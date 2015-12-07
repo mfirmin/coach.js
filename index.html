@@ -46,7 +46,16 @@ title: Coach.js example
                 Coach.lib.$('#simRate').text((time*30.).toFixed(1)); 
             }
 
-            world.go({renderCallback: renderCallback})
+            var pdc = new Coach.controllers.PDController(j2, 1.57);
+
+            var controller = function() {
+
+                var T = pdc.evaluate();
+                j2.addTorque(T);
+
+            };
+
+            world.go({renderCallback: renderCallback, simulationCallback: controller})
 
 
         </script>
