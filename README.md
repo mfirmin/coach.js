@@ -31,15 +31,15 @@ See the wiki (coming soon!) for more detailed instructions on creating and contr
 To create a simulated world using Coach, first call
 
 ```
-var world = new Coach.World({FPS: 1/30, dt: 0.0001}, '#simbicon');
+var world = new Coach.World({FPS: 30, dt: 0.0001}, '#simbicon');
 ```
 Where the first argument is a javascript Object with entries
 Make sure to call this only after the page is loaded (eg, wrap it in a $(document).ready handler)
-```
-FPS(float): frames per second to run the simulation at (default: 1/30)
-dt(float):  stepsize to run the simulation at (default: 0.0001)
-```
-Note that a very small timestep (0.0001) is required for stable simulation of a physically realistic, 17-link humanoid. This runs at about 0.4 real time. If using simpler characters, you may be able to use larger stepsizes
+
+- FPS(float): frames per second to run the simulation at (default: 1/30)
+- dt(float):  stepsize to run the simulation at (default: 0.0001)
+
+Note that a very small timestep (0.0001) is required for stable simulation of a physically realistic, 17-link humanoid. This runs at about 0.4 real time (30FPS). If using simpler characters, you may be able to use larger stepsizes
 
 The second argument to the World constructor is a string specifying the html element id (default: 'body').
 
@@ -49,14 +49,17 @@ Next, construct entities as follows
 
 ```
 var ground = new Coach.entities.Box('ground', [100,1,1], {mass: 0, color: [100,100,100]});
-var link1  = new Coach.entities.Box('link1', [1, .1, .1], {mass: 1, color: [0,0,1]});
-var link2  = new Coach.entities.Box('link2', [1, .1, .1], {mass: 1, color: [0,0,1]});
-var link3  = new Coach.entities.Box('link2', [1, .1, .1], {mass: 1, color: [0,0,1]});
-ground.setPosition([0.-.5,0]);
-link1.setPosition([0,5,0]);
-link2.setPosition([1,5,0]);
-link3.setPosition([2,5,0]);
+var pivot  = new Coach.entities.Box('pivot', [.1,.1,.1], {mass: 0, color: [255,0,0]});
+var link1  = new Coach.entities.Box('link1', [.5, .1, .1], {mass: 1, color: [0,255,0]});
+var link2  = new Coach.entities.Box('link2', [.5, .1, .1], {mass: 1, color: [0,0,255]});
+var link3  = new Coach.entities.Box('link3', [.5, .1, .1], {mass: 1, color: [0,255,255]});
+ground.setPosition([0.,-.5,0]);
+pivot.setPosition([0,2,0]);
+link1.setPosition([.25,2,0]);
+link2.setPosition([.75,2,0]);
+link3.setPosition([1.25,2,0]);
 world.addEntity(ground);
+world.addEntity(pivot);
 world.addEntity(link1);
 world.addEntity(link2);
 world.addEntity(link3);
@@ -74,8 +77,10 @@ Coach currently supports Box, Capsule, Cylinder, and Sphere elements.
 Next, we add joints between the links of the pendulum. Currently, only Hinge joints are supported.
 
 ```
-var j1 = new Coach.joints.Hinge('joint1', {'A': 'link1', 'B': 'link2'}, [0.5,5,0], [0,0,1]);
-var j2 = new Coach.joints.Hinge('joint2', {'A': 'link1', 'B': 'link2'}, [1.5,5,0], [0,0,1]);
+var j0 = new Coach.joints.Hinge('joint0', {'A': 'pivot', 'B': 'link1'}, [0,2,0], [0,0,1]);
+var j1 = new Coach.joints.Hinge('joint1', {'A': 'link1', 'B': 'link2'}, [0.5,2,0], [0,0,1]);
+var j2 = new Coach.joints.Hinge('joint2', {'A': 'link2', 'B': 'link3'}, [1.0,2,0], [0,0,1]);
+world.addJoint(j0);
 world.addJoint(j1);
 world.addJoint(j2);
 ```
@@ -89,3 +94,5 @@ Finally, to begin the simulation, just call
 ``` 
 world.go()
 ```
+
+See the full example in action [here](http://mfirmin.github.io/coach.js/), and full code [here](https://github.com/mfirmin/coach.js/blob/gh-pages/index.html)
