@@ -97,4 +97,27 @@ Finally, to begin the simulation, just call
 world.go()
 ```
 
+### Control
+
+While Coach makes it easy to create simple passive simulations, its real power comes in controlling the simulation in physically-realistic ways.
+
+Next, we will use a [Proportional Derivative (PD) Controller](https://en.wikipedia.org/wiki/PID_controller) in order to set the angle of the last joint at 90 degrees. The benefit of using a PD controller over simply setting joint angles is that the PD Controller produces a torque, which is fed into the physics engine itself, producing realistic motion.
+
+```javascript
+var pdc = new Coach.controllers.PDController(j2, 1.57);
+
+var simulationCallback = function(dt) {
+  var torque = pdc.evaluate();
+  j2.addTorque(torque);
+};
+```
+
+Here, we specify a PD controller to bring joint 2 to 1.57 radians (90 degrees). In a callback function, we evaluate the PD controller, and add the resulting torque to the joint. Finally, we update our existing world.go() function by passing in this callback as an argument
+
+```javascript
+world.go({"simulationCallback": simulationCallback});
+```
+
+The simulation will then apply the callback at every simulation step. Note that joint torques are reset to zero after each simulation step.
+
 See the full example in action [here](http://mfirmin.github.io/coach.js/), and full code [here](https://github.com/mfirmin/coach.js/blob/gh-pages/index.html)
