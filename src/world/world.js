@@ -88,6 +88,8 @@ World.prototype.go = function(opts) {
     var ready = true;
     var fpms = this.FPS*1000;
 
+    opts = (opts === undefined) ? {} : opts;
+
     this.simulator.setCallback(opts.simulationCallback);
     this.renderer.setCallback(opts.renderCallback);
 
