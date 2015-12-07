@@ -3,6 +3,8 @@
 var THREE = require('../lib/three.min');
 var ConvexHullGrahamScan = require('../lib/graham_scan.min');
 
+var $ = require('../lib/jquery-2.1.4.min');
+
 var Box      = require('../entity/box');
 var Cylinder = require('../entity/cylinder');
 var Sphere   = require('../entity/sphere');
