@@ -36,10 +36,10 @@ var world = new Coach.World({FPS: 30, dt: 0.0001}, '#simbicon');
 Where the first argument is a javascript Object with entries
 Make sure to call this only after the page is loaded (eg, wrap it in a $(document).ready handler)
 
-- FPS(float): frames per second to run the simulation at (default: 1/30)
+- FPS(float): frames per second to run the simulation at (default: 30)
 - dt(float):  stepsize to run the simulation at (default: 0.0001)
 
-Note that a very small timestep (0.0001) is required for stable simulation of a physically realistic, 17-link humanoid. This runs at about 0.4 real time (30FPS). If using simpler characters, you may be able to use larger stepsizes
+Note that a very small timestep (0.0001) is required for stable simulation of a physically realistic, 17-link humanoid. This runs at about 0.4 real time. If using simpler characters, you may be able to use larger stepsizes
 
 The second argument to the World constructor is a string specifying the html element id (default: 'body').
 
