@@ -11,7 +11,7 @@ var Sphere   = require('../entity/sphere');
 var Capsule  = require('../entity/capsule');
 var Plane    = require('../entity/plane');
 
-function Renderer(opts) {
+function Renderer(opts, element) {
 
     opts = (opts === undefined) ? {} : opts;
 
@@ -23,6 +23,7 @@ function Renderer(opts) {
     this.joints = {};
 
     this.callback = opts.callback;
+    this.element = (element === undefined) ? 'body' : element;
 }
 
 
@@ -66,6 +67,8 @@ Renderer.prototype.initializeWorld = function() {
 
 Renderer.prototype.initializeDiv = function() {
 
+    var scope = this;
+
     /*
     this.panel = $('<div>')
         .addClass('threeworld')
@@ -77,19 +80,24 @@ Renderer.prototype.initializeDiv = function() {
         });
     */
     this.panel = $('<div>')
-        .addClass('threeContext')
+        .addClass('coach-context')
         .attr({tabindex:0});
 
     this.renderer.setSize(400,400);
 
-    this.canvas = $(this.renderer.domElement).width(400).height(400).addClass("threeCanvas");
+    this.canvas = $(this.renderer.domElement).width(400).height(400).addClass("three-canvas");
     $(this.panel).append(this.canvas);
+
+    $(document).ready(function() {
+        $(scope.element).append(scope.panel);
+        scope.setSize();
+    });
 };
 
 Renderer.prototype.setSize = function() {
 
-    var w = $('#simbicon').width();
-    var h = $('#simbicon').height();
+    var w = $(this.element).width();
+    var h = $(this.element).height();
 
     this.canvas.width(w);
     this.canvas.height(h);

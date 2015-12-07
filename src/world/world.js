@@ -6,7 +6,7 @@ var Sphere   = require('../entity/sphere');
 var Capsule  = require('../entity/capsule');
 var Plane    = require('../entity/plane');
 
-function World(opts) {
+function World(opts, element) {
 
     opts = (opts === undefined) ? {} : opts;
 
@@ -14,7 +14,7 @@ function World(opts) {
     this.FPS = (opts.FPS === undefined) ? 1/30. : opts.FPS;
     this.dt  = (opts.dt === undefined) ? 0.0001 : opts.dt;
 
-    this.renderer = new Renderer();
+    this.renderer = new Renderer({}, element);
     this.simulator = new Simulator(this.dt);
 
     this.entities = {};
