@@ -87,5 +87,5 @@ Hinge Joints take 4 arguments: a unique string identifier, and Object identifyin
 Finally, to begin the simulation, just call
 
 ``` 
-World.go()
+world.go()
 ```
