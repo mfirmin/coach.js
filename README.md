@@ -5,7 +5,7 @@ Coach is built on top of the [Ammo.js](https://github.com/kripken/ammo.js/) dyna
 
 For examples of coach in action, see [SimbiconJS](http://mfirmin.github.io/SimbiconJS)
 
-Please note that Coach is currently in very early stages of development, so missing features and bugs are very likely. If you are interested in contributing to the development of Coach, feel free to send me an email at mcfirmin@gmail.com, or just clone/fork the repo and make a pull request!
+Please note that Coach is currently in very early stages of development, so you are very likely to come across missing features and bugs. If you are interested in contributing to the development of Coach, feel free to send me an email at mcfirmin@gmail.com, or just clone/fork the repo and make a pull request!
 
 
 ## Install
