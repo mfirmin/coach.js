@@ -30,7 +30,7 @@ See the wiki (coming soon!) for more detailed instructions on creating and contr
 
 To create a simulated world using Coach, first call
 
-```
+```javascript
 var world = new Coach.World({FPS: 30, dt: 0.0001}, '#simbicon');
 ```
 Where the first argument is a javascript Object with entries
@@ -47,7 +47,7 @@ The second argument to the World constructor is a string specifying the html ele
 
 Next, construct entities as follows
 
-```
+```javascript
 var ground = new Coach.entities.Box('ground', [100,1,1], {mass: 0, color: [100,100,100]});
 var pivot  = new Coach.entities.Box('pivot', [.1,.1,.1], {mass: 0, color: [255,0,0]});
 var link1  = new Coach.entities.Box('link1', [.5, .1, .1], {mass: 1, color: [0,255,0]});
@@ -76,7 +76,7 @@ Coach currently supports Box, Capsule, Cylinder, and Sphere elements.
 
 Next, we add joints between the links of the pendulum. Currently, only Hinge joints are supported.
 
-```
+```javascript
 var j0 = new Coach.joints.Hinge('joint0', {'A': 'pivot', 'B': 'link1'}, [0,2,0], [0,0,1]);
 var j1 = new Coach.joints.Hinge('joint1', {'A': 'link1', 'B': 'link2'}, [0.5,2,0], [0,0,1]);
 var j2 = new Coach.joints.Hinge('joint2', {'A': 'link2', 'B': 'link3'}, [1.0,2,0], [0,0,1]);
@@ -87,13 +87,13 @@ world.addJoint(j2);
 
 Hinge Joints take 4 arguments: a unique string identifier, and Object identifying  the entities being joined together (where "A" is the first entity, and "B" the second), the initial position of the joint, and the rotation axis of the joint.
 
-Entities and Joints can also be bundled up inside characters, which can be stored in a JSON representation. See the wiki for more information about creating and storing characters (coming soon!)
+Entities and Joints can also be bundled up as a __Character__, which can be stored in a JSON representation. See the wiki for more information about creating Characters (coming soon!).
 
 ### Running the world
 
 Finally, to begin the simulation, just call
 
-``` 
+```javascript
 world.go()
 ```
 
