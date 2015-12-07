@@ -7,20 +7,9 @@ For examples of coach in action, see [SimbiconJS](http://mfirmin.github.io/Simbi
 
 Please note that Coach is currently in very early stages of development, so you are very likely to come across missing features and bugs. If you are interested in contributing to the development of Coach, feel free to send me an email at mcfirmin@gmail.com, or just clone/fork the repo and make a pull request!
 
-
-## Install
-
-Clone the library using
-
-```
-git clone git@github.com:mfirmin/coach.js.git
-```
-
-from the root folder, run ```Make``` to produce the file coach.js. Simply include this file in your webpage.
-
 ## Usage
 
-Include the file coach.js on your webpage, which exposes the variable ```Coach``` in the global scope.
+Include the file coach.js (found in static/coach.js) on your webpage, which exposes the variable ```Coach``` in the global scope.
 
 In the following example, we create a simple articulated pendulum.
 
