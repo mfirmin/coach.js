@@ -18,7 +18,7 @@ title: Coach.js example
         </div>
 
         <script>
-            var world = new Coach.World({FPS: 1./30., dt: 0.0001}, '#pendulum');
+            var world = new Coach.World({FPS: 30., dt: 0.0001}, '#pendulum');
             var ground = new Coach.entities.Box('ground', [100,1,1], {mass: 0, color: [100,100,100]});
             var pivot  = new Coach.entities.Box('pivot', [.1,.1,.1], {mass: 0, color: [255,0,0]});
             var link1  = new Coach.entities.Box('link1', [.5, .1, .1], {mass: 1, color: [0,255,0]});

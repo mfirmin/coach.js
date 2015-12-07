@@ -2218,7 +2218,7 @@ function World(opts, element) {
     opts = (opts === undefined) ? {} : opts;
 
 
-    this.FPS = (opts.FPS === undefined) ? 1/30. : opts.FPS;
+    this.FPS = (opts.FPS === undefined) ? 30. : opts.FPS;
     this.dt  = (opts.dt === undefined) ? 0.0001 : opts.dt;
 
     this.renderer = new Renderer({}, element);
@@ -2293,7 +2293,10 @@ World.prototype.go = function(opts) {
 
     var scope = this;
     var ready = true;
-    var fpms = this.FPS*1000;
+    var framerate = 1./(this.FPS);
+    var framerateMS = framerate*1000;
+
+    opts = (opts === undefined) ? {} : opts;
 
     this.simulator.setCallback(opts.simulationCallback);
     this.renderer.setCallback(opts.renderCallback);
@@ -2306,8 +2309,8 @@ World.prototype.go = function(opts) {
         if (ready) {
             ready = false;
             var time = 0;
-            while (Date.now() - now < fpms) {
-                if (time < scope.FPS) {
+            while (Date.now() - now < framerateMS) {
+                if (time < framerate) {
                     scope.step();
                     time += scope.dt;
                 }
