@@ -49,14 +49,14 @@ Next, construct entities as follows
 
 ```javascript
 var ground = new Coach.entities.Box('ground', [100,1,1], {mass: 0, color: [100,100,100]});
-var pivot  = new Coach.entities.Box('pivot', [.1,.1,.1], {mass: 0, color: [255,0,0]});
-var link1  = new Coach.entities.Box('link1', [.5, .1, .1], {mass: 1, color: [0,255,0]});
-var link2  = new Coach.entities.Box('link2', [.5, .1, .1], {mass: 1, color: [0,0,255]});
-var link3  = new Coach.entities.Box('link3', [.5, .1, .1], {mass: 1, color: [0,255,255]});
-ground.setPosition([0.,-.5,0]);
+var pivot  = new Coach.entities.Box('pivot', [0.1,0.1,0.1], {mass: 0, color: [255,0,0]});
+var link1  = new Coach.entities.Box('link1', [0.5, 0.1, 0.1], {mass: 1, color: [0,255,0]});
+var link2  = new Coach.entities.Box('link2', [0.5, 0.1, 0.1], {mass: 1, color: [0,0,255]});
+var link3  = new Coach.entities.Box('link3', [0.5, 0.1, 0.1], {mass: 1, color: [0,255,255]});
+ground.setPosition([0.,-0.5,0]);
 pivot.setPosition([0,2,0]);
-link1.setPosition([.25,2,0]);
-link2.setPosition([.75,2,0]);
+link1.setPosition([0.25,2,0]);
+link2.setPosition([0.75,2,0]);
 link3.setPosition([1.25,2,0]);
 world.addEntity(ground);
 world.addEntity(pivot);
