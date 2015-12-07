@@ -2,10 +2,10 @@
 SOURCEDIR = src
 SOURCES = $(shell find $(SOURCEDIR) -name '*.js')
 
-all: coach.js Makefile
+all: static/coach.js Makefile
 
 clean: 
 	rm coach.js
 
-coach.js: $(SOURCES)
-	browserify src/coach.js --s Coach > coach.js
+static/coach.js: $(SOURCES)
+	browserify src/coach.js --s Coach > static/coach.js
