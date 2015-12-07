@@ -22,7 +22,7 @@ from the root folder, run ```Make``` to produce the file coach.js. Simply includ
 
 Include the file coach.js on your webpage, which exposes the variable ```Coach``` in the global scope.
 
-The example below will create a simple articulated pendulum.
+In the following example, we create a simple articulated pendulum.
 
 See the wiki (coming soon!) for more detailed instructions on creating and controlling characters with coach.
 
@@ -86,6 +86,8 @@ world.addJoint(j2);
 ```
 
 Hinge Joints take 4 arguments: a unique string identifier, and Object identifying  the entities being joined together (where "A" is the first entity, and "B" the second), the initial position of the joint, and the rotation axis of the joint.
+
+Entities and Joints can also be bundled up inside characters, which can be stored in a JSON representation. See the wiki for more information about creating and storing characters (coming soon!)
 
 ### Running the world
 
