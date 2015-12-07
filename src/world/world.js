@@ -100,8 +100,10 @@ World.prototype.go = function(opts) {
             ready = false;
             var time = 0;
             while (Date.now() - now < fpms) {
-                scope.step();
-                time += scope.dt;
+                if (time < scope.FPS) {
+                    scope.step();
+                    time += scope.dt;
+                }
             }
 
             scope.render(time);

@@ -1,0 +1,21 @@
+
+
+#main {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+#pendulum {
+    position: absolute;
+    width: 90vh;
+    height: 90vh;
+    left: 0vw;
+}
+
+#simTime {
+    position: absolute;
+    bottom: 5%;
+    left: 5%;
+}
+
