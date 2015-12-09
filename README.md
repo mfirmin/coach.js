@@ -79,7 +79,7 @@ Hinge Joints take 4 arguments: a unique string identifier, and Object identifyin
 
 Entities and Joints can also be bundled up as a __Character__, which can be stored in a JSON representation. See the wiki for more information about creating Characters (coming soon!).
 
-### Running the world
+### Start the simulation
 
 Finally, to begin the simulation, just call
 
