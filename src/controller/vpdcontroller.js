@@ -8,7 +8,7 @@ function VPDController(joint, part, goal, options) {
     this.part = part;
     this.goal = goal;
 
-    options = (options === undefined) ? {} : options; 
+    options = (options === undefined) ? {} : options;
 
     this.kp = (options.kp === undefined) ? KP : options.kp;
     this.kd = (options.kd === undefined) ? KD : options.kd;
@@ -20,17 +20,17 @@ function VPDController(joint, part, goal, options) {
 
 VPDController.prototype.constructor = VPDController;
 
-VPDController.prototype.evaluate = function() {
+VPDController.prototype.evaluate = function(dt) {
 
 //    var currentAngle = Math.acos(this.part.getRotation()[3])*2;
     var rot = this.part.getRotation();
     var currentAngle = Math.atan2(2*(rot[3]*rot[2] + rot[0]*rot[1]), 1 - 2*(rot[1]*rot[1]+rot[2]*rot[2]));
 
     if (this.lastAngle === undefined) {
-       this.lastAngle = currentAngle; 
-    } 
+       this.lastAngle = currentAngle;
+    }
 
-    var currentAngularVelocity = (currentAngle - this.lastAngle)*10000;
+    var currentAngularVelocity = (currentAngle - this.lastAngle)*1/dt;
 
     var goal = -this.goal;
 
