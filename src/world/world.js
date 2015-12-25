@@ -13,9 +13,10 @@ function World(opts, element) {
 
     this.FPS = (opts.FPS === undefined) ? 30. : opts.FPS;
     this.dt  = (opts.dt === undefined) ? 0.0001 : opts.dt;
+    this.is2D = (opts["2D"] === undefined) ? false : opts["2D"];
 
-    this.renderer = new Renderer({}, element);
-    this.simulator = new Simulator(this.dt);
+    this.renderer = new Renderer({"cameraOptions": opts.cameraOptions}, element);
+    this.simulator = new Simulator(this.dt, {"2D": this.is2D});
 
     this.entities = {};
     this.joints   = {};
@@ -113,9 +114,7 @@ World.prototype.go = function(opts) {
             ready = true;
         }
     }
-
     requestAnimationFrame(animate);
-
 };
 
 World.prototype.render = function(time) {
@@ -123,9 +122,7 @@ World.prototype.render = function(time) {
 };
 
 World.prototype.step = function() {
-
     this.simulator.step();
-
 };
 
 module.exports = World;

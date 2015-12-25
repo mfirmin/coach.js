@@ -5,6 +5,8 @@ var ConvexHullGrahamScan = require('../lib/graham_scan.min');
 
 var $ = require('../lib/jquery-2.1.4.min');
 
+var Camera   = require('./camera');
+
 var Box      = require('../entity/box');
 var Cylinder = require('../entity/cylinder');
 var Sphere   = require('../entity/sphere');
@@ -14,6 +16,7 @@ var Plane    = require('../entity/plane');
 function Renderer(opts, element) {
 
     opts = (opts === undefined) ? {} : opts;
+    this.cameraOptions = opts.cameraOptions;
 
     this.initializeGL();
     this.initializeWorld();
@@ -51,17 +54,17 @@ Renderer.prototype.initializeGL = function() {
 Renderer.prototype.initializeWorld = function() {
 
     this.scene = new THREE.Scene();
-    this.camera = new THREE.OrthographicCamera(-2, 2, 2, -2, 0, 2000);
-//    this.camera = new THREE.PerspectiveCamera(45, 1, 1, 2000);
-    this.scene.add(this.camera);
-    this.light = new THREE.PointLight( 0xfffffa, 1, 0 );
-    this.light.position.set(0,5,1000);
-    this.scene.add( this.light );
 
-    this.camera.position.x = 0;
-    this.camera.position.y = 1;
-    this.camera.position.z = 10;
-    this.camera.lookAt(new THREE.Vector3(0,1,0));
+    this.camera = new Camera(this.cameraOptions);
+
+    this.scene.add(this.camera.threeCamera);
+
+    this.light = new THREE.PointLight( 0xfffffa, 1, 0 );
+
+    var pos = this.camera.getPosition();
+
+    this.light.position.set(pos[0], pos[1], pos[2]);
+    this.scene.add( this.light );
 
 };
 
@@ -104,8 +107,7 @@ Renderer.prototype.setSize = function() {
 
     this.renderer.setSize(w, h);
 
-    this.camera.aspect = w/h;
-    this.camera.updateProjectionMatrix();
+    this.camera.setAspectRatio(w/h);
 
 //    this.panel.css({width: w, height: h});
 };
@@ -117,9 +119,9 @@ Renderer.prototype.setCallback = function(fn) {
 Renderer.prototype.render = function(time) {
     this.updateEntities();
     if (this.callback !== undefined) {
-        this.callback(time);
+        this.callback(this.camera, time);
     }
-    this.renderer.render(this.scene, this.camera);
+    this.renderer.render(this.scene, this.camera.threeCamera);
 };
 
 
