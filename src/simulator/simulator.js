@@ -12,6 +12,8 @@ function Simulator(dt, opts) {
 
     this.opts = (opts === undefined) ? {} : opts;
 
+    this.is2D = (opts["2D"] === undefined) ? false : opts["2D"];
+
     this.callback = this.opts.callback;
 
     this.entities = {};
@@ -55,9 +57,32 @@ Simulator.prototype.addJoint = function(j) {
         var pos = j.getPosition();
         var posA = this.entities[j.A].entity.getPosition();
         var jointPosInA = [pos[0] - posA[0], pos[1] - posA[1], pos[2] - posA[2]];
+        var frameInA = new Ammo.btTransform();
+        frameInA.setIdentity();
+        frameInA.setOrigin(new Ammo.btVector3(jointPosInA[0], jointPosInA[1], jointPosInA[2]));
+
+        var posB = this.entities[j.B].entity.getPosition();
+        var jointPosInB = [pos[0] - posB[0], pos[1] - posB[1], pos[2] - posB[2]];
+        var frameInB = new Ammo.btTransform();
+        frameInB.setIdentity();
+        frameInB.setOrigin(new Ammo.btVector3(jointPosInB[0], jointPosInB[1], jointPosInB[2]));
+
+        joint = new Ammo.btGeneric6DofConstraint(this.entities[j.A].body, this.entities[j.B].body, frameInA, frameInB, true);
+
+        if (j.limits["X"] !== undefined) {
+            joint.setLimit(3, j.limits["X"][0]*Math.PI/180, j.limits["X"][1]*Math.PI/180);
+        }
+        if (j.limits["Y"] !== undefined) {
+            joint.setLimit(4, j.limits["Y"][0]*Math.PI/180, j.limits["Y"][1]*Math.PI/180);
+        }
+        if (j.limits["Z"] !== undefined) {
+            joint.setLimit(5, j.limits["Z"][0]*Math.PI/180, j.limits["Z"][1]*Math.PI/180);
+        }
+        /*
         if (j.B === undefined) {
             joint = new Ammo.btPoint2PointConstraint(this.entities[j.A].body, new Ammo.btVector3(jointPosInA[0], jointPosInA[1], jointPosInA[2]));
         }
+        */
     } else if (type === 'HINGE') {
         var axis = j.axis;
         var pos = j.getPosition();
@@ -68,10 +93,10 @@ Simulator.prototype.addJoint = function(j) {
             var posB = this.entities[j.B].entity.getPosition();
             var jointPosInB = [pos[0] - posB[0], pos[1] - posB[1], pos[2] - posB[2]];
             joint = new Ammo.btHingeConstraint(
-                this.entities[j.A].body, 
-                this.entities[j.B].body, 
-                new Ammo.btVector3(jointPosInA[0],jointPosInA[1],jointPosInA[2]), 
-                new Ammo.btVector3(jointPosInB[0],jointPosInB[1],jointPosInB[2]), 
+                this.entities[j.A].body,
+                this.entities[j.B].body,
+                new Ammo.btVector3(jointPosInA[0],jointPosInA[1],jointPosInA[2]),
+                new Ammo.btVector3(jointPosInB[0],jointPosInB[1],jointPosInB[2]),
                 new Ammo.btVector3(j.axis[0], j.axis[1], j.axis[2]),
                 new Ammo.btVector3(j.axis[0], j.axis[1], j.axis[2]),
                 false
@@ -79,11 +104,11 @@ Simulator.prototype.addJoint = function(j) {
         } else {
 
             // TODO: FIX ME?
-            // THIS DOESNT WORK 
+            // THIS DOESNT WORK
 
             joint = new Ammo.btHingeConstraint(
-                this.entities[j.A].body, 
-                new Ammo.btVector3(jointPosInA[0],jointPosInA[1],jointPosInA[2]), 
+                this.entities[j.A].body,
+                new Ammo.btVector3(jointPosInA[0],jointPosInA[1],jointPosInA[2]),
                 new Ammo.btVector3(j.axis[0], j.axis[1], j.axis[2]),
                 false
             );
@@ -121,7 +146,7 @@ Simulator.prototype.addEntity = function(e) {
             break;
         default:
             throw 'Unknown type';
-            
+
     }
 
     var startTransform = new Ammo.btTransform();
@@ -137,14 +162,16 @@ Simulator.prototype.addEntity = function(e) {
 
     var pos = e.getPosition();
     startTransform.setOrigin(new Ammo.btVector3(pos[0], pos[1], pos[2]));
-  
+
     var myMotionState = new Ammo.btDefaultMotionState(startTransform);
     var rbInfo = new Ammo.btRigidBodyConstructionInfo(mass, myMotionState, shape, localInertia);
     var body = new Ammo.btRigidBody(rbInfo);
 
     // SET 2D
-    body.setLinearFactor(new Ammo.btVector3(1,1,0));
-    body.setAngularFactor(new Ammo.btVector3(0,0,1));
+    if (this.is2D) {
+        body.setLinearFactor(new Ammo.btVector3(1,1,0));
+        body.setAngularFactor(new Ammo.btVector3(0,0,1));
+    }
 
     var nothing = 0;
     var human = 1 << 0;
@@ -173,7 +200,7 @@ Simulator.prototype.step = function(callback) {
 
         Tpos.setZ(T);
         Tneg.setZ(-T);
-        
+
         A.applyTorque(Tpos);
         B.applyTorque(Tneg);
 
@@ -201,6 +228,12 @@ Simulator.prototype.step = function(callback) {
         var jointBullet = j.jointBullet;
         if (jointEntity.getType() === 'HINGE') {
             jointEntity.setAngle(jointBullet.getHingeAngle(), this.dt);
+        } else if (jointEntity.getType() === 'BALL') {
+            jointBullet.calculateTransforms();
+            var angleX = jointBullet.getAngle(0);
+            var angleY = jointBullet.getAngle(1);
+            var angleZ = jointBullet.getAngle(2);
+            jointEntity.setAngle([angleX, angleY, angleZ], this.dt);
         }
             var tform = jointBullet.getFrameOffsetA();
 
