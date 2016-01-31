@@ -135,7 +135,7 @@ Renderer.prototype.updateEntities = function() {
         obj.position.y = entity.position[1];
         obj.position.z = entity.position[2];
 
-        obj.rotation.setFromQuaternion(new THREE.Quaternion(entity.rotation[0], entity.rotation[1], entity.rotation[2], entity.rotation[3]));
+        obj.rotation.setFromQuaternion(new THREE.Quaternion(entity.orientation[1], entity.orientation[2], entity.orientation[3], entity.orientation[0]));
     }
     for (var name in this.joints) {
 
@@ -158,7 +158,7 @@ Renderer.prototype.addCylinder = function(e, options) {
 
     var cylinder = new THREE.Object3D();
 
-    var mat = new THREE.MeshPhongMaterial( { ambient: 0x030303, color: color, specular: 0x030303, shininess: 10, shading: THREE.SmoothShading} );
+    var mat = new THREE.MeshPhongMaterial( { color: color, specular: 0x030303, shininess: 10, shading: THREE.SmoothShading} );
     if (options.mesh === undefined) {
         var cyl_geo = new THREE.CylinderGeometry(e.getRadius(), e.getRadius(), e.getHeight(), 32, 4, false);
         var cyl_mesh = new THREE.Mesh( cyl_geo , mat );
@@ -208,7 +208,7 @@ Renderer.prototype.addCapsule = function(e, options) {
     var color = new THREE.Color(cstring);
 
     var capsule = new THREE.Object3D();
-    var mat = new THREE.MeshPhongMaterial( { ambient: 0x030303, color: color, specular: 0x030303, shininess: 10, shading: THREE.SmoothShading} );
+    var mat = new THREE.MeshPhongMaterial( { color: color, specular: 0x030303, shininess: 10, shading: THREE.SmoothShading} );
     if (options.mesh === undefined) {
         var cyl_geo = new THREE.CylinderGeometry(e.getRadius(), e.getRadius(), e.getHeight(), 32, 4, true);
         var sph_geo= new THREE.SphereGeometry(e.getRadius(), 32, 32);
@@ -293,7 +293,7 @@ Renderer.prototype.addSphere = function(e, options) {
         obj3.add(line);
     }
 
-    var mat = new THREE.MeshPhongMaterial( { ambient: 0x030303, color: color, specular: 0x030303, shininess: 10, shading: THREE.SmoothShading} );
+    var mat = new THREE.MeshPhongMaterial( { color: color, specular: 0x030303, shininess: 10, shading: THREE.SmoothShading} );
     var mesh = new THREE.Mesh( geo , mat );
 
     obj3.add(mesh);
@@ -344,7 +344,7 @@ Renderer.prototype.addBox = function(e, options) {
 
     var mat;
     if (options.shader === undefined) {
-        mat = new THREE.MeshPhongMaterial( { ambient: 0x030303, color: color, specular: 0x030303, shininess: 10, shading: THREE.SmoothShading} );
+        mat = new THREE.MeshPhongMaterial( { color: color, specular: 0x030303, shininess: 10, shading: THREE.SmoothShading} );
     } else {
         mat = new THREE.ShaderMaterial({
             vertexShader: document.getElementById(options.shader.vertexShader).textContent,
@@ -355,7 +355,7 @@ Renderer.prototype.addBox = function(e, options) {
     var mesh = new THREE.Mesh( geo , mat );
 
     obj3.add(mesh);
-    
+
 
     return obj3;
 
@@ -371,7 +371,7 @@ Renderer.prototype.addJoint = function(j) {
 };
 
 Renderer.prototype.addEntity = function(e, options) {
-    
+
     var name = e.name;
     if (name in this.entities) {
         console.error('Cannot add entity. Entity with name ' + name + 'already exists.');

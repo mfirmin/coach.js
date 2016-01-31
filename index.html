@@ -43,9 +43,9 @@ title: Coach.js example
             world.addEntity(link2);
             world.addEntity(link3);
 
-            var j0 = new Coach.joints.Ball('joint0', {'A': 'pivot', 'B': 'link1'}, [0,2,0], { });
-            var j1 = new Coach.joints.Ball('joint1', {'A': 'link1', 'B': 'link2'}, [0.5,2,0]);
-            var j2 = new Coach.joints.Ball('joint2', {'A': 'link2', 'B': 'link3'}, [0.5,2,-0.5]);
+            var j0 = new Coach.joints.Ball('joint0', pivot, link1, [0,2,0], { });
+            var j1 = new Coach.joints.Ball('joint1', link1, link2, [0.5,2,0]);
+            var j2 = new Coach.joints.Ball('joint2', link2, link3, [0.5,2,-0.5]);
             world.addJoint(j0);
             world.addJoint(j1);
             world.addJoint(j2);

@@ -38,7 +38,7 @@ VPDController.prototype.evaluate = function(dt) {
 
     this.lastAngle = currentAngle;
 
-    return ret;
+    return [0,0,ret];
 };
 
 

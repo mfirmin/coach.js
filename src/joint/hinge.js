@@ -1,26 +1,25 @@
 var Joint = require('./joint');
 
-function Hinge(name, entityNames, pos, axis, limits, angle, angularVelocity, torqueLimit) {
+function Hinge(name, parent, child, pos, axis, opts) {
 
-    Joint.call(this, name);
+    Joint.call(this, name, parent, child);
 
-    this.A = entityNames.A;
-    this.B = entityNames.B;
+    opts = (opts === undefined) ? {} : opts;
 
     this.position = pos;
     this.axis = axis;
 
-    this.angle = (angle === undefined) ? 0 : angle;
-    this.angularVelocity = (angularVelocity === undefined) ? 0 : angularVelocity;
+    this.angle = (opts.angle === undefined) ? 0 : opts.angle;
+    this.angularVelocity = (opts.angularVelocity === undefined) ? 0 : opts.angularVelocity;
     this.angularVelocityPrev = this.angularVelocity;
     this.torque = 0;
 
-    limits = (limits === undefined) ? {} : limits;
+    limits = (opts.limits === undefined) ? {} : opts.limits;
 
     this.lo = limits.lo;
     this.hi = limits.hi;
 
-    this.torqueLimit = (torqueLimit  === undefined) ? 370 : torqueLimit;
+    this.torqueLimit = (opts.torqueLimit  === undefined) ? 370 : opts.torqueLimit;
 
 }
 
@@ -77,21 +76,21 @@ Hinge.prototype.setTorque = function(t) {
 };
 
 Hinge.prototype.addTorque = function(t) {
-    this.torque += t;
+    this.torque[2] += t;
 };
 
 Hinge.prototype.getTorque = function() {
-    return this.torque;
+    return [0,0,this.torque];
 };
 
 Hinge.prototype.getLimitedTorque = function() {
     var ret = this.torque;
     if (Math.abs(ret) > this.torqueLimit) {
         ret = this.torqueLimit * ret/Math.abs(ret);
-        return ret;
+        return [0,0,ret];
     }
 
-    return this.torque;
+    return [0,0,this.torque];
 };
 
 Hinge.prototype.getType = function() {

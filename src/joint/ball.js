@@ -1,22 +1,23 @@
 var Joint = require('./joint');
+var utils = require('../utils/utils');
 
-function Ball(name, entityNames, pos, limits) {
+function Ball(name, parent, child, pos, opts) {
 
-    Joint.call(this, name);
+    Joint.call(this, name, parent, child);
 
-    this.A = entityNames.A;
-    this.B = entityNames.B;
+    opts = (opts === undefined) ? {} : opts;
 
     this.position = pos;
 
-    this.angle = [0,0,0];
+    this.angleLast = [0,0,0,0];
+    this.angle = [0,0,0,0];
 
     this.angularVelocity = [0,0,0];
     this.angularVelocityPrev = this.angularVelocity;
     this.torque = [0,0,0];
 
-    this.limits = (limits === undefined) ? {} : limits;
-
+    this.limits = (opts.limits === undefined) ? {} : opts.limits;
+    this.torqueLimit = (opts.torqueLimit  === undefined) ? 370 : opts.torqueLimit;
 }
 
 Ball.prototype = Object.create(Joint.prototype);
@@ -35,17 +36,37 @@ Ball.prototype.setPosition = function(xyz) {
     this.position[2] = xyz[2];
 };
 
+// Calculates joint's orientation in terms of Parent coordinates (ie, quaternion to rotate parent to child.)
+Ball.prototype.calculateOrientation = function() {
+    var pOrientation = this.parent.getOrientation();
+    var cOrientation = this.child.getOrientation();
+
+    this.angle = utils.multiplyQuaternions(utils.getQuaternionInverse(pOrientation), cOrientation);
+
+};
+
+// Calculates joint's angular velocity in Parent coordinate frame
+Ball.prototype.calculateAngularVelocity = function() {
+
+    var pAngVel = this.parent.getAngularVelocity();
+    var cAngVel = this.child.getAngularVelocity();
+
+    var wRel = [cAngVel[0] - pAngVel[0],cAngVel[1] - pAngVel[1],cAngVel[2] - pAngVel[2]];
+
+    this.angularVelocity = utils.rotateVector(wRel, utils.RFromQuaternion(utils.getQuaternionInverse(this.parent.getOrientation())));
+};
+
 Ball.prototype.setAngle = function(angs, dt) {
-    var angleLast = this.angle;
     this.angle = angs;
-    if (dt !== undefined) {
-        this.angularVelocityPrev = this.angularVelocity;
-        this.angularVelocity = [(this.angle[0] - angleLast[0])*1/dt,(this.angle[1] - angleLast[1])*1/dt,(this.angle[2] - angleLast[2])*1/dt];
-    }
+    return;
 };
 
 Ball.prototype.getAngle = function() {
     return this.angle;
+};
+
+Ball.prototype.getAngularVelocity = function() {
+    return this.angularVelocity;
 };
 
 Ball.prototype.getTorque = function() {
@@ -53,13 +74,31 @@ Ball.prototype.getTorque = function() {
 };
 
 Ball.prototype.getLimitedTorque = function() {
-    var ret = this.torque[0];
-    if (Math.abs(ret) > this.torqueLimit) {
-        ret = this.torqueLimit * ret/Math.abs(ret);
-        return ret;
-    }
+    var scope = this;
+    return this.torque.map(function(val) {
+        if (Math.abs(val) > scope.torqueLimit) {
+            val = scope.torqueLimit * val/Math.abs(val);
+        }
+        return val;
+    });
 
-    return this.torque[0];
+    return this.torque;
+};
+
+Ball.prototype.addTorqueX = function(t) {
+    this.torque[0] += t;
+};
+Ball.prototype.addTorqueY = function(t) {
+    this.torque[1] += t;
+};
+Ball.prototype.addTorqueZ = function(t) {
+    this.torque[2] += t;
+};
+
+Ball.prototype.addTorque = function(t) {
+    this.torque[0] += t[0];
+    this.torque[1] += t[1];
+    this.torque[2] += t[2];
 };
 
 Ball.prototype.setTorque = function(t) {
