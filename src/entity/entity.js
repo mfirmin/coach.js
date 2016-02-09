@@ -35,10 +35,14 @@ Entity.prototype.setOrientation = function(q) {
 };
 
 Entity.prototype.setAngularVelocity = function(a) {
+    // Angular Velocity expressed in WORLD COORDINATES!
 
     this.angularVelocity[0] = a[0];
     this.angularVelocity[1] = a[1];
     this.angularVelocity[2] = a[2];
+
+    // DO NOT INCLUDE THIS LINE 7 FEB 2016
+//    this.angularVelocity = utils.rotateVector(this.angularVelocity, utils.RFromQuaternion(this.orientation));
 };
 
 Entity.prototype.getPosition = function() {

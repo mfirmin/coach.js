@@ -53,6 +53,7 @@ utils.quaternionFromEulerAngles = function(e) {
     var phi = e[0];
     var theta = e[1];
     var psi = e[2];
+
     var q = [
         Math.cos(phi/2)*Math.cos(theta/2)*Math.cos(psi/2) + Math.sin(phi/2)*Math.sin(theta/2)*Math.sin(psi/2),
         Math.sin(phi/2)*Math.cos(theta/2)*Math.cos(psi/2) - Math.cos(phi/2)*Math.sin(theta/2)*Math.sin(psi/2),
@@ -73,7 +74,7 @@ utils.eulerAnglesFromQuaternion = function(q) {
 
     return [
         Math.atan2(2*(qw*qx + qy*qz), 1 - 2*(qx*qx+qy*qy)),
-        Math.asin(2*qw*qy-qz*qx),
+        Math.asin(2*(qw*qy-qz*qx)),
         Math.atan2(2*(qw*qz+qx*qy), 1 - 2*(qy*qy+qz*qz))
     ];
 };
@@ -85,6 +86,12 @@ utils.RFromQuaternion = function(q) {
     var qx = q[1];
     var qy = q[2];
     var qz = q[3];
+
+    /*
+    return [a*a+b*b - c*c - d*d,    2*b*c - 2*a*d,         2*b*d + 2*a*c,
+            2*b*c + 2*a*d,          a*a - b*b + c*c - d*d, 2*c*d - 2*a*b,
+            2*b*d - 2*a*c,          2*c*d+2*a*b,           a*a-b*b-c*c+d*d];
+            */
 
     return [ 1 - 2*qy*qy - 2*qz*qz, 2*qx*qy - 2*qz*qw,     2*qx*qz + 2*qy*qw,
              2*qx*qy + 2*qz*qw,     1 - 2*qx*qx - 2*qz*qz, 2*qy*qz - 2*qx*qw,

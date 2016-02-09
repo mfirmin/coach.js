@@ -53,7 +53,10 @@ Ball.prototype.calculateAngularVelocity = function() {
 
     var wRel = [cAngVel[0] - pAngVel[0],cAngVel[1] - pAngVel[1],cAngVel[2] - pAngVel[2]];
 
+//    console.log(this.parent.getOrientation());
+
     this.angularVelocity = utils.rotateVector(wRel, utils.RFromQuaternion(utils.getQuaternionInverse(this.parent.getOrientation())));
+//    this.angularVelocity = wRel;
 };
 
 Ball.prototype.setAngle = function(angs, dt) {
