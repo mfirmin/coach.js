@@ -1,3 +1,6 @@
+
+var utils = require('../utils/utils');
+
 function Entity(name, opts) {
 
     this.opts = (opts === undefined) ? {} : opts;
@@ -5,7 +8,8 @@ function Entity(name, opts) {
     this.name = name;
 
     this.position = [0,0,0];
-    this.rotation = [0,0,0,0]; // q.v, q.w
+    this.orientation = [0,0,0,0]; // q.w, q.v
+    this.angularVelocity = [0,0,0];
     this.mass = (opts.mass === undefined) ? 0 : opts.mass;
     this.color = (opts.color === undefined) ? [130,130,130] : opts.color;
 
@@ -23,26 +27,37 @@ Entity.prototype.setPosition = function(xyz) {
     this.position[2] = xyz[2];
 };
 
-Entity.prototype.setRotation = function(q) {
-    this.rotation[0] = q[0];
-    this.rotation[1] = q[1];
-    this.rotation[2] = q[2];
-    this.rotation[3] = q[3];
+Entity.prototype.setOrientation = function(q) {
+    this.orientation[0] = q[0];
+    this.orientation[1] = q[1];
+    this.orientation[2] = q[2];
+    this.orientation[3] = q[3];
+};
+
+Entity.prototype.setAngularVelocity = function(a) {
+    // Angular Velocity expressed in WORLD COORDINATES!
+
+    this.angularVelocity[0] = a[0];
+    this.angularVelocity[1] = a[1];
+    this.angularVelocity[2] = a[2];
+
+    // DO NOT INCLUDE THIS LINE 7 FEB 2016
+//    this.angularVelocity = utils.rotateVector(this.angularVelocity, utils.RFromQuaternion(this.orientation));
 };
 
 Entity.prototype.getPosition = function() {
     return this.position;
 };
-Entity.prototype.getRotation = function() {
-    return this.rotation;
+Entity.prototype.getOrientation = function() {
+    return this.orientation;
 };
 
 Entity.prototype.getAngle = function() {
 
 };
+
 Entity.prototype.getAngularVelocity = function() {
-    throw ' IMPLEMENT ME';
-    return ;
+    return this.angularVelocity;
 };
 
 Entity.prototype.getMass = function() {

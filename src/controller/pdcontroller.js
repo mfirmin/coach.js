@@ -7,7 +7,7 @@ function PDController(joint, goal, options) {
     this.goal = goal;
     this.joint = joint;
 
-    options = (options === undefined) ? {} : options; 
+    options = (options === undefined) ? {} : options;
 
     this.kp = (options.kp === undefined) ? KP : options.kp;
     this.kd = (options.kd === undefined) ? KD : options.kd;
@@ -24,7 +24,7 @@ PDController.prototype.evaluate = function() {
 
     var ret = this.kp*(this.goal - currentAngle) + this.kd*(0 - currentAngularVelocity);
 
-    return ret;
+    return [0,0,ret];
 
 };
 

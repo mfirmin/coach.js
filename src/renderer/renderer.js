@@ -5,6 +5,8 @@ var ConvexHullGrahamScan = require('../lib/graham_scan.min');
 
 var $ = require('../lib/jquery-2.1.4.min');
 
+var Camera   = require('./camera');
+
 var Box      = require('../entity/box');
 var Cylinder = require('../entity/cylinder');
 var Sphere   = require('../entity/sphere');
@@ -14,6 +16,7 @@ var Plane    = require('../entity/plane');
 function Renderer(opts, element) {
 
     opts = (opts === undefined) ? {} : opts;
+    this.cameraOptions = opts.cameraOptions;
 
     this.initializeGL();
     this.initializeWorld();
@@ -51,17 +54,17 @@ Renderer.prototype.initializeGL = function() {
 Renderer.prototype.initializeWorld = function() {
 
     this.scene = new THREE.Scene();
-    this.camera = new THREE.OrthographicCamera(-2, 2, 2, -2, 0, 2000);
-//    this.camera = new THREE.PerspectiveCamera(45, 1, 1, 2000);
-    this.scene.add(this.camera);
-    this.light = new THREE.PointLight( 0xfffffa, 1, 0 );
-    this.light.position.set(0,5,1000);
-    this.scene.add( this.light );
 
-    this.camera.position.x = 0;
-    this.camera.position.y = 1;
-    this.camera.position.z = 10;
-    this.camera.lookAt(new THREE.Vector3(0,1,0));
+    this.camera = new Camera(this.cameraOptions);
+
+    this.scene.add(this.camera.threeCamera);
+
+    this.light = new THREE.PointLight( 0xfffffa, 1, 0 );
+
+    var pos = this.camera.getPosition();
+
+    this.light.position.set(pos[0], pos[1], pos[2]);
+    this.scene.add( this.light );
 
 };
 
@@ -104,8 +107,7 @@ Renderer.prototype.setSize = function() {
 
     this.renderer.setSize(w, h);
 
-    this.camera.aspect = w/h;
-    this.camera.updateProjectionMatrix();
+    this.camera.setAspectRatio(w/h);
 
 //    this.panel.css({width: w, height: h});
 };
@@ -117,9 +119,9 @@ Renderer.prototype.setCallback = function(fn) {
 Renderer.prototype.render = function(time) {
     this.updateEntities();
     if (this.callback !== undefined) {
-        this.callback(time);
+        this.callback(this.camera, time);
     }
-    this.renderer.render(this.scene, this.camera);
+    this.renderer.render(this.scene, this.camera.threeCamera);
 };
 
 
@@ -133,7 +135,7 @@ Renderer.prototype.updateEntities = function() {
         obj.position.y = entity.position[1];
         obj.position.z = entity.position[2];
 
-        obj.rotation.setFromQuaternion(new THREE.Quaternion(entity.rotation[0], entity.rotation[1], entity.rotation[2], entity.rotation[3]));
+        obj.rotation.setFromQuaternion(new THREE.Quaternion(entity.orientation[1], entity.orientation[2], entity.orientation[3], entity.orientation[0]));
     }
     for (var name in this.joints) {
 
@@ -156,7 +158,7 @@ Renderer.prototype.addCylinder = function(e, options) {
 
     var cylinder = new THREE.Object3D();
 
-    var mat = new THREE.MeshPhongMaterial( { ambient: 0x030303, color: color, specular: 0x030303, shininess: 10, shading: THREE.SmoothShading} );
+    var mat = new THREE.MeshPhongMaterial( { color: color, specular: 0x030303, shininess: 10, shading: THREE.SmoothShading} );
     if (options.mesh === undefined) {
         var cyl_geo = new THREE.CylinderGeometry(e.getRadius(), e.getRadius(), e.getHeight(), 32, 4, false);
         var cyl_mesh = new THREE.Mesh( cyl_geo , mat );
@@ -206,7 +208,7 @@ Renderer.prototype.addCapsule = function(e, options) {
     var color = new THREE.Color(cstring);
 
     var capsule = new THREE.Object3D();
-    var mat = new THREE.MeshPhongMaterial( { ambient: 0x030303, color: color, specular: 0x030303, shininess: 10, shading: THREE.SmoothShading} );
+    var mat = new THREE.MeshPhongMaterial( { color: color, specular: 0x030303, shininess: 10, shading: THREE.SmoothShading} );
     if (options.mesh === undefined) {
         var cyl_geo = new THREE.CylinderGeometry(e.getRadius(), e.getRadius(), e.getHeight(), 32, 4, true);
         var sph_geo= new THREE.SphereGeometry(e.getRadius(), 32, 32);
@@ -291,7 +293,7 @@ Renderer.prototype.addSphere = function(e, options) {
         obj3.add(line);
     }
 
-    var mat = new THREE.MeshPhongMaterial( { ambient: 0x030303, color: color, specular: 0x030303, shininess: 10, shading: THREE.SmoothShading} );
+    var mat = new THREE.MeshPhongMaterial( { color: color, specular: 0x030303, shininess: 10, shading: THREE.SmoothShading} );
     var mesh = new THREE.Mesh( geo , mat );
 
     obj3.add(mesh);
@@ -342,7 +344,7 @@ Renderer.prototype.addBox = function(e, options) {
 
     var mat;
     if (options.shader === undefined) {
-        mat = new THREE.MeshPhongMaterial( { ambient: 0x030303, color: color, specular: 0x030303, shininess: 10, shading: THREE.SmoothShading} );
+        mat = new THREE.MeshPhongMaterial( { color: color, specular: 0x030303, shininess: 10, shading: THREE.SmoothShading} );
     } else {
         mat = new THREE.ShaderMaterial({
             vertexShader: document.getElementById(options.shader.vertexShader).textContent,
@@ -353,7 +355,7 @@ Renderer.prototype.addBox = function(e, options) {
     var mesh = new THREE.Mesh( geo , mat );
 
     obj3.add(mesh);
-    
+
 
     return obj3;
 
@@ -369,7 +371,7 @@ Renderer.prototype.addJoint = function(j) {
 };
 
 Renderer.prototype.addEntity = function(e, options) {
-    
+
     var name = e.name;
     if (name in this.entities) {
         console.error('Cannot add entity. Entity with name ' + name + 'already exists.');

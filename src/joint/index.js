@@ -1,7 +1,7 @@
 
 var joints = {
     "Joint":  require('./joint'),
-//    "Ball":   require('./ball'),
+    "Ball":   require('./ball'),
     "Hinge":  require('./hinge'),
 };
 
