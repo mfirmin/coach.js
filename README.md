@@ -20,16 +20,26 @@ See the wiki (coming soon!) for more detailed instructions on creating and contr
 To create a simulated world using Coach, first call
 
 ```javascript
-var world = new Coach.World({FPS: 30, dt: 0.0001}, '#simbicon');
+var world = new Coach.World({
+  "FPS": 30, 
+  "dt": 0.0001,
+  "cameraOptions": {
+    "type": "perspective",
+    "position": [2,2,2],
+    "target": [0,1,0],
+  }
+}, '#pendulum');
 ```
 Where the first argument is a javascript Object with entries
 
 - FPS(float): frames per second to render the simulation at (default: 30)
-- dt(float):  stepsize to run the simulation at (default: 0.0001)
+- dt(float):  stepsize to run the simulation at (default: 0.0002)
 
-Note that a very small timestep (0.0001) is required for stable simulation of a physically realistic, 17-link humanoid. This runs at about 0.4 real time. If using simpler characters, you may be able to use larger stepsizes
+And, cameraOptions defining the camera to view the scene with. See the wiki for more detailed instructions
 
-The second argument to the World constructor is a string specifying the html element id (default: 'body').
+Note that a very small timestep (0.0002) is required for real-time, stable simulation of a physically realistic, 17-link humanoid. If using simpler characters, you may be able to use larger stepsizes
+
+The second argument to the World constructor is a string specifying the html element id to add the WebGL Canvas to (default: 'body').
 
 Make sure to call this only after the page is loaded (eg, wrap it in a $(document).ready handler)
 
@@ -64,18 +74,24 @@ Coach currently supports Box, Capsule, Cylinder, and Sphere elements.
 
 ### Add Joints
 
-Next, we add joints between the links of the pendulum. Currently, only Hinge joints are supported.
+Next, we add joints between the links of the pendulum. Currently, hinge and ball joints are supported.
 
 ```javascript
-var j0 = new Coach.joints.Hinge('joint0', {'A': 'pivot', 'B': 'link1'}, [0,2,0], [0,0,1]);
-var j1 = new Coach.joints.Hinge('joint1', {'A': 'link1', 'B': 'link2'}, [0.5,2,0], [0,0,1]);
-var j2 = new Coach.joints.Hinge('joint2', {'A': 'link2', 'B': 'link3'}, [1.0,2,0], [0,0,1]);
+var j0 = new Coach.joints.Ball('joint0', pivot, link1, [0,2,0], {
+  "torqueScale": [0.1, 1.0, 1.0],
+});
+var j1 = new Coach.joints.Ball('joint1', link1, link2, [0.5,2,0], {
+  "torqueScale": [0.1, 1.0, 1.0],
+});
+var j2 = new Coach.joints.Ball('joint2', link2, link3, [1.0,2,0], {
+  "torqueScale": [0.1, 1.0, 1.0],
+});
 world.addJoint(j0);
 world.addJoint(j1);
 world.addJoint(j2);
 ```
 
-Hinge Joints take 4 arguments: a unique string identifier, and Object identifying  the entities being joined together (where "A" is the first entity, and "B" the second), the initial position of the joint, and the rotation axis of the joint.
+Ball Joints take 5 arguments: a unique string identifier, the parent entity, the child entity, the initial position of the joint, and an optional options object. The "torqueScale" option is necessary to keep the simulation stable, after we add control in a later step.
 
 Entities and Joints can also be bundled up as a __Character__, which can be stored in a JSON representation. See the wiki for more information about creating Characters (coming soon!).
 
@@ -89,20 +105,23 @@ world.go()
 
 ### Control
 
-While Coach makes it easy to create simple passive simulations, its real power comes in controlling the simulation in physically-realistic ways.
+While Coach makes it easy to create simple passive simulations, its real power comes in controlling the simulation by manipulating joint torques.
 
 Next, we will use a [Proportional Derivative (PD) Controller](https://en.wikipedia.org/wiki/PID_controller) in order to set the angle of the last joint at 90 degrees. The benefit of using a PD controller over simply setting joint angles is that the PD Controller produces a torque, which is fed into the physics engine itself, producing realistic motion.
 
 ```javascript
-var pdc = new Coach.controllers.PDController(j2, 1.57);
+var pdc = new Coach.controllers.PDController3D(j1, {"X": 0, "Y": 0, "Z": 1.57});
+var pdc2 = new Coach.controllers.PDController3D(j2, {"X": 0, "Y": 1.57, "Z": 0});
 
 var simulationCallback = function(dt) {
   var torque = pdc.evaluate();
-  j2.addTorque(torque);
+  j1.addTorque(torque);
+  var torque2 = pdc2.evaluate();
+  j2.addTorque(torque2);
 };
 ```
 
-Here, we specify a PD controller to bring joint 2 to 1.57 radians (90 degrees). In a callback function, we evaluate the PD controller, and add the resulting torque to the joint. Finally, we update our existing world.go() function by passing in this callback as an argument
+Here, we specify a PD controller to bring joint 1 to 1.57 radians (90 degrees) about its local Z axis, and joint 2 about its Y axis. In a callback function, we evaluate the PD controller, and add the resulting torque to the joint. Finally, we update our existing world.go() function by passing in this callback as an argument. 
 
 ```javascript
 world.go({"simulationCallback": simulationCallback});
