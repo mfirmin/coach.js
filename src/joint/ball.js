@@ -17,7 +17,8 @@ function Ball(name, parent, child, pos, opts) {
     this.torque = [0,0,0];
 
     this.limits = (opts.limits === undefined) ? {} : opts.limits;
-    this.torqueLimit = (opts.torqueLimit  === undefined) ? 370 : opts.torqueLimit;
+    this.torqueScale = (opts.torqueScale === undefined) ? [1,1,1] : opts.torqueScale;
+    this.torqueLimit = (opts.torqueLimit  === undefined) ? 10000 : opts.torqueLimit;
 }
 
 Ball.prototype = Object.create(Joint.prototype);
@@ -78,14 +79,28 @@ Ball.prototype.getTorque = function() {
 
 Ball.prototype.getLimitedTorque = function() {
     var scope = this;
-    return this.torque.map(function(val) {
-        if (Math.abs(val) > scope.torqueLimit) {
-            val = scope.torqueLimit * val/Math.abs(val);
-        }
-        return val;
-    });
 
-    return this.torque;
+    // get the torque in child coordinates...
+    var qToChild = this.getAngle();
+    var qInverse = [qToChild[0], -qToChild[1], -qToChild[2], -qToChild[3]];
+    var cTorque = utils.rotateVector(this.torque, utils.RFromQuaternion(qInverse));
+
+    cTorque = [cTorque[0]*this.torqueScale[0], cTorque[1]*this.torqueScale[1], cTorque[2]*this.torqueScale[2]];
+
+    if (cTorque[0] > this.torqueLimit*this.torqueScale[0]) { cTorque[0] = this.torqueLimit*this.torqueScale[0]; }
+    if (cTorque[0] < -this.torqueLimit*this.torqueScale[0]) { cTorque[0] = -this.torqueLimit*this.torqueScale[0]; }
+    if (cTorque[1] > this.torqueLimit*this.torqueScale[1]) { cTorque[1] = this.torqueLimit*this.torqueScale[1]; }
+    if (cTorque[1] < -this.torqueLimit*this.torqueScale[1]) { cTorque[1] = -this.torqueLimit*this.torqueScale[1]; }
+    if (cTorque[2] > this.torqueLimit*this.torqueScale[2]) { cTorque[2] = this.torqueLimit*this.torqueScale[2]; }
+    if (cTorque[2] < -this.torqueLimit*this.torqueScale[2]) { cTorque[2] = -this.torqueLimit*this.torqueScale[2]; }
+
+    // Back to parent coordinates
+    cTorque = utils.rotateVector(cTorque, utils.RFromQuaternion(qToChild));
+
+    // to World coordinates.
+    var ret = utils.rotateVector(cTorque, utils.RFromQuaternion(this.parent.getOrientation()));
+
+    return ret;
 };
 
 Ball.prototype.addTorqueX = function(t) {

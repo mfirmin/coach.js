@@ -46,47 +46,55 @@ title: Robotic Arm
                 world.addEntity(link1);
 
                 world.addEntity(link2);
-                /*
                 world.addEntity(link3);
-                */
 
-                var j0 = new Coach.joints.Ball('joint0', pivot, link1, [0,1,0]);
-                var j1 = new Coach.joints.Ball('joint1', link1, link2, [0.,1.5,0] );
-                var j2 = new Coach.joints.Ball('joint2', link2, link3, [0.,2.0,0] );
+                var j0 = new Coach.joints.Ball('joint0', pivot, link1, [0,1,0], {
+                    "torqueScale": [1,.1,1],
+                });
+                var j1 = new Coach.joints.Ball('joint1', link1, link2, [0.,1.5,0], {
+                    "torqueScale": [1,0.1,1],
+                });
+                var j2 = new Coach.joints.Ball('joint2', link2, link3, [0.,2.0,0], {
+                    "torqueScale": [1,0.1,1],
+                });
 
                 world.addJoint(j0);
                 world.addJoint(j1);
-//                world.addJoint(j2);
+                world.addJoint(j2);
 
                 var renderCallback = function(camera, time) {
                     Coach.lib.$('#simRate').text((time*30.).toFixed(1));
                 }
 
-                var pdc0 = new Coach.controllers.PDController3D(j0, {"X": 0., "Y": 0, "Z": 0}, {"kp":300, "kd": 3});
-                var pdc1 = new Coach.controllers.PDController3D(j1, {"X": 0, "Y": 0, "Z": 0}, {"kp":300, "kd": 3});
-                var pdc2 = new Coach.controllers.PDController3D(j2, {"X": 0, "Y": 0, "Z": 0});
+                var pdc0 = new Coach.controllers.PDController3D(j0, {"X": 0., "Y": 0, "Z": 0}, {
+                    "kp": 300,
+                    "kd": 30
+                });
+                var pdc1 = new Coach.controllers.PDController3D(j1, {"X": 0, "Y": 0, "Z": 0}, {
+                    "kp": 200,
+                    "kd": 20
+                });
+                var pdc2 = new Coach.controllers.PDController3D(j2, {"X": 0, "Y": 0, "Z": 0}, {
+                    "kp": 200,
+                    "kd": 20
+                });
                 var controller = function(dt) {
                     var torque = pdc0.evaluate(dt);
                     j0.addTorque(torque);
 
+
                     var t2= pdc1.evaluate(dt);
                     j1.addTorque(t2);
 
-                    /*
-                    var t3 = pdc2.evaluate();
+                    var t3 = pdc2.evaluate(dt);
                     j2.addTorque(t3);
-                    */
                 };
 
-//                world.simulator.setCallback(controller);
                 world.go({renderCallback: renderCallback, simulationCallback: controller})
 
-                window.controller = pdc0;
+                window.c1 = pdc0;
                 window.c2 = pdc1;
-                window.j0 = j0;
-                window.j1 = j1;
-                window.l0 = link1;
-                window.l1 = link2;
+                window.c3 = pdc2;
             });
 
 

@@ -49,9 +49,9 @@ PDController3D.prototype.evaluate = function(dt) {
     torque[1] += -wRel[1]*(-this.kd);
     torque[2] += -wRel[2]*(-this.kd);
 
-    var ret = utils.rotateVector(torque, utils.RFromQuaternion(this.joint.parent.getOrientation()));
+//    var ret = utils.rotateVector(torque, utils.RFromQuaternion(this.joint.parent.getOrientation()));
 
-    return ret;
+    return torque;
 
     /*
     var axisAngle = utils.axisAngleFromQuaternion(rotQ);
