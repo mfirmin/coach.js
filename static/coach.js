@@ -34,10 +34,10 @@ Character.prototype.setFromJSON = function(data, overlayMesh) {
 
         var entity;
         switch (eInfo.type) {
-            case "SPHERE": 
+            case "SPHERE":
                 entity = new Sphere(name, eInfo.radius, { "mass": eInfo.mass });
                 break;
-            case "CAPSULE": 
+            case "CAPSULE":
                 entity = new Capsule(name, (eInfo.radiusTop + eInfo.radiusBottom)/2.0, eInfo.height, {"mass": eInfo.mass});
                 break;
             case "BOX":
@@ -51,17 +51,17 @@ Character.prototype.setFromJSON = function(data, overlayMesh) {
         this.addEntity(entity);
     }
     for (var j in data.joints) {
-        var jInfo = human.joints[j];
+        var jInfo = data.joints[j];
 
         var name = this.name + '.' + j;
 
         var joint;
         switch(jInfo.type) {
             case "HINGE":
-                joint = new Hinge(name, 
-                                  {"A": this.name+'.'+jInfo.A, "B": this.name+'.'+jInfo.B}, 
-                                  jInfo.position, 
-                                  jInfo.axis, 
+                joint = new Hinge(name,
+                                  this.entities[this.name+'.'+jInfo.A],this.entities[this.name+'.'+jInfo.B],
+                                  jInfo.position,
+                                  jInfo.axis,
                                   {"lo": jInfo.min[2], "hi": jInfo.max[2]});
 
                 break;
@@ -287,7 +287,7 @@ VPDController.prototype.constructor = VPDController;
 VPDController.prototype.evaluate = function(dt) {
 
 //    var currentAngle = Math.acos(this.part.getRotation()[3])*2;
-    var rot = this.part.getRotation();
+    var rot = this.part.getOrientation();
     var currentAngle = Math.atan2(2*(rot[3]*rot[2] + rot[0]*rot[1]), 1 - 2*(rot[1]*rot[1]+rot[2]*rot[2]));
 
     if (this.lastAngle === undefined) {
@@ -2497,8 +2497,8 @@ Simulator.prototype.step = function(callback) {
         Tpos.setY(T[1]); Tneg.setY(-T[1]);
         Tpos.setZ(T[2]); Tneg.setZ(-T[2]);
 
-        A.applyTorque(Tpos);
-        B.applyTorque(Tneg);
+//        A.applyTorque(Tpos);
+//        B.applyTorque(Tneg);
 
         j.resetTorque();
     }

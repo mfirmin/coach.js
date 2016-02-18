@@ -207,8 +207,8 @@ Simulator.prototype.step = function(callback) {
         Tpos.setY(T[1]); Tneg.setY(-T[1]);
         Tpos.setZ(T[2]); Tneg.setZ(-T[2]);
 
-        A.applyTorque(Tpos);
-        B.applyTorque(Tneg);
+//        A.applyTorque(Tpos);
+//        B.applyTorque(Tneg);
 
         j.resetTorque();
     }
