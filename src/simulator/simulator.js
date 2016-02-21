@@ -83,7 +83,7 @@ Simulator.prototype.addJoint = function(j) {
         var posA = this.entities[j.parent.name].entity.getPosition();
         var jointPosInA = [pos[0] - posA[0], pos[1] - posA[1], pos[2] - posA[2]];
 
-        if (j.B !== undefined) {
+        if (j.child !== undefined) {
             var posB = this.entities[j.child.name].entity.getPosition();
             var jointPosInB = [pos[0] - posB[0], pos[1] - posB[1], pos[2] - posB[2]];
             joint = new Ammo.btHingeConstraint(
@@ -203,6 +203,8 @@ Simulator.prototype.step = function(callback) {
 
         var T = j.getLimitedTorque();
 
+//        console.log(T);
+
         Tpos.setX(T[0]); Tneg.setX(-T[0]);
         Tpos.setY(T[1]); Tneg.setY(-T[1]);
         Tpos.setZ(T[2]); Tneg.setZ(-T[2]);
@@ -238,25 +240,23 @@ Simulator.prototype.step = function(callback) {
         var jointBullet = j.jointBullet;
         if (jointEntity.getType() === 'HINGE') {
             jointEntity.setAngle(jointBullet.getHingeAngle(), this.dt);
+            var tform = jointBullet.getFrameOffsetA();
+
+            var body = jointBullet.getRigidBodyA();
+            body.getMotionState().getWorldTransform(trans);
+
+            var pos = [trans.getOrigin().x(), trans.getOrigin().y(), trans.getOrigin().z()];
+
+            var jointVec = [tform.getOrigin().x(), tform.getOrigin().y(), tform.getOrigin().z()];
+
+            var axis = trans.getRotation().normalized();
+            var vec = utils.rotateVector(jointVec, utils.RFromQuaternion([axis.w(), axis.x(), axis.y(), axis.z()]));
+
+            jointEntity.setPosition([pos[0] + vec[0], pos[1] + vec[1], pos[2] + vec[2]]);
         } else if (jointEntity.getType() === 'BALL') {
             jointEntity.calculateOrientation();
             jointEntity.calculateAngularVelocity();
         }
-        /*
-        var tform = jointBullet.getFrameOffsetA();
-
-        var body = jointBullet.getRigidBodyA();
-        body.getMotionState().getWorldTransform(trans);
-
-        var pos = [trans.getOrigin().x(), trans.getOrigin().y(), trans.getOrigin().z()];
-
-        var jointVec = [tform.getOrigin().x(), tform.getOrigin().y(), tform.getOrigin().z()];
-
-        var axis = trans.getRotation().normalized();
-        var vec = utils.rotateVector(jointVec, utils.RFromQuaternion([axis.w(), axis.x(), axis.y(), axis.z()]));
-
-        jointEntity.setPosition([pos[0] + vec[0], pos[1] + vec[1], pos[2] + vec[2]]);
-        */
 
     };
     if (this.callback !== undefined) {

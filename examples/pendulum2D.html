@@ -1,0 +1,82 @@
+---
+title: Coach.js Pendulum example
+---
+<!doctype html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <title>Coach.js Example</title>
+        <link rel="stylesheet" type="text/css" href="../css/coach.css">
+        <script src="../static/coach.js"></script>
+    </head>
+    <body>
+        <h1>Coach.js Example: Pendulum</h1>
+        <div id='main'>
+            <div id='pendulum'>
+                <div id='simTime'>Simulation Time (% real time): <div id='simRate' style="display: inline-block">0</div></div>
+            </div>
+        </div>
+
+        <script>
+            var FPS = 30;
+            var dt = 0.00025;
+            var world = new Coach.World({
+                "FPS": FPS,
+                "dt": dt,
+                "2D": true,
+                "cameraOptions": {
+                    "type": "orthographic",
+                    "position": [0,1,5],
+                    "target": [0,1,0],
+                },
+            }, '#pendulum');
+            var ground = new Coach.entities.Box('ground', [5,1,5], {mass: 0, color: [100,100,100]});
+            var pivot  = new Coach.entities.Box('pivot', [0.1,0.1,0.1], {mass: 0, color: [255,0,0]});
+            var link1  = new Coach.entities.Box('link1', [0.5, 0.1, 0.1], {mass: 1, color: [0,255,0]});
+            var link2  = new Coach.entities.Box('link2', [0.5, 0.1, 0.1], {mass: 1, color: [0,0,255]});
+            var link3  = new Coach.entities.Box('link3', [0.5, 0.1, 0.1], {mass: 1, color: [0,255,255]});
+            ground.setPosition([0.,-0.5,0]);
+            pivot.setPosition([0,2,0]);
+            link1.setPosition([0.25,2,0]);
+            link2.setPosition([0.75,2,0]);
+            link3.setPosition([1.25,2,0]);
+            world.addEntity(ground);
+            world.addEntity(pivot);
+            world.addEntity(link1);
+            world.addEntity(link2);
+            world.addEntity(link3);
+
+            var j0 = new Coach.joints.Hinge('joint0', pivot, link1, [0,2,0],   [0,0,1]);
+            var j1 = new Coach.joints.Hinge('joint1', link1, link2, [0.5,2,0], [0,0,1]);
+            var j2 = new Coach.joints.Hinge('joint2', link2, link3, [1,2,0],   [0,0,1]);
+            world.addJoint(j0);
+            world.addJoint(j1);
+            world.addJoint(j2);
+
+            var renderCallback = function(camera, time) {
+                Coach.lib.$('#simRate').text((time*30.).toFixed(1));
+            }
+
+            var pdc = new Coach.controllers.PDController(j1, 0);
+//            var pdc2 = new Coach.controllers.PDController(j2, 1.5);
+
+            var vpd1 = new Coach.controllers.VPDController(j2, link3, 0, {kp:-300, kd: -30});
+
+            var controller = function(dt) {
+                var T = vpd1.evaluate(dt);
+                j2.addTorque(T);
+                var T2 = pdc.evaluate(dt);
+                j1.addTorque(T2);
+                /*
+                var T2 = pdc2.evaluate(dt);
+                j2.addTorque(T2);
+                */
+            };
+
+            world.go({renderCallback: renderCallback, simulationCallback: controller})
+
+
+        </script>
+
+    </body>
+</html>
