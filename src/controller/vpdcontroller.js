@@ -24,7 +24,7 @@ VPDController.prototype.evaluate = function(dt) {
 
 //    var currentAngle = Math.acos(this.part.getRotation()[3])*2;
     var rot = this.part.getOrientation();
-    var currentAngle = Math.atan2(2*(rot[3]*rot[2] + rot[0]*rot[1]), 1 - 2*(rot[1]*rot[1]+rot[2]*rot[2]));
+    var currentAngle = Math.atan2(2*(rot[0]*rot[3] + rot[1]*rot[2]), 1 - 2*(rot[2]*rot[2]+rot[3]*rot[3]));
 
     if (this.lastAngle === undefined) {
        this.lastAngle = currentAngle;
@@ -38,7 +38,7 @@ VPDController.prototype.evaluate = function(dt) {
 
     this.lastAngle = currentAngle;
 
-    return [0,0,ret];
+    return ret;
 };
 
 

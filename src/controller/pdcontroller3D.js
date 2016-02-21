@@ -24,7 +24,7 @@ function PDController3D(joint, goal, options) {
 
 PDController3D.prototype.constructor = PDController3D;
 
-PDController3D.prototype.evaluate = function(dt) {
+PDController3D.prototype.evaluate = function() {
 
     var torque = [0,0,0];
 

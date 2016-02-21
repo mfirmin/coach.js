@@ -12,7 +12,7 @@ function Hinge(name, parent, child, pos, axis, opts) {
     this.angle = (opts.angle === undefined) ? 0 : opts.angle;
     this.angularVelocity = (opts.angularVelocity === undefined) ? 0 : opts.angularVelocity;
     this.angularVelocityPrev = this.angularVelocity;
-    this.torque = 0;
+    this.torque = [0,0,0];
 
     limits = (opts.limits === undefined) ? {} : opts.limits;
 
@@ -68,7 +68,7 @@ Hinge.prototype.setAngularVelocity = function(angVel) {
 };
 
 Hinge.prototype.resetTorque = function() {
-    this.setTorque(0);
+    this.setTorque([0,0,0]);
 };
 
 Hinge.prototype.setTorque = function(t) {
@@ -80,17 +80,16 @@ Hinge.prototype.addTorque = function(t) {
 };
 
 Hinge.prototype.getTorque = function() {
-    return [0,0,this.torque];
+    return this.torque;
 };
 
 Hinge.prototype.getLimitedTorque = function() {
     var ret = this.torque;
-    if (Math.abs(ret) > this.torqueLimit) {
-        ret = this.torqueLimit * ret/Math.abs(ret);
-        return [0,0,ret];
+    if (Math.abs(ret[2]) > this.torqueLimit) {
+        ret[2] = this.torqueLimit * ret[2]/Math.abs(ret[2]);
     }
 
-    return [0,0,this.torque];
+    return ret;
 };
 
 Hinge.prototype.getType = function() {

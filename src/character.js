@@ -61,7 +61,12 @@ Character.prototype.setFromJSON = function(data, overlayMesh) {
                                   this.entities[this.name+'.'+jInfo.A],this.entities[this.name+'.'+jInfo.B],
                                   jInfo.position,
                                   jInfo.axis,
-                                  {"lo": jInfo.min[2], "hi": jInfo.max[2]});
+                                  {
+                                      limits: {
+                                          "lo": jInfo.min[2],
+                                          "hi": jInfo.max[2]
+                                      }
+                                  });
 
                 break;
             default:
