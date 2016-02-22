@@ -63,6 +63,7 @@ Simulator.prototype.addJoint = function(j) {
 
         joint = new Ammo.btPoint2PointConstraint(this.entities[j.parent.name].body, this.entities[j.child.name].body, pivotInA, pivotInB);
 
+        /*
         if (j.limits["X"] !== undefined) {
             joint.setLimit(3, j.limits["X"][0]*Math.PI/180, j.limits["X"][1]*Math.PI/180);
         }
@@ -72,6 +73,7 @@ Simulator.prototype.addJoint = function(j) {
         if (j.limits["Z"] !== undefined) {
             joint.setLimit(5, j.limits["Z"][0]*Math.PI/180, j.limits["Z"][1]*Math.PI/180);
         }
+        */
         /*
         if (j.B === undefined) {
             joint = new Ammo.btPoint2PointConstraint(this.entities[j.A].body, new Ammo.btVector3(jointPosInA[0], jointPosInA[1], jointPosInA[2]));
@@ -203,8 +205,6 @@ Simulator.prototype.step = function(callback) {
 
         var T = j.getLimitedTorque();
 
-//        console.log(T);
-
         Tpos.setX(T[0]); Tneg.setX(-T[0]);
         Tpos.setY(T[1]); Tneg.setY(-T[1]);
         Tpos.setZ(T[2]); Tneg.setZ(-T[2]);
@@ -231,7 +231,7 @@ Simulator.prototype.step = function(callback) {
             entity.setOrientation([rot.w(), rot.x(), rot.y(), rot.z()]);
 
             var angVel = body.getAngularVelocity();
-            entity.setAngularVelocity([angVel.x(), angVel.y(), angVel.z()])
+            entity.setAngularVelocity([angVel.x(), angVel.y(), angVel.z()]);
         }
     };
     for (var name in this.joints) {
