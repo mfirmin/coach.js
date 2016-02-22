@@ -9,8 +9,8 @@ function Ball(name, parent, child, pos, opts) {
 
     this.position = pos;
 
-    this.angleLast = [0,0,0,0];
-    this.angle = [0,0,0,0];
+    this.angleLast = [1,0,0,0];
+    this.angle = [1,0,0,0];
 
     this.angularVelocity = [0,0,0];
     this.angularVelocityPrev = this.angularVelocity;

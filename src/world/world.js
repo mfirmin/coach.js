@@ -74,9 +74,13 @@ World.prototype.addCharacter = function(character, opts) {
     for (var e in character.entities) {
 
         var name = e.slice(e.indexOf('.')+1);
-        var mesh = {"faces": opts.meshOverlay[name].faces, "vertices": opts.meshOverlay[name].vertices, "color": opts.meshOverlay[name].color}
+        var eOpts = {};
+        if (opts !== undefined && opts.meshOverlay !== undefined) {
+            var mesh = {"faces": opts.meshOverlay[name].faces, "vertices": opts.meshOverlay[name].vertices, "color": opts.meshOverlay[name].color}
+            eOpts["mesh"] = mesh;
 
-        this.addEntity(character.entities[e], {"mesh": mesh});
+        }
+        this.addEntity(character.entities[e], eOpts);
     }
     for (var j in character.joints) {
         this.addJoint(character.joints[j]);
