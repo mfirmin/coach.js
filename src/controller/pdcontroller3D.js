@@ -32,6 +32,7 @@ PDController3D.prototype.evaluate = function() {
 
     var cInverse = [qRel[0], -qRel[1], -qRel[2], -qRel[3]];
 
+    // extra needed on top of qRel to rotate into goal!
     var qErr = utils.multiplyQuaternions(cInverse, this.goal);
 
     var sinTheta = Math.sqrt(qErr[1]*qErr[1]+qErr[2]*qErr[2]+qErr[3]*qErr[3]);
@@ -43,14 +44,15 @@ PDController3D.prototype.evaluate = function() {
         torque = [qErr[1]*multiplier, qErr[2]*multiplier, qErr[3]*multiplier];
     }
 
+    // torque in parent coords
     torque = utils.rotateVector(torque, utils.RFromQuaternion(qRel));
+    // wRel in parent coords
     var wRel = this.joint.getAngularVelocity();
     torque[0] += -wRel[0]*(-this.kd);
     torque[1] += -wRel[1]*(-this.kd);
     torque[2] += -wRel[2]*(-this.kd);
 
-//    var ret = utils.rotateVector(torque, utils.RFromQuaternion(this.joint.parent.getOrientation()));
-
+    // torque in parent coords
     return torque;
 
     /*

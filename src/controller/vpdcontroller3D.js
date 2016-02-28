@@ -1,4 +1,6 @@
 
+var utils = require('../utils/utils');
+
 var KP = 300;
 var KD = 30;
 
@@ -33,6 +35,7 @@ VPDController3D.prototype.evaluate = function(dt) {
 
     var cInverse = [qRel[0], -qRel[1], -qRel[2], -qRel[3]];
 
+    // qErr in world coordinates
     var qErr = utils.multiplyQuaternions(cInverse, this.goal);
 
     var sinTheta = Math.sqrt(qErr[1]*qErr[1]+qErr[2]*qErr[2]+qErr[3]*qErr[3]);
@@ -44,33 +47,28 @@ VPDController3D.prototype.evaluate = function(dt) {
         torque = [qErr[1]*multiplier, qErr[2]*multiplier, qErr[3]*multiplier];
     }
 
-//    torque = utils.rotateVector(torque, utils.RFromQuaternion(qRel));
+    torque = utils.rotateVector(torque, utils.RFromQuaternion(qRel));
+    // wRel in world coords
     var wRel = this.part.getAngularVelocity();
     torque[0] += -wRel[0]*(-this.kd);
     torque[1] += -wRel[1]*(-this.kd);
     torque[2] += -wRel[2]*(-this.kd);
 
-//    var ret = utils.rotateVector(torque, utils.RFromQuaternion(this.joint.parent.getOrientation()));
+    // rotate torque into parent coords
+    torque = utils.rotateVector(torque, utils.RFromQuaternion(utils.getQuaternionInverse(this.joint.parent.getOrientation())));
 
     return torque;
 
+};
 
-//    var rot = this.part.getOrientation();
-//    var currentAngle = Math.atan2(2*(rot[0]*rot[3] + rot[1]*rot[2]), 1 - 2*(rot[2]*rot[2]+rot[3]*rot[3]));
-//
-//    if (this.lastAngle === undefined) {
-//       this.lastAngle = currentAngle;
-//    }
-//
-//    var currentAngularVelocity = (currentAngle - this.lastAngle)*1/dt;
-//
-//    var goal = -this.goal;
-//
-//    var ret = this.kp*(goal - currentAngle) + this.kd*(0 - currentAngularVelocity);
-//
-//    this.lastAngle = currentAngle;
-//
-//    return ret;
+VPDController3D.prototype.setGoal = function(g) {
+
+    var goalEuler = [
+        (g["X"] === undefined) ? 0 : g["X"],
+        (g["Y"] === undefined) ? 0 : g["Y"],
+        (g["Z"] === undefined) ? 0 : g["Z"]
+    ];
+    this.goal = utils.normalizeQuaternion(utils.quaternionFromEulerAngles(goalEuler));
 };
 
 
