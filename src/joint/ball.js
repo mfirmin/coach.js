@@ -9,8 +9,8 @@ function Ball(name, parent, child, pos, opts) {
 
     this.position = pos;
 
-    this.angleLast = [0,0,0,0];
-    this.angle = [0,0,0,0];
+    this.angleLast = [1,0,0,0];
+    this.angle = [1,0,0,0];
 
     this.angularVelocity = [0,0,0];
     this.angularVelocityPrev = this.angularVelocity;
@@ -54,8 +54,8 @@ Ball.prototype.calculateAngularVelocity = function() {
 
     var wRel = [cAngVel[0] - pAngVel[0],cAngVel[1] - pAngVel[1],cAngVel[2] - pAngVel[2]];
 
-//    console.log(this.parent.getOrientation());
 
+    // angVel is in world coords, rotate it by parent's orientation to get parent coords
     this.angularVelocity = utils.rotateVector(wRel, utils.RFromQuaternion(utils.getQuaternionInverse(this.parent.getOrientation())));
 //    this.angularVelocity = wRel;
 };
@@ -114,6 +114,7 @@ Ball.prototype.addTorqueZ = function(t) {
 };
 
 Ball.prototype.addTorque = function(t) {
+    // torque in parent coords
     this.torque[0] += t[0];
     this.torque[1] += t[1];
     this.torque[2] += t[2];

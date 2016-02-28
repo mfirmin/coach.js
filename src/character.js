@@ -24,7 +24,9 @@ Character.prototype.initialize = function() {
 
 Character.prototype.setFromJSON = function(data, overlayMesh) {
 
-    this._overlayMesh = overlayMesh;
+    if (overlayMesh !== undefined) {
+        this._overlayMesh = overlayMesh;
+    }
 
     for (var e in data.parts) {
         var eInfo = data.parts[e];
@@ -58,7 +60,8 @@ Character.prototype.setFromJSON = function(data, overlayMesh) {
         switch(jInfo.type) {
             case "HINGE":
                 joint = new Hinge(name,
-                                  this.entities[this.name+'.'+jInfo.A],this.entities[this.name+'.'+jInfo.B],
+                                  this.entities[this.name+'.'+jInfo.A],
+                                  this.entities[this.name+'.'+jInfo.B],
                                   jInfo.position,
                                   jInfo.axis,
                                   {
@@ -68,6 +71,24 @@ Character.prototype.setFromJSON = function(data, overlayMesh) {
                                       }
                                   });
 
+                break;
+            case "BALL":
+                joint = new Ball(name,
+                                 this.entities[this.name+'.'+jInfo.A],
+                                 this.entities[this.name+'.'+jInfo.B],
+                                 jInfo.position,
+                                 {
+                                     limits: {
+                                         "X": [jInfo.min[0], jInfo.max[0]],
+                                         "Y": [jInfo.min[1], jInfo.max[1]],
+                                         "Z": [jInfo.min[2], jInfo.max[2]],
+                                     },
+                                     torqueScale: [
+                                         jInfo.torqueScale[0],
+                                         jInfo.torqueScale[1],
+                                         jInfo.torqueScale[2]
+                                     ]
+                                 });
                 break;
             default:
                 throw "Unknown Joint type: " + jInfo.type;
