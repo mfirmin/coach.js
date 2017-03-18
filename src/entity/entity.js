@@ -1,67 +1,65 @@
+class Entity {
+    init(name, opts = {}) {
+        this.name = name;
 
-var utils = require('../utils/utils');
+        this._position = (opts.position === undefined) ?
+            [0, 0, 0] : opts.position;
+        this._orientation = (opts.position === undefined) ?
+            [0, 0, 0, 1] : opts.orientation; // q.w, q.v
+        this._angularVelocity = (opts.angularVelocity === undefined) ?
+            [0, 0, 0] : opts.angularVelocity;
 
-function Entity(name, opts) {
+        this._mass = (opts.mass === undefined) ? 0 : opts.mass;
+        this._color = (opts.color === undefined) ? [130, 130, 130] : opts.color;
 
-    this.opts = (opts === undefined) ? {} : opts;
+        this.initialize();
+    }
 
-    this.name = name;
+    // eslint-disable-next-line class-methods-use-this
+    initialize() { }
 
-    this.position = [0,0,0];
-    this.orientation = [0,0,0,0]; // q.w, q.v
-    this.angularVelocity = [0,0,0];
-    this.mass = (opts.mass === undefined) ? 0 : opts.mass;
-    this.color = (opts.color === undefined) ? [130,130,130] : opts.color;
+    set position(xyz) {
+        this._position[0] = xyz[0];
+        this._position[1] = xyz[1];
+        this._position[2] = xyz[2];
+    }
 
-    this.initialize();
+    set orientation(q) {
+        this._orientation[0] = q[0];
+        this._orientation[1] = q[1];
+        this._orientation[2] = q[2];
+        this._orientation[3] = q[3];
+    }
+
+    set angularVelocity(a) {
+        // Angular Velocity expressed in WORLD COORDINATES!
+
+        this._angularVelocity[0] = a[0];
+        this._angularVelocity[1] = a[1];
+        this._angularVelocity[2] = a[2];
+
+        // DO NOT INCLUDE THIS LINE 7 FEB 2016
+        // this.angularVelocity = utils.rotateVector(
+        //     this.angularVelocity,
+        //     utils.RFromQuaternion(this.orientation),
+        // );
+    }
+
+    get position() {
+        return this._position;
+    }
+    get orientation() {
+        return this._orientation;
+    }
+
+    get angularVelocity() {
+        return this._angularVelocity;
+    }
+
+    get mass() {
+        return this._mass;
+    }
+
 }
 
-Entity.prototype.constructor = Entity;
-
-Entity.prototype.initialize = function() {
-};
-
-Entity.prototype.setPosition = function(xyz) {
-    this.position[0] = xyz[0];
-    this.position[1] = xyz[1];
-    this.position[2] = xyz[2];
-};
-
-Entity.prototype.setOrientation = function(q) {
-    this.orientation[0] = q[0];
-    this.orientation[1] = q[1];
-    this.orientation[2] = q[2];
-    this.orientation[3] = q[3];
-};
-
-Entity.prototype.setAngularVelocity = function(a) {
-    // Angular Velocity expressed in WORLD COORDINATES!
-
-    this.angularVelocity[0] = a[0];
-    this.angularVelocity[1] = a[1];
-    this.angularVelocity[2] = a[2];
-
-    // DO NOT INCLUDE THIS LINE 7 FEB 2016
-//    this.angularVelocity = utils.rotateVector(this.angularVelocity, utils.RFromQuaternion(this.orientation));
-};
-
-Entity.prototype.getPosition = function() {
-    return this.position;
-};
-Entity.prototype.getOrientation = function() {
-    return this.orientation;
-};
-
-Entity.prototype.getAngle = function() {
-
-};
-
-Entity.prototype.getAngularVelocity = function() {
-    return this.angularVelocity;
-};
-
-Entity.prototype.getMass = function() {
-    return this.mass;
-};
-
-module.exports = Entity;
+export default Entity;

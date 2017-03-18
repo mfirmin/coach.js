@@ -1,46 +1,44 @@
 
-var KP = 300;
-var KD = 30;
+const KP = 300;
+const KD = 30;
 
-function VPDController(joint, part, goal, options) {
+class VPDController {
+    init(joint, part, goal, options = {}) {
+        this.joint = joint;
+        this.part = part;
+        this.goal = goal;
 
-    this.joint = joint;
-    this.part = part;
-    this.goal = goal;
+        this.kp = (options.kp === undefined) ? KP : options.kp;
+        this.kd = (options.kd === undefined) ? KD : options.kd;
+        this.goalVelocity = (options.goalVelocity === undefined) ? 0 : options.goalVelocity;
 
-    options = (options === undefined) ? {} : options;
-
-    this.kp = (options.kp === undefined) ? KP : options.kp;
-    this.kd = (options.kd === undefined) ? KD : options.kd;
-    this.goalVelocity = (options.goalVelocity === undefined) ? 0 : optionsgoalVelocity;
-
-    this.lastAngle;
-
-}
-
-VPDController.prototype.constructor = VPDController;
-
-VPDController.prototype.evaluate = function(dt) {
-
-//    var currentAngle = Math.acos(this.part.getRotation()[3])*2;
-    var rot = this.part.getOrientation();
-    var currentAngle = Math.atan2(2*(rot[0]*rot[3] + rot[1]*rot[2]), 1 - 2*(rot[2]*rot[2]+rot[3]*rot[3]));
-
-    if (this.lastAngle === undefined) {
-       this.lastAngle = currentAngle;
+        this.lastAngle = NaN;
     }
 
-    var currentAngularVelocity = (currentAngle - this.lastAngle)*1/dt;
+    evaluate(dt) {
+        const rot = this.part.getOrientation();
+        const currentAngle = Math.atan2(
+            2 * ((rot[0] * rot[3]) + (rot[1] * rot[2])),
+            1 - (2 * ((rot[2] * rot[2]) + (rot[3] * rot[3]))),
+        );
 
-    var goal = -this.goal;
+        if (Number.isNaN(this.lastAngle)) {
+            this.lastAngle = currentAngle;
+        }
 
-    var ret = this.kp*(goal - currentAngle) + this.kd*(0 - currentAngularVelocity);
+        const currentAngularVelocity = (currentAngle - this.lastAngle) / dt;
 
-    this.lastAngle = currentAngle;
+        const goal = -this.goal;
 
-    return ret;
-};
+        const angErr = goal - currentAngle;
+        const angVelErr = 0 - currentAngularVelocity;
 
+        const ret = (this.kp * angErr) + (this.kd * angVelErr);
 
+        this.lastAngle = currentAngle;
 
-module.exports = VPDController;
+        return ret;
+    }
+}
+
+export default VPDController;

@@ -1,18 +1,31 @@
-function Joint(name, parent, child, opts) {
+class Joint {
+    init(name, parent, child, opts = {}) {
+        this._parent = parent;
+        this._child = child;
 
-    this.opts = (opts === undefined) ? {} : opts;
+        this.name = name;
 
-    this.parent = parent;
-    this.child = child;
+        this.initialize();
+    }
 
-    this.name = name;
+    get parent() {
+        return this._parent;
+    }
 
-    this.initialize();
+    set parent(p) {
+        this._parent = p;
+    }
+
+    get child() {
+        return this._child;
+    }
+
+    set child(p) {
+        this._child = p;
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    initialize() { }
 }
 
-Joint.prototype.constructor = Joint;
-
-Joint.prototype.initialize = function() {
-};
-
-module.exports = Joint;
+export default Joint;

@@ -1,136 +1,164 @@
-var Joint = require('./joint');
-var utils = require('../utils/utils');
+import Joint from './joint';
+import utils from '../utils/utils';
 
-function Ball(name, parent, child, pos, opts) {
+class Ball extends Joint {
+    init(name, parent, child, pos, opts = {}) {
+        super(name, parent, child);
 
-    Joint.call(this, name, parent, child);
+        this._position = pos;
 
-    opts = (opts === undefined) ? {} : opts;
+        this._angleLast = [1, 0, 0, 0];
+        this._angle = [1, 0, 0, 0];
 
-    this.position = pos;
+        this._angularVelocity = [0, 0, 0];
+        this._angularVelocityPrev = [
+            this._angularVelocity[0],
+            this._angularVelocity[1],
+            this._angularVelocity[2],
+        ];
 
-    this.angleLast = [1,0,0,0];
-    this.angle = [1,0,0,0];
+        this._torque = [0, 0, 0];
 
-    this.angularVelocity = [0,0,0];
-    this.angularVelocityPrev = this.angularVelocity;
-    this.torque = [0,0,0];
+        this._limits = (opts.limits === undefined) ? {} : opts.limits;
+        this._torqueScale = (opts.torqueScale === undefined) ? [1, 1, 1] : opts.torqueScale;
+        this._torqueLimit = (opts.torqueLimit === undefined) ? 10000 : opts.torqueLimit;
 
-    this.limits = (opts.limits === undefined) ? {} : opts.limits;
-    this.torqueScale = (opts.torqueScale === undefined) ? [1,1,1] : opts.torqueScale;
-    this.torqueLimit = (opts.torqueLimit  === undefined) ? 10000 : opts.torqueLimit;
+        this._type = 'BALL';
+    }
+
+    initialize() {
+        super.initialize();
+    }
+
+    // Calculates joint's orientation in terms of Parent coordinates
+    // (ie, quaternion to rotate parent to child.)
+    calculateOrientation() {
+        const pOrientation = this.parent.getOrientation();
+        const cOrientation = this.child.getOrientation();
+
+        this._angle = utils.multiplyQuaternions(
+            utils.getQuaternionInverse(pOrientation),
+            cOrientation,
+        );
+    }
+
+    // Calculates joint's angular velocity in Parent coordinate frame
+    calculateAngularVelocity() {
+        const pAngVel = this.parent.getAngularVelocity();
+        const cAngVel = this.child.getAngularVelocity();
+
+        const wRel = [cAngVel[0] - pAngVel[0], cAngVel[1] - pAngVel[1], cAngVel[2] - pAngVel[2]];
+
+        // angVel is in world coords, rotate it by parent's orientation to get parent coords
+        this._angularVelocity = utils.rotateVector(
+            wRel,
+            utils.RFromQuaternion(utils.getQuaternionInverse(this.parent.getOrientation())),
+        );
+    //    this._angularVelocity = wRel;
+    }
+
+    updateAngle(angs, dt) {
+        this._angle = angs;
+    }
+
+
+    getLimitedTorque() {
+        // get the torque in child coordinates...
+        const qToChild = this.getAngle();
+        const qInverse = [qToChild[0], -qToChild[1], -qToChild[2], -qToChild[3]];
+        let cTorque = utils.rotateVector(this._torque, utils.RFromQuaternion(qInverse));
+
+        cTorque = [
+            cTorque[0] * this._torqueScale[0],
+            cTorque[1] * this._torqueScale[1],
+            cTorque[2] * this._torqueScale[2],
+        ];
+
+        if (cTorque[0] > this._torqueLimit * this._torqueScale[0]) {
+            cTorque[0] = this._torqueLimit * this._torqueScale[0];
+        }
+        if (cTorque[1] > this._torqueLimit * this._torqueScale[1]) {
+            cTorque[1] = this._torqueLimit * this._torqueScale[1];
+        }
+        if (cTorque[2] > this._torqueLimit * this._torqueScale[2]) {
+            cTorque[2] = this._torqueLimit * this._torqueScale[2];
+        }
+
+        if (cTorque[0] < -this._torqueLimit * this._torqueScale[0]) {
+            cTorque[0] = -this._torqueLimit * this._torqueScale[0];
+        }
+        if (cTorque[1] < -this._torqueLimit * this._torqueScale[1]) {
+            cTorque[1] = -this._torqueLimit * this._torqueScale[1];
+        }
+        if (cTorque[2] < -this._torqueLimit * this._torqueScale[2]) {
+            cTorque[2] = -this._torqueLimit * this._torqueScale[2];
+        }
+
+        // Back to parent coordinates
+        cTorque = utils.rotateVector(cTorque, utils.RFromQuaternion(qToChild));
+
+        // to World coordinates.
+        return utils.rotateVector(cTorque, utils.RFromQuaternion(this.parent.getOrientation()));
+    }
+
+    addTorqueX(t) {
+        this._torque[0] += t;
+    }
+    addTorqueY(t) {
+        this._torque[1] += t;
+    }
+    addTorqueZ(t) {
+        this._torque[2] += t;
+    }
+
+    addTorque(t) {
+        // torque in parent coords
+        this._torque[0] += t[0];
+        this._torque[1] += t[1];
+        this._torque[2] += t[2];
+    }
+
+    resetTorque() {
+        this.torque = [0, 0, 0];
+    }
+
+
+    get position() {
+        return this._position;
+    }
+
+    set position(xyz) {
+        this._position[0] = xyz[0];
+        this._position[1] = xyz[1];
+        this._position[2] = xyz[2];
+    }
+
+    get angle() {
+        return this._angle;
+    }
+
+    set angle(angs) {
+        this._angle = angs;
+    }
+
+    get angularVelocity() {
+        return this._angularVelocity;
+    }
+
+    get torque() {
+        return this._torque;
+    }
+
+    set torque(t) {
+        this._torque[0] = t[0];
+        this._torque[1] = t[1];
+        this._torque[2] = t[2];
+    }
+
+    get type() {
+        return this._type;
+    }
+
 }
 
-Ball.prototype = Object.create(Joint.prototype);
-
-Ball.prototype.constructor = Ball;
-
-Ball.prototype.initialize = function() {
-};
-Ball.prototype.getPosition = function() {
-    return this.position;
-};
-
-Ball.prototype.setPosition = function(xyz) {
-    this.position[0] = xyz[0];
-    this.position[1] = xyz[1];
-    this.position[2] = xyz[2];
-};
-
-// Calculates joint's orientation in terms of Parent coordinates (ie, quaternion to rotate parent to child.)
-Ball.prototype.calculateOrientation = function() {
-    var pOrientation = this.parent.getOrientation();
-    var cOrientation = this.child.getOrientation();
-
-    this.angle = utils.multiplyQuaternions(utils.getQuaternionInverse(pOrientation), cOrientation);
-
-};
-
-// Calculates joint's angular velocity in Parent coordinate frame
-Ball.prototype.calculateAngularVelocity = function() {
-
-    var pAngVel = this.parent.getAngularVelocity();
-    var cAngVel = this.child.getAngularVelocity();
-
-    var wRel = [cAngVel[0] - pAngVel[0],cAngVel[1] - pAngVel[1],cAngVel[2] - pAngVel[2]];
-
-
-    // angVel is in world coords, rotate it by parent's orientation to get parent coords
-    this.angularVelocity = utils.rotateVector(wRel, utils.RFromQuaternion(utils.getQuaternionInverse(this.parent.getOrientation())));
-//    this.angularVelocity = wRel;
-};
-
-Ball.prototype.setAngle = function(angs, dt) {
-    this.angle = angs;
-    return;
-};
-
-Ball.prototype.getAngle = function() {
-    return this.angle;
-};
-
-Ball.prototype.getAngularVelocity = function() {
-    return this.angularVelocity;
-};
-
-Ball.prototype.getTorque = function() {
-    return this.torque;
-};
-
-Ball.prototype.getLimitedTorque = function() {
-    var scope = this;
-
-    // get the torque in child coordinates...
-    var qToChild = this.getAngle();
-    var qInverse = [qToChild[0], -qToChild[1], -qToChild[2], -qToChild[3]];
-    var cTorque = utils.rotateVector(this.torque, utils.RFromQuaternion(qInverse));
-
-    cTorque = [cTorque[0]*this.torqueScale[0], cTorque[1]*this.torqueScale[1], cTorque[2]*this.torqueScale[2]];
-
-    if (cTorque[0] > this.torqueLimit*this.torqueScale[0]) { cTorque[0] = this.torqueLimit*this.torqueScale[0]; }
-    if (cTorque[0] < -this.torqueLimit*this.torqueScale[0]) { cTorque[0] = -this.torqueLimit*this.torqueScale[0]; }
-    if (cTorque[1] > this.torqueLimit*this.torqueScale[1]) { cTorque[1] = this.torqueLimit*this.torqueScale[1]; }
-    if (cTorque[1] < -this.torqueLimit*this.torqueScale[1]) { cTorque[1] = -this.torqueLimit*this.torqueScale[1]; }
-    if (cTorque[2] > this.torqueLimit*this.torqueScale[2]) { cTorque[2] = this.torqueLimit*this.torqueScale[2]; }
-    if (cTorque[2] < -this.torqueLimit*this.torqueScale[2]) { cTorque[2] = -this.torqueLimit*this.torqueScale[2]; }
-
-    // Back to parent coordinates
-    cTorque = utils.rotateVector(cTorque, utils.RFromQuaternion(qToChild));
-
-    // to World coordinates.
-    var ret = utils.rotateVector(cTorque, utils.RFromQuaternion(this.parent.getOrientation()));
-
-    return ret;
-};
-
-Ball.prototype.addTorqueX = function(t) {
-    this.torque[0] += t;
-};
-Ball.prototype.addTorqueY = function(t) {
-    this.torque[1] += t;
-};
-Ball.prototype.addTorqueZ = function(t) {
-    this.torque[2] += t;
-};
-
-Ball.prototype.addTorque = function(t) {
-    // torque in parent coords
-    this.torque[0] += t[0];
-    this.torque[1] += t[1];
-    this.torque[2] += t[2];
-};
-
-Ball.prototype.setTorque = function(t) {
-    this.torque = t;
-};
-
-Ball.prototype.resetTorque = function() {
-    this.setTorque([0,0,0]);
-};
-
-
-Ball.prototype.getType = function() {
-    return 'BALL';
-};
-
-module.exports = Ball;
+export default Ball;
