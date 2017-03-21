@@ -128,250 +128,9 @@ class Renderer {
         }
     }
 
-    addCylinder(e, options = {}) {
-        const c = (options.mesh !== undefined && options.mesh.color !== undefined) ?
-            options.mesh.color : e.color;
-
-        const cstring = `rgb(${c[0]},${c[1]},${c[2]})`;
-    //    const cstring = 'rgb(255,0,0)';
-        const color = new THREE.Color(cstring);
-
-        const cylinder = new THREE.Object3D();
-
-        const mat = new THREE.MeshPhongMaterial({
-            color,
-            specular:  0x030303,
-            shininess: 10,
-            shading:   THREE.SmoothShading,
-        });
-
-        if (options.mesh === undefined) {
-            const cylGeom = new THREE.CylinderGeometry(
-                e.getRadius(),
-                e.getRadius(),
-                e.getHeight(),
-                32,
-                4,
-                false,
-            );
-            const cylMesh = new THREE.Mesh(cylGeom, mat);
-            cylinder.add(cylMesh);
-        } else {
-            const geom = new THREE.Geometry();
-            const chuller = new ConvexHullGrahamScan();
-            for (let i = 0; i < options.mesh.vertices.length; i++) {
-                geom.vertices.push(new THREE.Vector3(
-                    options.mesh.vertices[i][0],
-                    options.mesh.vertices[i][1],
-                    options.mesh.vertices[i][2],
-                ));
-            }
-            for (let i = 0; i < options.mesh.faces.length; i++) {
-                geom.faces.push(new THREE.Face3(
-                options.mesh.faces[i][0],
-                    options.mesh.faces[i][1],
-                    options.mesh.faces[i][2],
-                ));
-                chuller.addPoint(
-                    options.mesh.vertices[options.mesh.faces[i][0]][0],
-                    options.mesh.vertices[options.mesh.faces[i][0]][1],
-                );
-                chuller.addPoint(
-                    options.mesh.vertices[options.mesh.faces[i][1]][0],
-                    options.mesh.vertices[options.mesh.faces[i][1]][1],
-                );
-                chuller.addPoint(
-                    options.mesh.vertices[options.mesh.faces[i][2]][0],
-                    options.mesh.vertices[options.mesh.faces[i][2]][1],
-                );
-            }
-
-            geom.computeFaceNormals();
-            geom.computeVertexNormals();
-            const mesh = new THREE.Mesh(geom, mat);
-
-            const hullPoints = chuller.getHull();
-            const lineGeo = new THREE.Geometry();
-            for (let i = 0; i < hullPoints.length; i++) {
-                lineGeo.vertices.push(
-                    new THREE.Vector3(
-                        hullPoints[i].x,
-                        hullPoints[i].y,
-                        0.003 + options.mesh.vertices[0][2],
-                    ),
-                );
-            }
-            const lineMat = new THREE.LineBasicMaterial({
-                color:     new THREE.Color(0, 0, 0),
-                linewidth: 1,
-            });
-            const line = new THREE.Line(lineGeo, lineMat);
-            cylinder.add(line);
-            cylinder.add(mesh);
-        }
-
-        return cylinder;
-    }
-
-    addCapsule(e, options) {
-        options = (options === undefined) ? {} : options;
-
-        const c = (options.mesh !== undefined && options.mesh.color !== undefined) ? options.mesh.color : e.color;
-
-        const cstring = `rgb(${c[0]},${c[1]},${c[2]})`;
-    //    const cstring = 'rgb(255,0,0)';
-        const color = new THREE.Color(cstring);
-
-        const capsule = new THREE.Object3D();
-        const mat = new THREE.MeshPhongMaterial({ color, specular: 0x030303, shininess: 10, shading: THREE.SmoothShading });
-        if (options.mesh === undefined) {
-            const cylGeom = new THREE.CylinderGeometry(e.getRadius(), e.getRadius(), e.getHeight(), 32, 4, true);
-            const sph_geo = new THREE.SphereGeometry(e.getRadius(), 32, 32);
-            const cylMesh = new THREE.Mesh(cylGeom, mat);
-            const top_mesh = new THREE.Mesh(sph_geo, mat);
-            const btm_mesh = new THREE.Mesh(sph_geo, mat);
-            top_mesh.position.y = e.getHeight() / 2.0;
-            btm_mesh.position.y = -e.getHeight() / 2.0;
-
-            capsule.add(cylMesh);
-            capsule.add(top_mesh);
-            capsule.add(btm_mesh);
-        } else {
-            const geo = new THREE.Geometry();
-            const chuller = new ConvexHullGrahamScan();
-            for (const i = 0; i < options.mesh.vertices.length; i++) {
-                geo.vertices.push(new THREE.Vector3(options.mesh.vertices[i][0], options.mesh.vertices[i][1], options.mesh.vertices[i][2]));
-            }
-            for (const i = 0; i < options.mesh.faces.length; i++) {
-                geo.faces.push(new THREE.Face3(options.mesh.faces[i][0], options.mesh.faces[i][1], options.mesh.faces[i][2]));
-                chuller.addPoint(options.mesh.vertices[options.mesh.faces[i][0]][0], options.mesh.vertices[options.mesh.faces[i][0]][1]);
-                chuller.addPoint(options.mesh.vertices[options.mesh.faces[i][1]][0], options.mesh.vertices[options.mesh.faces[i][1]][1]);
-                chuller.addPoint(options.mesh.vertices[options.mesh.faces[i][2]][0], options.mesh.vertices[options.mesh.faces[i][2]][1]);
-            }
-            geo.computeFaceNormals();
-            geo.computeVertexNormals();
-            const mesh = new THREE.Mesh(geo, mat);
-            capsule.add(mesh);
-
-            const hullPoints = chuller.getHull();
-            const lineGeo = new THREE.Geometry();
-            for (const i = 0; i < hullPoints.length; i++) {
-                // lineGeo.vertices.push(new THREE.Vector3(hullPoints[i].x, hullPoints[i].y, 5));
-                lineGeo.vertices.push(new THREE.Vector3(hullPoints[i].x, hullPoints[i].y, 0.003 + options.mesh.vertices[0][2]));
-            }
-            const lineMat = new THREE.LineBasicMaterial({ color: new THREE.Color(0, 0, 0), linewidth: 1 });
-            const line = new THREE.Line(lineGeo, lineMat);
-            capsule.add(line);
-        }
-
-        return capsule;
-    }
-
-    addSphere(e, options) {
-        options = (options === undefined) ? {} : options;
-
-        const c = (options.mesh !== undefined && options.mesh.color !== undefined) ? options.mesh.color : e.color;
-        const cstring = `rgb(${c[0]},${c[1]},${c[2]})`;
-    //    const cstring = 'rgb(255,0,0)';
-        const color = new THREE.Color(cstring);
-
-        const obj3 = new THREE.Object3D();
-
-        if (options.mesh === undefined) {
-            const geo = new THREE.SphereGeometry(e.getRadius(), 32, 32);
-        } else {
-            const chuller = new ConvexHullGrahamScan();
-            const geo = new THREE.Geometry();
-            for (const i = 0; i < options.mesh.vertices.length; i++) {
-                geo.vertices.push(new THREE.Vector3(options.mesh.vertices[i][0], options.mesh.vertices[i][1], options.mesh.vertices[i][2]));
-            }
-            for (const i = 0; i < options.mesh.faces.length; i++) {
-                geo.faces.push(new THREE.Face3(options.mesh.faces[i][0], options.mesh.faces[i][1], options.mesh.faces[i][2]));
-                chuller.addPoint(options.mesh.vertices[options.mesh.faces[i][0]][0], options.mesh.vertices[options.mesh.faces[i][0]][1]);
-                chuller.addPoint(options.mesh.vertices[options.mesh.faces[i][1]][0], options.mesh.vertices[options.mesh.faces[i][1]][1]);
-                chuller.addPoint(options.mesh.vertices[options.mesh.faces[i][2]][0], options.mesh.vertices[options.mesh.faces[i][2]][1]);
-            }
-            geo.computeFaceNormals();
-            geo.computeVertexNormals();
-            const hullPoints = chuller.getHull();
-            const lineGeo = new THREE.Geometry();
-            for (const i = 0; i < hullPoints.length; i++) {
-                // lineGeo.vertices.push(new THREE.Vector3(hullPoints[i].x, hullPoints[i].y, 5));
-                lineGeo.vertices.push(new THREE.Vector3(hullPoints[i].x, hullPoints[i].y, 0.003 + options.mesh.vertices[0][2]));
-            }
-            const lineMat = new THREE.LineBasicMaterial({ color: new THREE.Color(0, 0, 0), linewidth: 1 });
-            const line = new THREE.Line(lineGeo, lineMat);
-            obj3.add(line);
-        }
-
-        const mat = new THREE.MeshPhongMaterial({ color, specular: 0x030303, shininess: 10, shading: THREE.SmoothShading });
-        const mesh = new THREE.Mesh(geo, mat);
-
-        obj3.add(mesh);
-
-
-        return obj3;
-    }
-
-    addBox(e, options) {
-        options = (options === undefined) ? {} : options;
-
-        const c = (options.mesh !== undefined && options.mesh.color !== undefined) ? options.mesh.color : e.color;
-        const cstring = `rgb(${c[0]},${c[1]},${c[2]})`;
-    //    const cstring = 'rgb(255,0,0)';
-        const color = new THREE.Color(cstring);
-
-        const obj3 = new THREE.Object3D();
-
-        const sides = e.getSides();
-        if (options.mesh === undefined) {
-            const geo = new THREE.BoxGeometry(sides[0], sides[1], sides[2]);
-        } else {
-            const chuller = new ConvexHullGrahamScan();
-            const geo = new THREE.Geometry();
-            for (const i = 0; i < options.mesh.vertices.length; i++) {
-                geo.vertices.push(new THREE.Vector3(options.mesh.vertices[i][0], options.mesh.vertices[i][1], options.mesh.vertices[i][2]));
-            }
-            for (const i = 0; i < options.mesh.faces.length; i++) {
-                geo.faces.push(new THREE.Face3(options.mesh.faces[i][0], options.mesh.faces[i][1], options.mesh.faces[i][2]));
-                chuller.addPoint(options.mesh.vertices[options.mesh.faces[i][0]][0], options.mesh.vertices[options.mesh.faces[i][0]][1]);
-                chuller.addPoint(options.mesh.vertices[options.mesh.faces[i][1]][0], options.mesh.vertices[options.mesh.faces[i][1]][1]);
-                chuller.addPoint(options.mesh.vertices[options.mesh.faces[i][2]][0], options.mesh.vertices[options.mesh.faces[i][2]][1]);
-            }
-            geo.computeFaceNormals();
-            geo.computeVertexNormals();
-            const hullPoints = chuller.getHull();
-            const lineGeo = new THREE.Geometry();
-            for (const i = 0; i < hullPoints.length; i++) {
-                // lineGeo.vertices.push(new THREE.Vector3(hullPoints[i].x, hullPoints[i].y, 5));
-                lineGeo.vertices.push(new THREE.Vector3(hullPoints[i].x, hullPoints[i].y, 0.003 + options.mesh.vertices[0][2]));
-            }
-            const lineMat = new THREE.LineBasicMaterial({ color: new THREE.Color(0, 0, 0), linewidth: 1 });
-            const line = new THREE.Line(lineGeo, lineMat);
-            obj3.add(line);
-        }
-
-        let mat;
-        if (options.shader === undefined) {
-            mat = new THREE.MeshPhongMaterial({ color, specular: 0x030303, shininess: 10, shading: THREE.SmoothShading });
-        } else {
-            mat = new THREE.ShaderMaterial({
-                vertexShader:   document.getElementById(options.shader.vertexShader).textContent,
-                fragmentShader: document.getElementById(options.shader.fragmentShader).textContent,
-            });
-        }
-
-        const mesh = new THREE.Mesh(geo, mat);
-
-        obj3.add(mesh);
-
-
-        return obj3;
-    }
-
     addJoint(j) {
         const entity = { color: [255, 170, 0], getRadius() { return 0.06; } };
-        const obj = this.addSphere(entity);
+        const obj = this.constructor.addSphere(entity);
 
         this.scene.add(obj);
         this.joints[j.name] = { object: obj, joint: j };
@@ -387,16 +146,16 @@ class Renderer {
 
         switch (e.type) {
             case 'SPHERE':
-                obj = this.addSphere(e, options);
+                obj = this.constructor.createSphere(e, options);
                 break;
             case 'BOX':
-                obj = this.addBox(e, options);
+                obj = this.constructor.createBox(e, options);
                 break;
             case 'CAPSULE':
-                obj = this.addCapsule(e, options);
+                obj = this.constructor.createCapsule(e, options);
                 break;
             case 'CYLINDER':
-                obj = this.addCylinder(e, options);
+                obj = this.constructor.createCylinder(e, options);
                 break;
             default:
                 break;
@@ -406,6 +165,202 @@ class Renderer {
 
         this.entities[e.name] = { entity: e, object: obj };
     }
+
+    static createMeshAndOutline(options) {
+        const chuller = new ConvexHullGrahamScan();
+        const geom = new THREE.BufferGeometry();
+
+        const vs = options.mesh.vertices;
+        const fs = options.mesh.faces;
+        const positions = new Float32Array(vs.length * 3);
+        const indices   = new Float32Array(fs.length * 3);
+
+        for (let i = 0; i < vs.length; i++) {
+            positions[(i * 3) + 0] = vs[i][0];
+            positions[(i * 3) + 1] = vs[i][1];
+            positions[(i * 3) + 2] = vs[i][2];
+        }
+
+        for (let i = 0; i < fs.length; i++) {
+            indices[(i * 3) + 0] = fs[i][0];
+            indices[(i * 3) + 1] = fs[i][1];
+            indices[(i * 3) + 2] = fs[i][2];
+
+            chuller.addPoint(vs[fs[i][0]][0], vs[fs[i][0]][1]);
+            chuller.addPoint(vs[fs[i][1]][0], vs[fs[i][1]][1]);
+            chuller.addPoint(vs[fs[i][2]][0], vs[fs[i][2]][1]);
+        }
+
+        geom.setIndex(new THREE.BufferAttribute(indices, 1));
+        geom.addAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+        geom.computeFaceNormals();
+        geom.computeVertexNormals();
+
+        const hullPoints = chuller.getHull();
+        const lineGeo = new THREE.BufferGeometry();
+        const lgPositions = new Float32Array(hullPoints.length * 3);
+        for (let i = 0; i < hullPoints.length; i++) {
+            lgPositions[(i * 3) + 0] = hullPoints[i].x;
+            lgPositions[(i * 3) + 1] = hullPoints[i].y;
+            lgPositions[(i * 3) + 2] = 0.003 + vs[0][2];
+        }
+
+        lineGeo.addAttribute('position', new THREE.BufferAttribute(lgPositions, 3));
+
+        const lineMat = new THREE.LineBasicMaterial({ color: new THREE.Color(0, 0, 0) });
+        const outline = new THREE.Line(lineGeo, lineMat);
+
+        return [geom, outline];
+    }
+
+    static createBox(e, options = {}) {
+        const c = (options.mesh !== undefined && options.mesh.color !== undefined) ?
+            options.mesh.color : e.color;
+        const cstring = `rgb(${c[0]},${c[1]},${c[2]})`;
+    //    const cstring = 'rgb(255,0,0)';
+        const color = new THREE.Color(cstring);
+
+        const obj3 = new THREE.Object3D();
+
+        let geo;
+        if (options.mesh === undefined) {
+            const sides = e.getSides();
+            geo = new THREE.BoxBufferGeometry(sides[0], sides[1], sides[2]);
+        } else {
+            const ret = this.createMeshAndOutline(options);
+            geo = ret[0];
+            obj3.add(ret[1]);
+        }
+
+        let mat;
+        if (options.shader === undefined) {
+            mat = new THREE.MeshPhongMaterial({
+                color,
+                specular:  0x030303,
+                shininess: 10,
+                shading:   THREE.SmoothShading,
+            });
+        } else {
+            mat = new THREE.ShaderMaterial({
+                vertexShader:   document.getElementById(options.shader.vertexShader).textContent,
+                fragmentShader: document.getElementById(options.shader.fragmentShader).textContent,
+            });
+        }
+
+        const mesh = new THREE.Mesh(geo, mat);
+
+        obj3.add(mesh);
+
+        return obj3;
+    }
+
+    static createCapsule(e, options = {}) {
+        const c = (options.mesh !== undefined && options.mesh.color !== undefined) ?
+            options.mesh.color : e.color;
+
+        const cstring = `rgb(${c[0]},${c[1]},${c[2]})`;
+    //    const cstring = 'rgb(255,0,0)';
+        const color = new THREE.Color(cstring);
+
+        const capsule = new THREE.Object3D();
+        const mat = new THREE.MeshPhongMaterial({
+            color,
+            specular:  0x030303,
+            shininess: 10,
+            shading:   THREE.SmoothShading,
+        });
+        if (options.mesh === undefined) {
+            const cylGeom = new THREE.CylinderBufferGeometry(
+                e.getRadius(), // top radius
+                e.getRadius(), // bottom radius
+                e.getHeight(),
+                32,
+                4,
+                true,
+            );
+            const sphGeo = new THREE.SphereBufferGeometry(e.getRadius(), 32, 32);
+            const cylMesh = new THREE.Mesh(cylGeom, mat);
+            const topMesh = new THREE.Mesh(sphGeo, mat);
+            const btmMesh = new THREE.Mesh(sphGeo, mat);
+            topMesh.position.y = e.getHeight() / 2.0;
+            btmMesh.position.y = -e.getHeight() / 2.0;
+
+            capsule.add(cylMesh);
+            capsule.add(topMesh);
+            capsule.add(btmMesh);
+        } else {
+            const ret = this.createMeshAndOutline(options);
+            capsule.add(ret[0]);
+            capsule.add(ret[1]);
+        }
+
+        return capsule;
+    }
+
+    static createCylinder(e, options = {}) {
+        const c = (options.mesh !== undefined && options.mesh.color !== undefined) ?
+            options.mesh.color : e.color;
+
+        const cstring = `rgb(${c[0]},${c[1]},${c[2]})`;
+        const color = new THREE.Color(cstring);
+
+        const cylinder = new THREE.Object3D();
+
+        const mat = new THREE.MeshPhongMaterial({
+            color,
+            specular:  0x030303,
+            shininess: 10,
+            shading:   THREE.SmoothShading,
+        });
+
+        if (options.mesh === undefined) {
+            const cylGeom = new THREE.CylinderBufferGeometry(
+                e.getRadius(),
+                e.getRadius(),
+                e.getHeight(),
+                32,
+                4,
+                false,
+            );
+            const cylMesh = new THREE.Mesh(cylGeom, mat);
+            cylinder.add(cylMesh);
+        } else {
+            const ret = this.createMeshAndOutline(options);
+            cylinder.add(ret[0]);
+            cylinder.add(ret[1]);
+        }
+        return cylinder;
+    }
+
+    static createSphere(e, options = {}) {
+        const c = (options.mesh !== undefined && options.mesh.color !== undefined) ?
+            options.mesh.color : e.color;
+        const cstring = `rgb(${c[0]},${c[1]},${c[2]})`;
+    //    const cstring = 'rgb(255,0,0)';
+        const color = new THREE.Color(cstring);
+
+        const sphere = new THREE.Object3D();
+
+        if (options.mesh === undefined) {
+            const geo = new THREE.SphereBufferGeometry(e.getRadius(), 32, 32);
+            const mat = new THREE.MeshPhongMaterial({
+                color,
+                specular:  0x030303,
+                shininess: 10,
+                shading:   THREE.SmoothShading,
+            });
+            const mesh = new THREE.Mesh(geo, mat);
+            sphere.add(mesh);
+        } else {
+            const ret = this.createMeshAndOutline(options);
+            sphere.add(ret[0]);
+            sphere.add(ret[1]);
+        }
+
+        return sphere;
+    }
+
 }
 
 export default Renderer;
