@@ -12,6 +12,7 @@
         "no-restricted-syntax": "off",
         "no-unused-vars": ["error", { "vars": "all", "args": "none" }],
         "react/require-extension": "off",
-        "no-console": [2, { "allow": ["warn"] }]
+        "no-console": [2, { "allow": ["warn"] }],
+        "no-bitwise": "off"
     }
 }
