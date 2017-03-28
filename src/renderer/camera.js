@@ -1,7 +1,7 @@
 import THREE from '../lib/three.min';
 
 class Camera {
-    init(opts = {}) {
+    constructor(opts = {}) {
         this._type = (opts.type === undefined) ? 'perspective' : opts.type;
         this._target = (opts.target === undefined) ? [0, 0, 0] : opts.type;
         this._aspectRatio = (opts.aspect === undefined) ? 1 : opts.apect;

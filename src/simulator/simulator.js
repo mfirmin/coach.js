@@ -11,7 +11,7 @@ const Tpos = new Ammo.btVector3(0, 0, 0);
 const Tneg = new Ammo.btVector3(0, 0, 0);
 
 class Simulator {
-    init(dt, opts) {
+    constructor(dt, opts) {
         this.dt = dt;
 
         this.opts = (opts === undefined) ? {} : opts;

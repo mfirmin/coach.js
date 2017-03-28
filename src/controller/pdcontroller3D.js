@@ -1,11 +1,11 @@
+import utils from '../utils/utils';
+
 const KP = 300;
 const KD = 30;
 
-const utils = require('../utils/utils');
-
 class PDController3D {
 
-    init(joint, goal, options = {}) {
+    constructor(joint, goal, options = {}) {
         const goalEuler = [
             (goal.X === undefined) ? 0 : goal.X,
             (goal.Y === undefined) ? 0 : goal.Y,

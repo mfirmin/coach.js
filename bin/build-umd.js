@@ -5,14 +5,32 @@ var commonjs = require('rollup-plugin-commonjs');
 
 var fs = require('fs');
 
+var builtins = require('rollup-plugin-node-builtins');
+
 rollup.rollup({
     entry: '../src/coach.js',
     plugins: [
         babel({
-            exclude: '../node_modules/**',
+            exclude: [
+                '../node_modules/**',
+                '../src/lib/ammo.js',
+                '../src/lib/three.min.js',
+                '../src/lib/graham_scan.min.js',
+                '../src/lib/jquery-2.1.4.min.js',
+            ],
             runtimeHelpers: true,
         }),
-        commonjs(),
+        builtins(),
+        commonjs({
+            include: [
+                '../src/lib/ammo.js',
+                '../src/lib/three.min.js',
+                '../src/lib/graham_scan.min.js',
+                '../src/lib/jquery-2.1.4.min.js',
+            ],
+            ignoreGlobal: false,
+            sourceMap: false,
+        }),
         nodeResolver({ jsnext: true, main: true }),
     ],
 }).then(function writeToUMD(bundle) {

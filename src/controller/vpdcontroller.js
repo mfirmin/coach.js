@@ -3,7 +3,7 @@ const KP = 300;
 const KD = 30;
 
 class VPDController {
-    init(joint, part, goal, options = {}) {
+    constructor(joint, part, goal, options = {}) {
         this.joint = joint;
         this.part = part;
         this.goal = goal;

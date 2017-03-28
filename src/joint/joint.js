@@ -1,5 +1,5 @@
 class Joint {
-    init(name, parent, child, opts = {}) {
+    constructor(name, parent, child, opts = {}) {
         this._parent = parent;
         this._child = child;
 

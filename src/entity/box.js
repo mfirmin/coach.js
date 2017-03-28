@@ -1,7 +1,7 @@
 import Entity from './entity';
 
 class Box extends Entity {
-    init(name, sides, opts) {
+    constructor(name, sides, opts) {
         super(name, opts);
 
         this._sides = sides;

@@ -1,9 +1,13 @@
+import three from './three.min';
+import ammo from './ammo';
+import grahamScan from './graham_scan.min';
+import $ from './jquery-2.1.4.min';
 
-var lib = {
-    "three": require('./three.min'),
-    "ammo":  require('./ammo'),
-    "graham_scan":  require('./graham_scan.min'),
-    "$": require('./jquery-2.1.4.min'),
+const lib = {
+    three,
+    ammo,
+    grahamScan,
+    $,
 };
 
-module.exports = lib;
+export default lib;

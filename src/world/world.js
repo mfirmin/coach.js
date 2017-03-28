@@ -3,7 +3,7 @@ import Renderer  from '../renderer/renderer';
 import Simulator from '../simulator/simulator';
 
 class World {
-    init(opts = {}, element) {
+    constructor(opts = {}, element) {
         this.FPS = (opts.FPS === undefined) ? 30.0 : opts.FPS;
         this.dt  = (opts.dt === undefined) ? 0.0001 : opts.dt;
         this.is2D = (opts['2D'] === undefined) ? false : opts['2D'];

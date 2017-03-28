@@ -10,7 +10,7 @@ import utils       from './utils/utils';
 import lib         from './lib/index';
 
 const Coach = {
-    version: '0.0.0',
+    version: '0.0.1',
 
     controllers,
     entities,

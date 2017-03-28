@@ -6,7 +6,7 @@ import Ball     from './joint/ball';
 
 class Character {
 
-    init(name, opts = {}) {
+    constructor(name, opts = {}) {
         this.name = name;
         this.initialize();
         this.entities = {};

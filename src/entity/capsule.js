@@ -1,7 +1,7 @@
 import Entity from './entity';
 
 class Capsule extends Entity {
-    init(name, radius, height, opts) {
+    constructor(name, radius, height, opts) {
         super(name, opts);
 
         this._radius = radius;

@@ -2,7 +2,7 @@ import Joint from './joint';
 import utils from '../utils/utils';
 
 class Ball extends Joint {
-    init(name, parent, child, pos, opts = {}) {
+    constructor(name, parent, child, pos, opts = {}) {
         super(name, parent, child);
 
         this._position = pos;

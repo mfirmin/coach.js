@@ -6,7 +6,7 @@ const KD = 30;
 
 class VPDController3D {
 
-    init(joint, part, goal, options = {}) {
+    constructor(joint, part, goal, options = {}) {
         const goalEuler = [
             (goal.X === undefined) ? 0 : goal.X,
             (goal.Y === undefined) ? 0 : goal.Y,

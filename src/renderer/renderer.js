@@ -5,7 +5,7 @@ import ConvexHullGrahamScan from '../lib/graham_scan.min';
 import Camera from './camera';
 
 class Renderer {
-    init(opts = {}, element) {
+    constructor(opts = {}, element) {
         this.cameraOptions = opts.cameraOptions;
 
         this.initializeGL();

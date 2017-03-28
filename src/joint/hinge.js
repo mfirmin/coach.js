@@ -1,7 +1,7 @@
 import Joint from './joint';
 
 class Hinge extends Joint {
-    init(name, parent, child, pos, axis, opts = {}) {
+    constructor(name, parent, child, pos, axis, opts = {}) {
         super(name, parent, child);
 
         this._position = pos;

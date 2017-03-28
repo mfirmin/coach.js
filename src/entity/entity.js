@@ -1,5 +1,5 @@
 class Entity {
-    init(name, opts = {}) {
+    constructor(name, opts = {}) {
         this.name = name;
 
         this._position = (opts.position === undefined) ?

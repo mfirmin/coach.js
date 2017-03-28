@@ -2,7 +2,7 @@ const KP = 300;
 const KD = 30;
 
 class PDController {
-    init(joint, goal, options = {}) {
+    constructor(joint, goal, options = {}) {
         this.goal = goal;
         this.joint = joint;
 
