@@ -62,14 +62,14 @@ class Simulator {
 
     addJoint(j) {
         let joint;
-        const type = j.getType();
+        const type = j.type;
         if (type === 'BALL') {
-            const pos = j.getPosition();
-            const posA = this.entities[j.parent.name].entity.getPosition();
+            const pos = j.position;
+            const posA = this.entities[j.parent.name].entity.position;
             const jointPosInA = [pos[0] - posA[0], pos[1] - posA[1], pos[2] - posA[2]];
             const pivotInA = new Ammo.btVector3(jointPosInA[0], jointPosInA[1], jointPosInA[2]);
 
-            const posB = this.entities[j.child.name].entity.getPosition();
+            const posB = this.entities[j.child.name].entity.position;
             const jointPosInB = [pos[0] - posB[0], pos[1] - posB[1], pos[2] - posB[2]];
             const pivotInB = new Ammo.btVector3(jointPosInB[0], jointPosInB[1], jointPosInB[2]);
 
@@ -101,12 +101,12 @@ class Simulator {
             */
         } else if (type === 'HINGE') {
             // const axis = j.axis;
-            const pos = j.getPosition();
-            const posA = this.entities[j.parent.name].entity.getPosition();
+            const pos = j.position;
+            const posA = this.entities[j.parent.name].entity.position;
             const jointPosInA = [pos[0] - posA[0], pos[1] - posA[1], pos[2] - posA[2]];
 
             if (j.child !== undefined) {
-                const posB = this.entities[j.child.name].entity.getPosition();
+                const posB = this.entities[j.child.name].entity.position;
                 const jointPosInB = [pos[0] - posB[0], pos[1] - posB[1], pos[2] - posB[2]];
                 joint = new Ammo.btHingeConstraint(
                     this.entities[j.parent.name].body,
@@ -142,9 +142,9 @@ class Simulator {
 
     addEntity(e) {
         let shape;
-        switch (e.getType()) {
+        switch (e.type) {
             case 'SPHERE':
-                shape = new Ammo.btSphereShape(e.getRadius());
+                shape = new Ammo.btSphereShape(e.radius);
                 break;
             case 'BOX':
                 shape = new Ammo.btBoxShape(
@@ -152,11 +152,11 @@ class Simulator {
                 );
                 break;
             case 'CAPSULE':
-                shape = new Ammo.btCapsuleShape(e.getRadius(), e.getHeight());
+                shape = new Ammo.btCapsuleShape(e.radius, e.height);
                 break;
             case 'CYLINDER':
                 shape = new Ammo.btCylinderShape(
-                    new Ammo.btVector3(e.getRadius(), e.getHeight() / 2.0, e.getRadius()),
+                    new Ammo.btVector3(e.radius, e.height / 2.0, e.radius),
                 );
                 break;
             default:
@@ -176,7 +176,7 @@ class Simulator {
             shape.calculateLocalInertia(mass, localInertia);
         }
 
-        const pos = e.getPosition();
+        const pos = e.position;
         startTransform.setOrigin(new Ammo.btVector3(pos[0], pos[1], pos[2]));
 
         const myMotionState = new Ammo.btDefaultMotionState(startTransform);
@@ -246,11 +246,11 @@ class Simulator {
                 const pos = [trans.getOrigin().x(), trans.getOrigin().y(), trans.getOrigin().z()];
 
                 const rot = trans.getRotation().normalized();
-                entity.setPosition(pos);
-                entity.setOrientation([rot.w(), rot.x(), rot.y(), rot.z()]);
+                entity.position = pos;
+                entity.orientation = [rot.w(), rot.x(), rot.y(), rot.z()];
 
                 const angVel = body.getAngularVelocity();
-                entity.setAngularVelocity([angVel.x(), angVel.y(), angVel.z()]);
+                entity.angularVelocity = [angVel.x(), angVel.y(), angVel.z()];
             }
         }
 
@@ -258,8 +258,8 @@ class Simulator {
             const j = this.joints[name];
             const jointEntity = j.joint;
             const jointBullet = j.jointBullet;
-            if (jointEntity.getType() === 'HINGE') {
-                jointEntity.setAngle(jointBullet.getHingeAngle(), this.dt);
+            if (jointEntity.type === 'HINGE') {
+                jointEntity.updateAngle(jointBullet.getHingeAngle(), this.dt);
                 const tform = jointBullet.getFrameOffsetA();
 
                 const body = jointBullet.getRigidBodyA();
@@ -281,8 +281,8 @@ class Simulator {
                     ]),
                 );
 
-                jointEntity.setPosition([pos[0] + vec[0], pos[1] + vec[1], pos[2] + vec[2]]);
-            } else if (jointEntity.getType() === 'BALL') {
+                jointEntity.position = [pos[0] + vec[0], pos[1] + vec[1], pos[2] + vec[2]];
+            } else if (jointEntity.type === 'BALL') {
                 jointEntity.calculateOrientation();
                 jointEntity.calculateAngularVelocity();
             }

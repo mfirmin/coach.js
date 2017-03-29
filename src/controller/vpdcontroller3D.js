@@ -25,7 +25,7 @@ class VPDController3D {
     evaluate(dt) {
         let torque = [0, 0, 0];
 
-        const qRel = this.part.getOrientation();
+        const qRel = this.part.orientation;
 
         const cInverse = [qRel[0], -qRel[1], -qRel[2], -qRel[3]];
 
@@ -51,7 +51,7 @@ class VPDController3D {
 
         torque = utils.rotateVector(torque, utils.RFromQuaternion(qRel));
         // wRel in world coords
-        const wRel = this.part.getAngularVelocity();
+        const wRel = this.part.angularVelocity;
         torque[0] += -wRel[0] * (-this.kd);
         torque[1] += -wRel[1] * (-this.kd);
         torque[2] += -wRel[2] * (-this.kd);
@@ -59,7 +59,7 @@ class VPDController3D {
         // rotate torque into parent coords
         torque = utils.rotateVector(
             torque,
-            utils.RFromQuaternion(utils.getQuaternionInverse(this.joint.parent.getOrientation())),
+            utils.RFromQuaternion(utils.getQuaternionInverse(this.joint.parent.orientation)),
         );
 
         return torque;

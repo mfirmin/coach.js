@@ -12,8 +12,8 @@ class PDController {
     }
 
     evaluate() {
-        const currentAngle = this.joint.getAngle();
-        const currentAngularVelocity = this.joint.getAngularVelocity();
+        const currentAngle = this.joint.angle;
+        const currentAngularVelocity = this.joint.angularVelocity;
 
         const angErr    = this.goal - currentAngle;
         const angVelErr = 0.0 - currentAngularVelocity;

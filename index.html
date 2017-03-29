@@ -32,11 +32,11 @@ title: coach.js Pendulum example
             var link1  = new coach.entities.Box('link1', [0.5, 0.1, 0.1], {mass: 1, color: [0,255,0]});
             var link2  = new coach.entities.Box('link2', [0.5, 0.1, 0.1], {mass: 1, color: [0,0,255]});
             var link3  = new coach.entities.Box('link3', [0.5, 0.1, 0.1], {mass: 1, color: [0,255,255]});
-            ground.setPosition([0.,-0.5,0]);
-            pivot.setPosition([0,2,0]);
-            link1.setPosition([0.25,2,0]);
-            link2.setPosition([0.75,2,0]);
-            link3.setPosition([1.25,2,0]);
+            ground.position = [0.,-0.5,0]
+            pivot.position = [0,2,0]
+            link1.position = [0.25,2,0]
+            link2.position = [0.75,2,0]
+            link3.position = [1.25,2,0]
             world.addEntity(ground);
             world.addEntity(pivot);
             world.addEntity(link1);

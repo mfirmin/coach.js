@@ -14,7 +14,7 @@ rollup.rollup({
             exclude: [
                 '../node_modules/**',
                 '../src/lib/ammo.js',
-                '../src/lib/three.min.js',
+    //            '../src/lib/three.min.js',
                 '../src/lib/graham_scan.min.js',
                 '../src/lib/jquery-2.1.4.min.js',
             ],
@@ -24,7 +24,7 @@ rollup.rollup({
         commonjs({
             include: [
                 '../src/lib/ammo.js',
-                '../src/lib/three.min.js',
+//                '../src/lib/three.min.js',
                 '../src/lib/graham_scan.min.js',
                 '../src/lib/jquery-2.1.4.min.js',
             ],

@@ -7,7 +7,7 @@ import Simulator   from './simulator/simulator';
 import World       from './world/world';
 import utils       from './utils/utils';
 
-import lib         from './lib/index';
+import * as lib    from './lib/index';
 
 const Coach = {
     version: '0.0.1',

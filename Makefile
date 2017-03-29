@@ -16,3 +16,6 @@ build: $(COACH)
 $(COACH): $(SOURCES)
 	cd bin && node build-umd.js
 	cp build/coach.js static/coach.js
+
+run:
+	bundle exec jekyll serve

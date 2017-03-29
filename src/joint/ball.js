@@ -33,8 +33,8 @@ class Ball extends Joint {
     // Calculates joint's orientation in terms of Parent coordinates
     // (ie, quaternion to rotate parent to child.)
     calculateOrientation() {
-        const pOrientation = this.parent.getOrientation();
-        const cOrientation = this.child.getOrientation();
+        const pOrientation = this.parent.orientation;
+        const cOrientation = this.child.orientation;
 
         this._angle = utils.multiplyQuaternions(
             utils.getQuaternionInverse(pOrientation),
@@ -44,15 +44,15 @@ class Ball extends Joint {
 
     // Calculates joint's angular velocity in Parent coordinate frame
     calculateAngularVelocity() {
-        const pAngVel = this.parent.getAngularVelocity();
-        const cAngVel = this.child.getAngularVelocity();
+        const pAngVel = this.parent.angularVelocity;
+        const cAngVel = this.child.angularVelocity;
 
         const wRel = [cAngVel[0] - pAngVel[0], cAngVel[1] - pAngVel[1], cAngVel[2] - pAngVel[2]];
 
         // angVel is in world coords, rotate it by parent's orientation to get parent coords
         this._angularVelocity = utils.rotateVector(
             wRel,
-            utils.RFromQuaternion(utils.getQuaternionInverse(this.parent.getOrientation())),
+            utils.RFromQuaternion(utils.getQuaternionInverse(this.parent.orientation)),
         );
     //    this._angularVelocity = wRel;
     }
@@ -64,7 +64,7 @@ class Ball extends Joint {
 
     getLimitedTorque() {
         // get the torque in child coordinates...
-        const qToChild = this.getAngle();
+        const qToChild = this.angle;
         const qInverse = [qToChild[0], -qToChild[1], -qToChild[2], -qToChild[3]];
         let cTorque = utils.rotateVector(this._torque, utils.RFromQuaternion(qInverse));
 
@@ -98,7 +98,7 @@ class Ball extends Joint {
         cTorque = utils.rotateVector(cTorque, utils.RFromQuaternion(qToChild));
 
         // to World coordinates.
-        return utils.rotateVector(cTorque, utils.RFromQuaternion(this.parent.getOrientation()));
+        return utils.rotateVector(cTorque, utils.RFromQuaternion(this.parent.orientation));
     }
 
     addTorqueX(t) {

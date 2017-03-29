@@ -1,6 +1,7 @@
-/* global $, document */
-import THREE                from '../lib/three.min';
+/* global document */
+import { three as THREE } from '../lib/index';
 import ConvexHullGrahamScan from '../lib/graham_scan.min';
+import $                    from '../lib/jquery-2.1.4.min';
 
 import Camera from './camera';
 
@@ -38,7 +39,7 @@ class Renderer {
 
         this.light = new THREE.PointLight(0xfffffa, 1, 0);
 
-        const pos = this.camera.getPosition();
+        const pos = this.camera.position;
 
         this.light.position.set(pos[0], pos[1], pos[2]);
         this.scene.add(this.light);
@@ -81,7 +82,7 @@ class Renderer {
 
         this.renderer.setSize(w, h);
 
-        this.camera.setAspectRatio(w / h);
+        this.camera.aspectRatio = w / h;
 
     //    this.panel.css({width: w, height: h});
     }
@@ -225,7 +226,7 @@ class Renderer {
 
         let geo;
         if (options.mesh === undefined) {
-            const sides = e.getSides();
+            const sides = e.sides;
             geo = new THREE.BoxBufferGeometry(sides[0], sides[1], sides[2]);
         } else {
             const ret = this.createMeshAndOutline(options);
@@ -272,14 +273,14 @@ class Renderer {
         });
         if (options.mesh === undefined) {
             const cylGeom = new THREE.CylinderBufferGeometry(
-                e.getRadius(), // top radius
-                e.getRadius(), // bottom radius
-                e.getHeight(),
+                e.radius, // top radius
+                e.radius, // bottom radius
+                e.height,
                 32,
                 4,
                 true,
             );
-            const sphGeo = new THREE.SphereBufferGeometry(e.getRadius(), 32, 32);
+            const sphGeo = new THREE.SphereBufferGeometry(e.radius, 32, 32);
             const cylMesh = new THREE.Mesh(cylGeom, mat);
             const topMesh = new THREE.Mesh(sphGeo, mat);
             const btmMesh = new THREE.Mesh(sphGeo, mat);
@@ -316,9 +317,9 @@ class Renderer {
 
         if (options.mesh === undefined) {
             const cylGeom = new THREE.CylinderBufferGeometry(
-                e.getRadius(),
-                e.getRadius(),
-                e.getHeight(),
+                e.radius,
+                e.radius,
+                e.height,
                 32,
                 4,
                 false,
@@ -343,7 +344,7 @@ class Renderer {
         const sphere = new THREE.Object3D();
 
         if (options.mesh === undefined) {
-            const geo = new THREE.SphereBufferGeometry(e.getRadius(), 32, 32);
+            const geo = new THREE.SphereBufferGeometry(e.radius, 32, 32);
             const mat = new THREE.MeshPhongMaterial({
                 color,
                 specular:  0x030303,

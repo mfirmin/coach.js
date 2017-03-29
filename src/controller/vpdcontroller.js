@@ -16,7 +16,7 @@ class VPDController {
     }
 
     evaluate(dt) {
-        const rot = this.part.getOrientation();
+        const rot = this.part.orientation;
         const currentAngle = Math.atan2(
             2 * ((rot[0] * rot[3]) + (rot[1] * rot[2])),
             1 - (2 * ((rot[2] * rot[2]) + (rot[3] * rot[3]))),

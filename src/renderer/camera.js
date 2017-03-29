@@ -1,9 +1,9 @@
-import THREE from '../lib/three.min';
+import { three as THREE } from '../lib/index';
 
 class Camera {
     constructor(opts = {}) {
         this._type = (opts.type === undefined) ? 'perspective' : opts.type;
-        this._target = (opts.target === undefined) ? [0, 0, 0] : opts.type;
+        this._target = (opts.target === undefined) ? [0, 0, 0] : opts.target;
         this._aspectRatio = (opts.aspect === undefined) ? 1 : opts.apect;
 
         this.initialize(opts);
@@ -18,10 +18,10 @@ class Camera {
         }
 
         const pos = (opts.position === undefined) ? [0, 0, 5] : opts.position;
-        this.setPosition(pos);
+        this.position = pos;
 
         const target = (opts.target === undefined) ? [0, 0, 0] : opts.target;
-        this.setTarget(target);
+        this.target = target;
     }
 
     setPerspective(opts) {

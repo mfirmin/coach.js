@@ -5,6 +5,7 @@ class Sphere extends Entity {
         super(name, opts);
 
         this._radius = radius;
+        this._type = 'SPHERE';
     }
 
     initialize() {

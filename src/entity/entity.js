@@ -60,6 +60,16 @@ class Entity {
         return this._mass;
     }
 
+    get color() {
+        return this._color;
+    }
+
+    set color(c) {
+        this._color[0] = c[0];
+        this._color[1] = c[1];
+        this._color[2] = c[2];
+    }
+
 }
 
 export default Entity;

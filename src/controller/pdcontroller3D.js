@@ -23,7 +23,7 @@ class PDController3D {
     evaluate() {
         let torque = [0, 0, 0];
 
-        const qRel = this.joint.getAngle();
+        const qRel = this.joint.angle;
 
         const cInverse = [qRel[0], -qRel[1], -qRel[2], -qRel[3]];
 
@@ -45,7 +45,7 @@ class PDController3D {
         // torque in parent coords
         torque = utils.rotateVector(torque, utils.RFromQuaternion(qRel));
         // wRel in parent coords
-        const wRel = this.joint.getAngularVelocity();
+        const wRel = this.joint.angularVelocity;
         torque[0] += -wRel[0] * (-this.kd);
         torque[1] += -wRel[1] * (-this.kd);
         torque[2] += -wRel[2] * (-this.kd);
@@ -74,7 +74,7 @@ class PDController3D {
         vq = [vq[0]*signW, vq[1]*signW, vq[2]*signW];
 
 
-        const w = this.joint.getAngularVelocity();
+        const w = this.joint.angularVelocity;
 
         const ret = [
              this.kp*(vq[0]) - this.kd*w[0],

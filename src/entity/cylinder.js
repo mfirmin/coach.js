@@ -6,6 +6,7 @@ class Cylinder extends Entity {
 
         this._radius = radius;
         this._height = height;
+        this._type   = 'CYLINDER';
     }
 
     initialize() {
