@@ -1,40 +1,37 @@
-var Entity = require('./entity');
+import Entity from './entity';
 
-function Capsule(name, radius, height, opts) {
+class Capsule extends Entity {
+    constructor(name, radius, height, opts) {
+        super(name, opts);
 
-    this.radius = radius;
-    this.height = height;
+        this._radius = radius;
+        this._height = height;
+        this._type   = 'CAPSULE';
+    }
 
-    Entity.call(this, name, opts);
+    initialize() {
+        super.initialize();
+    }
+
+    get radius() {
+        return this._radius;
+    }
+
+    set radius(r) {
+        this._radius = r;
+    }
+
+    get height() {
+        return this._height;
+    }
+
+    set height(h) {
+        this._height = h;
+    }
+
+    get type() {
+        return this._type;
+    }
 }
 
-Capsule.prototype = Object.create(Entity.prototype);
-
-Capsule.prototype.constructor = Capsule;
-
-Capsule.prototype.initialize = function() {
-
-    Entity.prototype.initialize.call(this);
-}
-
-Capsule.prototype.getRadius = function() {
-    return this.radius;
-};
-
-Capsule.prototype.setRadius= function(r) {
-    this.radius = r;
-};
-
-Capsule.prototype.getHeight = function() {
-    return this.height;
-};
-
-Capsule.prototype.setHeight= function(h) {
-    this.height = h;
-};
-
-Capsule.prototype.getType = function() {
-    return 'CAPSULE';
-};
-
-module.exports = Capsule;
+export default Capsule;

@@ -1,30 +1,28 @@
-var Entity = require('./entity');
+import Entity from './entity';
 
-function Sphere(name, radius, opts) {
+class Sphere extends Entity {
+    constructor(name, radius, opts) {
+        super(name, opts);
 
-    this.radius = radius;
-    Entity.call(this, name, opts);
+        this._radius = radius;
+        this._type = 'SPHERE';
+    }
 
+    initialize() {
+        super.initialize();
+    }
+
+    get radius() {
+        return this._radius;
+    }
+
+    set radius(r) {
+        this._radius = r;
+    }
+
+    get type() {
+        return this._type;
+    }
 }
 
-Sphere.prototype = Object.create(Entity.prototype);
-
-Sphere.prototype.constructor = Sphere;
-
-Sphere.prototype.initialize = function() {
-    Entity.prototype.initialize.call(this);
-};
-
-Sphere.prototype.getRadius = function() {
-    return this.radius;
-};
-
-Sphere.prototype.setRadius = function(r) {
-    this.radius = r;
-};
-
-Sphere.prototype.getType = function() {
-    return 'SPHERE';
-};
-
-module.exports = Sphere;
+export default Sphere;

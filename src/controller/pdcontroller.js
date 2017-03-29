@@ -1,33 +1,27 @@
+const KP = 300;
+const KD = 30;
 
-var KP = 300;
-var KD = 30;
+class PDController {
+    constructor(joint, goal, options = {}) {
+        this.goal = goal;
+        this.joint = joint;
 
-function PDController(joint, goal, options) {
+        this.kp = (options.kp === undefined) ? KP : options.kp;
+        this.kd = (options.kd === undefined) ? KD : options.kd;
+        this.goalVelocity = (options.goalVelocity === undefined) ? 0 : options.goalVelocity;
+    }
 
-    this.goal = goal;
-    this.joint = joint;
+    evaluate() {
+        const currentAngle = this.joint.angle;
+        const currentAngularVelocity = this.joint.angularVelocity;
 
-    options = (options === undefined) ? {} : options;
+        const angErr    = this.goal - currentAngle;
+        const angVelErr = 0.0 - currentAngularVelocity;
 
-    this.kp = (options.kp === undefined) ? KP : options.kp;
-    this.kd = (options.kd === undefined) ? KD : options.kd;
-    this.goalVelocity = (options.goalVelocity === undefined) ? 0 : optionsgoalVelocity;
+        const ret = (this.kp * angErr) + (this.kd * angVelErr);
 
+        return ret;
+    }
 }
 
-PDController.prototype.constructor = PDController;
-
-PDController.prototype.evaluate = function() {
-
-    var currentAngle = this.joint.getAngle();
-    var currentAngularVelocity = this.joint.getAngularVelocity();
-
-    var ret = this.kp*(this.goal - currentAngle) + this.kd*(0 - currentAngularVelocity);
-
-    return ret;
-
-};
-
-
-
-module.exports = PDController;
+export default PDController;
