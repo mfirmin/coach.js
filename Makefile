@@ -1,11 +1,21 @@
 
+COACH = build/coach.js
+
 SOURCEDIR = src
 SOURCES = $(shell find $(SOURCEDIR) -name '*.js')
 
-all: static/coach.js Makefile
+.PHONY: all clean build
+
+all: $(COACH) Makefile
 
 clean: 
-	rm static/coach.js
+	rm $(COACH)
 
-static/coach.js: $(SOURCES)
-	browserify src/coach.js --s Coach > static/coach.js
+build: $(COACH)
+
+$(COACH): $(SOURCES)
+	cd bin && node build-umd.js
+	cp build/coach.js static/coach.js
+
+run:
+	bundle exec jekyll serve

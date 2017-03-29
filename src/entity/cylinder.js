@@ -1,41 +1,37 @@
+import Entity from './entity';
 
-var Entity = require('./entity');
+class Cylinder extends Entity {
+    constructor(name, radius, height, opts) {
+        super(name, opts);
 
-function Cylinder(name, radius, height, opts) {
+        this._radius = radius;
+        this._height = height;
+        this._type   = 'CYLINDER';
+    }
 
-    this.radius = radius;
-    this.height = height;
+    initialize() {
+        super.initialize();
+    }
 
-    Entity.call(this, name, opts);
+    get radius() {
+        return this._radius;
+    }
+
+    set radius(r) {
+        this._radius = r;
+    }
+
+    get height() {
+        return this._height;
+    }
+
+    set height(h) {
+        this._height = h;
+    }
+
+    get type() {
+        return this._type;
+    }
 }
 
-Cylinder.prototype = Object.create(Entity.prototype);
-
-Cylinder.prototype.constructor = Cylinder;
-
-Cylinder.prototype.initialize = function() {
-
-    Entity.prototype.initialize.call(this);
-}
-
-Cylinder.prototype.getRadius = function() {
-    return this.radius;
-};
-
-Cylinder.prototype.setRadius= function(r) {
-    this.radius = r;
-};
-
-Cylinder.prototype.getHeight = function() {
-    return this.height;
-};
-
-Cylinder.prototype.setHeight= function(h) {
-    this.height = h;
-};
-
-Cylinder.prototype.getType = function() {
-    return 'CYLINDER';
-};
-
-module.exports = Cylinder;
+export default Cylinder;

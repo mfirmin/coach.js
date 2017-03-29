@@ -1,30 +1,28 @@
-var Entity = require('./entity');
+import Entity from './entity';
 
-function Box(name, sides, opts) {
+class Box extends Entity {
+    constructor(name, sides, opts) {
+        super(name, opts);
 
-    this.sides = sides;
-    Entity.call(this, name, opts);
+        this._sides = sides;
+        this._type  = 'BOX';
+    }
+
+    initialize() {
+        super.initialize();
+    }
+
+    get sides() {
+        return this._sides;
+    }
+
+    set sides(s) {
+        this._sides = s;
+    }
+
+    get type() {
+        return this._type;
+    }
 }
 
-
-Box.prototype = Object.create(Entity.prototype);
-
-Box.prototype.constructor = Box;
-
-Box.prototype.initialize = function() {
-    Entity.prototype.initialize.call(this);
-}
-
-Box.prototype.getSides = function() {
-    return this.sides;
-};
-
-Box.prototype.setSides= function(s) {
-    this.sides = s;
-};
-
-Box.prototype.getType = function() {
-    return 'BOX';
-};
-
-module.exports = Box;
+export default Box;

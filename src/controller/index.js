@@ -1,9 +1,13 @@
+import PDController    from './pdcontroller';
+import PDController3D  from './pdcontroller3D';
+import VPDController   from './vpdcontroller';
+import VPDController3D from './vpdcontroller3D';
 
-var controllers = {
-    "PDController":  require('./pdcontroller'),
-    "PDController3D":  require('./pdcontroller3D'),
-    "VPDController": require('./vpdcontroller'),
-    "VPDController3D": require('./vpdcontroller3D')
+const controllers = {
+    PDController,
+    PDController3D,
+    VPDController,
+    VPDController3D,
 };
 
-module.exports = controllers;
+export default controllers;

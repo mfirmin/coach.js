@@ -1,99 +1,116 @@
-var Joint = require('./joint');
+import Joint from './joint';
 
-function Hinge(name, parent, child, pos, axis, opts) {
+class Hinge extends Joint {
+    constructor(name, parent, child, pos, axis, opts = {}) {
+        super(name, parent, child);
 
-    Joint.call(this, name, parent, child);
+        this._position = pos;
+        this._axis = axis;
 
-    opts = (opts === undefined) ? {} : opts;
+        this._angle = (opts.angle === undefined) ? 0 : opts.angle;
+        this._angularVelocity = (opts.angularVelocity === undefined) ? 0 : opts.angularVelocity;
+        this._angularVelocityPrev = this.angularVelocity;
+        this._torque = [0, 0, 0];
 
-    this.position = pos;
-    this.axis = axis;
+        const limits = (opts.limits === undefined) ? {} : opts.limits;
 
-    this.angle = (opts.angle === undefined) ? 0 : opts.angle;
-    this.angularVelocity = (opts.angularVelocity === undefined) ? 0 : opts.angularVelocity;
-    this.angularVelocityPrev = this.angularVelocity;
-    this.torque = [0,0,0];
+        this._lo = limits.lo;
+        this._hi = limits.hi;
 
-    limits = (opts.limits === undefined) ? {} : opts.limits;
+        this._torqueLimit = (opts.torqueLimit === undefined) ? 370 : opts.torqueLimit;
 
-    this.lo = limits.lo;
-    this.hi = limits.hi;
-
-    this.torqueLimit = (opts.torqueLimit  === undefined) ? 370 : opts.torqueLimit;
-
-}
-
-Hinge.prototype = Object.create(Joint.prototype);
-
-Hinge.prototype.constructor = Hinge;
-
-Hinge.prototype.initialize = function() {
-}
-
-Hinge.prototype.getAxis = function() {
-    return this.axis;
-};
-
-Hinge.prototype.getPosition = function() {
-    return this.position;
-};
-
-Hinge.prototype.setPosition = function(xyz) {
-    this.position[0] = xyz[0];
-    this.position[1] = xyz[1];
-    this.position[2] = xyz[2];
-};
-
-Hinge.prototype.getAngle = function() {
-    return this.angle;
-};
-
-Hinge.prototype.setAngle = function(ang, dt) {
-    var angleLast = this.angle;
-    this.angle = ang;
-    if (dt !== undefined) {
-        this.angularVelocityPrev = this.angularVelocity;
-        this.angularVelocity = (this.angle - angleLast)*1/dt;
-    }
-};
-
-Hinge.prototype.getAngularVelocity = function() {
-//    return (this.angularVelocityPrev + this.angularVelocity)/2.; // average angVel over 2 timesteps.
-//    return 0;
-    return this.angularVelocity;
-};
-
-Hinge.prototype.setAngularVelocity = function(angVel) {
-    this.angularVelocity = angVel;
-};
-
-Hinge.prototype.resetTorque = function() {
-    this.setTorque([0,0,0]);
-};
-
-Hinge.prototype.setTorque = function(t) {
-    this.torque = t;
-};
-
-Hinge.prototype.addTorque = function(t) {
-    this.torque[2] += t;
-};
-
-Hinge.prototype.getTorque = function() {
-    return this.torque;
-};
-
-Hinge.prototype.getLimitedTorque = function() {
-    var ret = this.torque;
-    if (Math.abs(ret[2]) > this.torqueLimit) {
-        ret[2] = this.torqueLimit * ret[2]/Math.abs(ret[2]);
+        this._type = 'HINGE';
     }
 
-    return ret;
-};
+    initialize() {
+        super.initialize();
+    }
 
-Hinge.prototype.getType = function() {
-    return 'HINGE';
-};
+    resetTorque() {
+        this.torque = [0, 0, 0];
+    }
 
-module.exports = Hinge;
+    updateAngle(ang, dt) {
+        const angleLast = this.angle;
+        this._angle = ang;
+        if (dt !== undefined) {
+            this._angularVelocityPrev = this._angularVelocity;
+            this._angularVelocity = (this._angle - angleLast) / dt;
+        }
+    }
+
+
+    get axis() {
+        return this._axis;
+    }
+
+    set axis(a) {
+        this._axis = a;
+    }
+
+    get angle() {
+        return this._angle;
+    }
+
+    /**
+     * set angle
+     * @description
+     * Directly sets the angle
+     * NOTE - Do not use this during simulation, as it will not update the angular velocity properly
+     *
+     */
+    set angle(ang) {
+        this._angle = ang;
+    }
+
+    get position() {
+        return this._position;
+    }
+
+    set position(xyz) {
+        this._position[0] = xyz[0];
+        this._position[1] = xyz[1];
+        this._position[2] = xyz[2];
+    }
+
+    get angularVelocity() {
+    //    // average angVel over 2 timesteps.
+    //    return (this.angularVelocityPrev + this.angularVelocity)/2.;
+    //    return 0;
+        return this._angularVelocity;
+    }
+
+    set angularVelocity(angVel) {
+        this._angularVelocity = angVel;
+    }
+
+    set torque(t) {
+        this._torque[0] = t[0];
+        this._torque[1] = t[1];
+        this._torque[2] = t[2];
+    }
+
+    get torque() {
+        return this._torque;
+    }
+
+    // TODO: Make this not 2D...
+    addTorque(t) {
+        this._torque[2] += t;
+    }
+
+    getLimitedTorque() {
+        const ret = [this._torque[0], this._torque[1], this._torque[2]];
+        if (Math.abs(ret[2]) > this.torqueLimit) {
+            ret[2] = (this._torqueLimit * ret[2]) / Math.abs(ret[2]);
+        }
+
+        return ret;
+    }
+
+    get type() {
+        return this._type;
+    }
+}
+
+export default Hinge;

@@ -1,8 +1,11 @@
+import Joint from './joint';
+import Ball  from './ball';
+import Hinge from './hinge';
 
-var joints = {
-    "Joint":  require('./joint'),
-    "Ball":   require('./ball'),
-    "Hinge":  require('./hinge'),
+const joints = {
+    Joint,
+    Ball,
+    Hinge,
 };
 
-module.exports = joints;
+export default joints;
