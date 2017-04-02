@@ -1,13 +1,15 @@
 /* global document */
-import { three as THREE } from '../lib/index';
+import { three as THREE, VREffect } from '../lib/index';
 import ConvexHullGrahamScan from '../lib/graham_scan.min';
 import $                    from '../lib/jquery-2.1.4.min';
 
 import Camera from './camera';
+import VRCamera from './vrCamera';
 
 class Renderer {
     constructor(opts = {}, element) {
         this.cameraOptions = opts.cameraOptions;
+        this.vrEnabled = (opts.VR === undefined) ? false : opts.VR;
 
         this.initializeGL();
         this.initializeWorld();
@@ -17,9 +19,9 @@ class Renderer {
         this.joints = {};
 
         this.callback = opts.callback;
+
         this.element = (element === undefined) ? 'body' : element;
     }
-
 
     initializeGL() {
         this.renderer = new THREE.WebGLRenderer({
@@ -28,12 +30,20 @@ class Renderer {
         });
 
         this.renderer.setClearColor(0xffffff, 1);
+
+        if (this.vrEnabled) {
+            this.enableVR();
+        }
     }
 
     initializeWorld() {
         this.scene = new THREE.Scene();
 
-        this.camera = new Camera(this.cameraOptions);
+        if (this.vrEnabled) {
+            this.camera = new VRCamera(this.cameraOptions);
+        } else {
+            this.camera = new Camera(this.cameraOptions);
+        }
 
         this.scene.add(this.camera.threeCamera);
 
@@ -43,6 +53,11 @@ class Renderer {
 
         this.light.position.set(pos[0], pos[1], pos[2]);
         this.scene.add(this.light);
+    }
+
+    enableVR() {
+        this.effect = new VREffect(this.renderer);
+        this.effect.setSize(400, 400);
     }
 
     initializeDiv() {
@@ -64,25 +79,33 @@ class Renderer {
 
         this.renderer.setSize(400, 400);
 
-        this.canvas = $(this.renderer.domElement).width(400).height(400).addClass('three-canvas');
-        $(this.panel).append(this.canvas);
+//        this.canvas = $(this.renderer.domElement).width(400).height(400).addClass('three-canvas');
+//        $(this.panel).append(this.canvas);
 
         $(document).ready(() => {
-            $(scope.element).append(scope.panel);
-            scope.setSize();
+            document.body.appendChild(this.renderer.domElement);
+//            $(scope.element).append(scope.panel);
+            this.setSize();
         });
     }
 
     setSize() {
-        const w = $(this.element).width();
-        const h = $(this.element).height();
+//        const w = $(this.element).width();
+//        const h = $(this.element).height();
 
-        this.canvas.width(w);
-        this.canvas.height(h);
+//        this.canvas.width(w);
+//        this.canvas.height(h);
+
+        const w = window.innerWidth;
+        const h = window.innerHeight;
 
         this.renderer.setSize(w, h);
 
         this.camera.aspectRatio = w / h;
+
+        if (this.vrEnabled && this.effect !== undefined) {
+            this.effect.setSize(w, h);
+        }
 
     //    this.panel.css({width: w, height: h});
     }
@@ -96,7 +119,11 @@ class Renderer {
         if (this.callback !== undefined) {
             this.callback(this.camera, time);
         }
-        this.renderer.render(this.scene, this.camera.threeCamera);
+        if (this.vrEnabled) {
+            this.effect.render(this.scene, this.camera.threeCamera);
+        } else {
+            this.renderer.render(this.scene, this.camera.threeCamera);
+        }
     }
 
 

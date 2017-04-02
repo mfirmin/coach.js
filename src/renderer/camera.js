@@ -74,6 +74,18 @@ class Camera {
         this.threeCamera.position.z = pos[2];
     }
 
+    set positionX(x) {
+        this.threeCamera.position.x = x;
+    }
+
+    set positionY(y) {
+        this.threeCamera.position.y = y;
+    }
+
+    set positionZ(z) {
+        this.threeCamera.position.z = z;
+    }
+
     get target() {
         return this._target;
     }

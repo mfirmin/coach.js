@@ -1,4 +1,4 @@
-/* global requestAnimationFrame */
+/* global requestAnimationFrame, navigator */
 import Renderer  from '../renderer/renderer';
 import Simulator from '../simulator/simulator';
 
@@ -8,7 +8,26 @@ class World {
         this.dt  = (opts.dt === undefined) ? 0.0001 : opts.dt;
         this.is2D = (opts['2D'] === undefined) ? false : opts['2D'];
 
-        this.renderer = new Renderer({ cameraOptions: opts.cameraOptions }, element);
+        this.vrEnabled = (opts.VR === undefined) ? false : opts.VR;
+
+        if (this.vrEnabled) {
+            this.vrReady = false;
+            // eslint-disable-next-line no-param-reassign
+            this.vrDisplay = navigator.getVRDisplays().then((displays) => {
+                if (displays.length > 0) {
+                    this.vrDisplay = displays[0];
+                    if (this.vrDisplay.stageParameters) {
+//                        this.setupVR(this.vrDisplay.stageParameters);
+                        this.vrReady = true;
+                    }
+                }
+            });
+        }
+
+        this.renderer = new Renderer({
+            cameraOptions: opts.cameraOptions,
+            VR:            this.vrEnabled,
+        }, element);
         this.simulator = new Simulator(this.dt, { '2D': this.is2D });
 
         this.entities = {};
@@ -83,8 +102,6 @@ class World {
         this.renderer.setCallback(opts.renderCallback);
 
         function animate() {
-            requestAnimationFrame(animate);
-
             const now = Date.now();
             if (ready) {
                 ready = false;
@@ -96,7 +113,16 @@ class World {
                     }
                 }
 
+                if (scope.vrEnabled) {
+                    scope.renderer.camera.vrControls.update();
+                }
+
                 scope.render(time);
+                if (scope.vrEnabled && scope.vrReady) {
+                    scope.vrDisplay.requestAnimationFrame(animate);
+                } else {
+                    requestAnimationFrame(animate);
+                }
                 ready = true;
             }
         }

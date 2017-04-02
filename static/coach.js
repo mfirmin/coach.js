@@ -45082,12 +45082,526 @@ return M.access(a,b,c)},removeData:function(a,b){M.remove(a,b);},_data:function(
 void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?void 0:e):null!==c?d&&"set"in d&&void 0!==(e=d.set(a,c,b))?e:(a.setAttribute(b,c+""),c):void n.removeAttr(a,b))},removeAttr:function(a,b){var c,d,e=0,f=b&&b.match(E);if(f&&1===a.nodeType)while(c=f[e++])d=n.propFix[c]||c,n.expr.match.bool.test(c)&&(a[d]=!1),a.removeAttribute(c);},attrHooks:{type:{set:function(a,b){if(!k.radioValue&&"radio"===b&&n.nodeName(a,"input")){var c=a.value;return a.setAttribute("type",b),c&&(a.value=c),b}}}}}),Za={set:function(a,b,c){return b===!1?n.removeAttr(a,c):a.setAttribute(c,c),c}},n.each(n.expr.match.bool.source.match(/\w+/g),function(a,b){var c=$a[b]||n.find.attr;$a[b]=function(a,b,d){var e,f;return d||(f=$a[b],$a[b]=e,e=null!=c(a,b,d)?b.toLowerCase():null,$a[b]=f),e};});var _a=/^(?:input|select|textarea|button)$/i;n.fn.extend({prop:function(a,b){return J(this,n.prop,a,b,arguments.length>1)},removeProp:function(a){return this.each(function(){delete this[n.propFix[a]||a];})}}),n.extend({propFix:{"for":"htmlFor","class":"className"},prop:function(a,b,c){var d,e,f,g=a.nodeType;if(a&&3!==g&&8!==g&&2!==g)return f=1!==g||!n.isXMLDoc(a),f&&(b=n.propFix[b]||b,e=n.propHooks[b]),void 0!==c?e&&"set"in e&&void 0!==(d=e.set(a,c,b))?d:a[b]=c:e&&"get"in e&&null!==(d=e.get(a,b))?d:a[b]},propHooks:{tabIndex:{get:function(a){return a.hasAttribute("tabindex")||_a.test(a.nodeName)||a.href?a.tabIndex:-1}}}}),k.optSelected||(n.propHooks.selected={get:function(a){var b=a.parentNode;return b&&b.parentNode&&b.parentNode.selectedIndex,null}}),n.each(["tabIndex","readOnly","maxLength","cellSpacing","cellPadding","rowSpan","colSpan","useMap","frameBorder","contentEditable"],function(){n.propFix[this.toLowerCase()]=this;});var ab=/[\t\r\n\f]/g;n.fn.extend({addClass:function(a){var b,c,d,e,f,g,h="string"==typeof a&&a,i=0,j=this.length;if(n.isFunction(a))return this.each(function(b){n(this).addClass(a.call(this,b,this.className));});if(h)for(b=(a||"").match(E)||[];j>i;i++)if(c=this[i],d=1===c.nodeType&&(c.className?(" "+c.className+" ").replace(ab," "):" ")){f=0;while(e=b[f++])d.indexOf(" "+e+" ")<0&&(d+=e+" ");g=n.trim(d),c.className!==g&&(c.className=g);}return this},removeClass:function(a){var b,c,d,e,f,g,h=0===arguments.length||"string"==typeof a&&a,i=0,j=this.length;if(n.isFunction(a))return this.each(function(b){n(this).removeClass(a.call(this,b,this.className));});if(h)for(b=(a||"").match(E)||[];j>i;i++)if(c=this[i],d=1===c.nodeType&&(c.className?(" "+c.className+" ").replace(ab," "):"")){f=0;while(e=b[f++])while(d.indexOf(" "+e+" ")>=0)d=d.replace(" "+e+" "," ");g=a?n.trim(d):"",c.className!==g&&(c.className=g);}return this},toggleClass:function(a,b){var c=typeof a;return"boolean"==typeof b&&"string"===c?b?this.addClass(a):this.removeClass(a):this.each(n.isFunction(a)?function(c){n(this).toggleClass(a.call(this,c,this.className,b),b);}:function(){if("string"===c){var b,d=0,e=n(this),f=a.match(E)||[];while(b=f[d++])e.hasClass(b)?e.removeClass(b):e.addClass(b);}else(c===U||"boolean"===c)&&(this.className&&L.set(this,"__className__",this.className),this.className=this.className||a===!1?"":L.get(this,"__className__")||"");})},hasClass:function(a){for(var b=" "+a+" ",c=0,d=this.length;d>c;c++)if(1===this[c].nodeType&&(" "+this[c].className+" ").replace(ab," ").indexOf(b)>=0)return!0;return!1}});var bb=/\r/g;n.fn.extend({val:function(a){var b,c,d,e=this[0];{if(arguments.length)return d=n.isFunction(a),this.each(function(c){var e;1===this.nodeType&&(e=d?a.call(this,c,n(this).val()):a,null==e?e="":"number"==typeof e?e+="":n.isArray(e)&&(e=n.map(e,function(a){return null==a?"":a+""})),b=n.valHooks[this.type]||n.valHooks[this.nodeName.toLowerCase()],b&&"set"in b&&void 0!==b.set(this,e,"value")||(this.value=e));});if(e)return b=n.valHooks[e.type]||n.valHooks[e.nodeName.toLowerCase()],b&&"get"in b&&void 0!==(c=b.get(e,"value"))?c:(c=e.value,"string"==typeof c?c.replace(bb,""):null==c?"":c)}}}),n.extend({valHooks:{option:{get:function(a){var b=n.find.attr(a,"value");return null!=b?b:n.trim(n.text(a))}},select:{get:function(a){for(var b,c,d=a.options,e=a.selectedIndex,f="select-one"===a.type||0>e,g=f?null:[],h=f?e+1:d.length,i=0>e?h:f?e:0;h>i;i++)if(c=d[i],!(!c.selected&&i!==e||(k.optDisabled?c.disabled:null!==c.getAttribute("disabled"))||c.parentNode.disabled&&n.nodeName(c.parentNode,"optgroup"))){if(b=n(c).val(),f)return b;g.push(b);}return g},set:function(a,b){var c,d,e=a.options,f=n.makeArray(b),g=e.length;while(g--)d=e[g],(d.selected=n.inArray(d.value,f)>=0)&&(c=!0);return c||(a.selectedIndex=-1),f}}}}),n.each(["radio","checkbox"],function(){n.valHooks[this]={set:function(a,b){return n.isArray(b)?a.checked=n.inArray(n(a).val(),b)>=0:void 0}},k.checkOn||(n.valHooks[this].get=function(a){return null===a.getAttribute("value")?"on":a.value});}),n.each("blur focus focusin focusout load resize scroll unload click dblclick mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave change select submit keydown keypress keyup error contextmenu".split(" "),function(a,b){n.fn[b]=function(a,c){return arguments.length>0?this.on(b,null,a,c):this.trigger(b)};}),n.fn.extend({hover:function(a,b){return this.mouseenter(a).mouseleave(b||a)},bind:function(a,b,c){return this.on(a,null,b,c)},unbind:function(a,b){return this.off(a,null,b)},delegate:function(a,b,c,d){return this.on(b,a,c,d)},undelegate:function(a,b,c){return 1===arguments.length?this.off(a,"**"):this.off(b,a||"**",c)}});var cb=n.now(),db=/\?/;n.parseJSON=function(a){return JSON.parse(a+"")},n.parseXML=function(a){var b,c;if(!a||"string"!=typeof a)return null;try{c=new DOMParser,b=c.parseFromString(a,"text/xml");}catch(d){b=void 0;}return(!b||b.getElementsByTagName("parsererror").length)&&n.error("Invalid XML: "+a),b};var eb=/#.*$/,fb=/([?&])_=[^&]*/,gb=/^(.*?):[ \t]*([^\r\n]*)$/gm,hb=/^(?:about|app|app-storage|.+-extension|file|res|widget):$/,ib=/^(?:GET|HEAD)$/,jb=/^\/\//,kb=/^([\w.+-]+:)(?:\/\/(?:[^\/?#]*@|)([^\/?#:]*)(?::(\d+)|)|)/,lb={},mb={},nb="*/".concat("*"),ob=a.location.href,pb=kb.exec(ob.toLowerCase())||[];function qb(a){return function(b,c){"string"!=typeof b&&(c=b,b="*");var d,e=0,f=b.toLowerCase().match(E)||[];if(n.isFunction(c))while(d=f[e++])"+"===d[0]?(d=d.slice(1)||"*",(a[d]=a[d]||[]).unshift(c)):(a[d]=a[d]||[]).push(c);}}function rb(a,b,c,d){var e={},f=a===mb;function g(h){var i;return e[h]=!0,n.each(a[h]||[],function(a,h){var j=h(b,c,d);return"string"!=typeof j||f||e[j]?f?!(i=j):void 0:(b.dataTypes.unshift(j),g(j),!1)}),i}return g(b.dataTypes[0])||!e["*"]&&g("*")}function sb(a,b){var c,d,e=n.ajaxSettings.flatOptions||{};for(c in b)void 0!==b[c]&&((e[c]?a:d||(d={}))[c]=b[c]);return d&&n.extend(!0,a,d),a}function tb(a,b,c){var d,e,f,g,h=a.contents,i=a.dataTypes;while("*"===i[0])i.shift(),void 0===d&&(d=a.mimeType||b.getResponseHeader("Content-Type"));if(d)for(e in h)if(h[e]&&h[e].test(d)){i.unshift(e);break}if(i[0]in c)f=i[0];else{for(e in c){if(!i[0]||a.converters[e+" "+i[0]]){f=e;break}g||(g=e);}f=f||g;}return f?(f!==i[0]&&i.unshift(f),c[f]):void 0}function ub(a,b,c,d){var e,f,g,h,i,j={},k=a.dataTypes.slice();if(k[1])for(g in a.converters)j[g.toLowerCase()]=a.converters[g];f=k.shift();while(f)if(a.responseFields[f]&&(c[a.responseFields[f]]=b),!i&&d&&a.dataFilter&&(b=a.dataFilter(b,a.dataType)),i=f,f=k.shift())if("*"===f)f=i;else if("*"!==i&&i!==f){if(g=j[i+" "+f]||j["* "+f],!g)for(e in j)if(h=e.split(" "),h[1]===f&&(g=j[i+" "+h[0]]||j["* "+h[0]])){g===!0?g=j[e]:j[e]!==!0&&(f=h[0],k.unshift(h[1]));break}if(g!==!0)if(g&&a["throws"])b=g(b);else try{b=g(b);}catch(l){return{state:"parsererror",error:g?l:"No conversion from "+i+" to "+f}}}return{state:"success",data:b}}n.extend({active:0,lastModified:{},etag:{},ajaxSettings:{url:ob,type:"GET",isLocal:hb.test(pb[1]),global:!0,processData:!0,async:!0,contentType:"application/x-www-form-urlencoded; charset=UTF-8",accepts:{"*":nb,text:"text/plain",html:"text/html",xml:"application/xml, text/xml",json:"application/json, text/javascript"},contents:{xml:/xml/,html:/html/,json:/json/},responseFields:{xml:"responseXML",text:"responseText",json:"responseJSON"},converters:{"* text":String,"text html":!0,"text json":n.parseJSON,"text xml":n.parseXML},flatOptions:{url:!0,context:!0}},ajaxSetup:function(a,b){return b?sb(sb(a,n.ajaxSettings),b):sb(n.ajaxSettings,a)},ajaxPrefilter:qb(lb),ajaxTransport:qb(mb),ajax:function(a,b){"object"==typeof a&&(b=a,a=void 0),b=b||{};var c,d,e,f,g,h,i,j,k=n.ajaxSetup({},b),l=k.context||k,m=k.context&&(l.nodeType||l.jquery)?n(l):n.event,o=n.Deferred(),p=n.Callbacks("once memory"),q=k.statusCode||{},r={},s={},t=0,u="canceled",v={readyState:0,getResponseHeader:function(a){var b;if(2===t){if(!f){f={};while(b=gb.exec(e))f[b[1].toLowerCase()]=b[2];}b=f[a.toLowerCase()];}return null==b?null:b},getAllResponseHeaders:function(){return 2===t?e:null},setRequestHeader:function(a,b){var c=a.toLowerCase();return t||(a=s[c]=s[c]||a,r[a]=b),this},overrideMimeType:function(a){return t||(k.mimeType=a),this},statusCode:function(a){var b;if(a)if(2>t)for(b in a)q[b]=[q[b],a[b]];else v.always(a[v.status]);return this},abort:function(a){var b=a||u;return c&&c.abort(b),x(0,b),this}};if(o.promise(v).complete=p.add,v.success=v.done,v.error=v.fail,k.url=((a||k.url||ob)+"").replace(eb,"").replace(jb,pb[1]+"//"),k.type=b.method||b.type||k.method||k.type,k.dataTypes=n.trim(k.dataType||"*").toLowerCase().match(E)||[""],null==k.crossDomain&&(h=kb.exec(k.url.toLowerCase()),k.crossDomain=!(!h||h[1]===pb[1]&&h[2]===pb[2]&&(h[3]||("http:"===h[1]?"80":"443"))===(pb[3]||("http:"===pb[1]?"80":"443")))),k.data&&k.processData&&"string"!=typeof k.data&&(k.data=n.param(k.data,k.traditional)),rb(lb,k,b,v),2===t)return v;i=n.event&&k.global,i&&0===n.active++&&n.event.trigger("ajaxStart"),k.type=k.type.toUpperCase(),k.hasContent=!ib.test(k.type),d=k.url,k.hasContent||(k.data&&(d=k.url+=(db.test(d)?"&":"?")+k.data,delete k.data),k.cache===!1&&(k.url=fb.test(d)?d.replace(fb,"$1_="+cb++):d+(db.test(d)?"&":"?")+"_="+cb++)),k.ifModified&&(n.lastModified[d]&&v.setRequestHeader("If-Modified-Since",n.lastModified[d]),n.etag[d]&&v.setRequestHeader("If-None-Match",n.etag[d])),(k.data&&k.hasContent&&k.contentType!==!1||b.contentType)&&v.setRequestHeader("Content-Type",k.contentType),v.setRequestHeader("Accept",k.dataTypes[0]&&k.accepts[k.dataTypes[0]]?k.accepts[k.dataTypes[0]]+("*"!==k.dataTypes[0]?", "+nb+"; q=0.01":""):k.accepts["*"]);for(j in k.headers)v.setRequestHeader(j,k.headers[j]);if(k.beforeSend&&(k.beforeSend.call(l,v,k)===!1||2===t))return v.abort();u="abort";for(j in{success:1,error:1,complete:1})v[j](k[j]);if(c=rb(mb,k,b,v)){v.readyState=1,i&&m.trigger("ajaxSend",[v,k]),k.async&&k.timeout>0&&(g=setTimeout(function(){v.abort("timeout");},k.timeout));try{t=1,c.send(r,x);}catch(w){if(!(2>t))throw w;x(-1,w);}}else x(-1,"No Transport");function x(a,b,f,h){var j,r,s,u,w,x=b;2!==t&&(t=2,g&&clearTimeout(g),c=void 0,e=h||"",v.readyState=a>0?4:0,j=a>=200&&300>a||304===a,f&&(u=tb(k,v,f)),u=ub(k,u,v,j),j?(k.ifModified&&(w=v.getResponseHeader("Last-Modified"),w&&(n.lastModified[d]=w),w=v.getResponseHeader("etag"),w&&(n.etag[d]=w)),204===a||"HEAD"===k.type?x="nocontent":304===a?x="notmodified":(x=u.state,r=u.data,s=u.error,j=!s)):(s=x,(a||!x)&&(x="error",0>a&&(a=0))),v.status=a,v.statusText=(b||x)+"",j?o.resolveWith(l,[r,x,v]):o.rejectWith(l,[v,x,s]),v.statusCode(q),q=void 0,i&&m.trigger(j?"ajaxSuccess":"ajaxError",[v,k,j?r:s]),p.fireWith(l,[v,x]),i&&(m.trigger("ajaxComplete",[v,k]),--n.active||n.event.trigger("ajaxStop")));}return v},getJSON:function(a,b,c){return n.get(a,b,c,"json")},getScript:function(a,b){return n.get(a,void 0,b,"script")}}),n.each(["get","post"],function(a,b){n[b]=function(a,c,d,e){return n.isFunction(c)&&(e=e||d,d=c,c=void 0),n.ajax({url:a,type:b,dataType:e,data:c,success:d})};}),n._evalUrl=function(a){return n.ajax({url:a,type:"GET",dataType:"script",async:!1,global:!1,"throws":!0})},n.fn.extend({wrapAll:function(a){var b;return n.isFunction(a)?this.each(function(b){n(this).wrapAll(a.call(this,b));}):(this[0]&&(b=n(a,this[0].ownerDocument).eq(0).clone(!0),this[0].parentNode&&b.insertBefore(this[0]),b.map(function(){var a=this;while(a.firstElementChild)a=a.firstElementChild;return a}).append(this)),this)},wrapInner:function(a){return this.each(n.isFunction(a)?function(b){n(this).wrapInner(a.call(this,b));}:function(){var b=n(this),c=b.contents();c.length?c.wrapAll(a):b.append(a);})},wrap:function(a){var b=n.isFunction(a);return this.each(function(c){n(this).wrapAll(b?a.call(this,c):a);})},unwrap:function(){return this.parent().each(function(){n.nodeName(this,"body")||n(this).replaceWith(this.childNodes);}).end()}}),n.expr.filters.hidden=function(a){return a.offsetWidth<=0&&a.offsetHeight<=0},n.expr.filters.visible=function(a){return!n.expr.filters.hidden(a)};var vb=/%20/g,wb=/\[\]$/,xb=/\r?\n/g,yb=/^(?:submit|button|image|reset|file)$/i,zb=/^(?:input|select|textarea|keygen)/i;function Ab(a,b,c,d){var e;if(n.isArray(b))n.each(b,function(b,e){c||wb.test(a)?d(a,e):Ab(a+"["+("object"==typeof e?b:"")+"]",e,c,d);});else if(c||"object"!==n.type(b))d(a,b);else for(e in b)Ab(a+"["+e+"]",b[e],c,d);}n.param=function(a,b){var c,d=[],e=function(a,b){b=n.isFunction(b)?b():null==b?"":b,d[d.length]=encodeURIComponent(a)+"="+encodeURIComponent(b);};if(void 0===b&&(b=n.ajaxSettings&&n.ajaxSettings.traditional),n.isArray(a)||a.jquery&&!n.isPlainObject(a))n.each(a,function(){e(this.name,this.value);});else for(c in a)Ab(c,a[c],b,e);return d.join("&").replace(vb,"+")},n.fn.extend({serialize:function(){return n.param(this.serializeArray())},serializeArray:function(){return this.map(function(){var a=n.prop(this,"elements");return a?n.makeArray(a):this}).filter(function(){var a=this.type;return this.name&&!n(this).is(":disabled")&&zb.test(this.nodeName)&&!yb.test(a)&&(this.checked||!T.test(a))}).map(function(a,b){var c=n(this).val();return null==c?null:n.isArray(c)?n.map(c,function(a){return{name:b.name,value:a.replace(xb,"\r\n")}}):{name:b.name,value:c.replace(xb,"\r\n")}}).get()}}),n.ajaxSettings.xhr=function(){try{return new XMLHttpRequest}catch(a){}};var Bb=0,Cb={},Db={0:200,1223:204},Eb=n.ajaxSettings.xhr();a.attachEvent&&a.attachEvent("onunload",function(){for(var a in Cb)Cb[a]();}),k.cors=!!Eb&&"withCredentials"in Eb,k.ajax=Eb=!!Eb,n.ajaxTransport(function(a){var b;return k.cors||Eb&&!a.crossDomain?{send:function(c,d){var e,f=a.xhr(),g=++Bb;if(f.open(a.type,a.url,a.async,a.username,a.password),a.xhrFields)for(e in a.xhrFields)f[e]=a.xhrFields[e];a.mimeType&&f.overrideMimeType&&f.overrideMimeType(a.mimeType),a.crossDomain||c["X-Requested-With"]||(c["X-Requested-With"]="XMLHttpRequest");for(e in c)f.setRequestHeader(e,c[e]);b=function(a){return function(){b&&(delete Cb[g],b=f.onload=f.onerror=null,"abort"===a?f.abort():"error"===a?d(f.status,f.statusText):d(Db[f.status]||f.status,f.statusText,"string"==typeof f.responseText?{text:f.responseText}:void 0,f.getAllResponseHeaders()));}},f.onload=b(),f.onerror=b("error"),b=Cb[g]=b("abort");try{f.send(a.hasContent&&a.data||null);}catch(h){if(b)throw h}},abort:function(){b&&b();}}:void 0}),n.ajaxSetup({accepts:{script:"text/javascript, application/javascript, application/ecmascript, application/x-ecmascript"},contents:{script:/(?:java|ecma)script/},converters:{"text script":function(a){return n.globalEval(a),a}}}),n.ajaxPrefilter("script",function(a){void 0===a.cache&&(a.cache=!1),a.crossDomain&&(a.type="GET");}),n.ajaxTransport("script",function(a){if(a.crossDomain){var b,c;return{send:function(d,e){b=n("<script>").prop({async:!0,charset:a.scriptCharset,src:a.url}).on("load error",c=function(a){b.remove(),c=null,a&&e("error"===a.type?404:200,a.type);}),l.head.appendChild(b[0]);},abort:function(){c&&c();}}}});var Fb=[],Gb=/(=)\?(?=&|$)|\?\?/;n.ajaxSetup({jsonp:"callback",jsonpCallback:function(){var a=Fb.pop()||n.expando+"_"+cb++;return this[a]=!0,a}}),n.ajaxPrefilter("json jsonp",function(b,c,d){var e,f,g,h=b.jsonp!==!1&&(Gb.test(b.url)?"url":"string"==typeof b.data&&!(b.contentType||"").indexOf("application/x-www-form-urlencoded")&&Gb.test(b.data)&&"data");return h||"jsonp"===b.dataTypes[0]?(e=b.jsonpCallback=n.isFunction(b.jsonpCallback)?b.jsonpCallback():b.jsonpCallback,h?b[h]=b[h].replace(Gb,"$1"+e):b.jsonp!==!1&&(b.url+=(db.test(b.url)?"&":"?")+b.jsonp+"="+e),b.converters["script json"]=function(){return g||n.error(e+" was not called"),g[0]},b.dataTypes[0]="json",f=a[e],a[e]=function(){g=arguments;},d.always(function(){a[e]=f,b[e]&&(b.jsonpCallback=c.jsonpCallback,Fb.push(e)),g&&n.isFunction(f)&&f(g[0]),g=f=void 0;}),"script"):void 0}),n.parseHTML=function(a,b,c){if(!a||"string"!=typeof a)return null;"boolean"==typeof b&&(c=b,b=!1),b=b||l;var d=v.exec(a),e=!c&&[];return d?[b.createElement(d[1])]:(d=n.buildFragment([a],b,e),e&&e.length&&n(e).remove(),n.merge([],d.childNodes))};var Hb=n.fn.load;n.fn.load=function(a,b,c){if("string"!=typeof a&&Hb)return Hb.apply(this,arguments);var d,e,f,g=this,h=a.indexOf(" ");return h>=0&&(d=n.trim(a.slice(h)),a=a.slice(0,h)),n.isFunction(b)?(c=b,b=void 0):b&&"object"==typeof b&&(e="POST"),g.length>0&&n.ajax({url:a,type:e,dataType:"html",data:b}).done(function(a){f=arguments,g.html(d?n("<div>").append(n.parseHTML(a)).find(d):a);}).complete(c&&function(a,b){g.each(c,f||[a.responseText,b,a]);}),this},n.each(["ajaxStart","ajaxStop","ajaxComplete","ajaxError","ajaxSuccess","ajaxSend"],function(a,b){n.fn[b]=function(a){return this.on(b,a)};}),n.expr.filters.animated=function(a){return n.grep(n.timers,function(b){return a===b.elem}).length};var Ib=a.document.documentElement;function Jb(a){return n.isWindow(a)?a:9===a.nodeType&&a.defaultView}n.offset={setOffset:function(a,b,c){var d,e,f,g,h,i,j,k=n.css(a,"position"),l=n(a),m={};"static"===k&&(a.style.position="relative"),h=l.offset(),f=n.css(a,"top"),i=n.css(a,"left"),j=("absolute"===k||"fixed"===k)&&(f+i).indexOf("auto")>-1,j?(d=l.position(),g=d.top,e=d.left):(g=parseFloat(f)||0,e=parseFloat(i)||0),n.isFunction(b)&&(b=b.call(a,c,h)),null!=b.top&&(m.top=b.top-h.top+g),null!=b.left&&(m.left=b.left-h.left+e),"using"in b?b.using.call(a,m):l.css(m);}},n.fn.extend({offset:function(a){if(arguments.length)return void 0===a?this:this.each(function(b){n.offset.setOffset(this,a,b);});var b,c,d=this[0],e={top:0,left:0},f=d&&d.ownerDocument;if(f)return b=f.documentElement,n.contains(b,d)?(typeof d.getBoundingClientRect!==U&&(e=d.getBoundingClientRect()),c=Jb(f),{top:e.top+c.pageYOffset-b.clientTop,left:e.left+c.pageXOffset-b.clientLeft}):e},position:function(){if(this[0]){var a,b,c=this[0],d={top:0,left:0};return"fixed"===n.css(c,"position")?b=c.getBoundingClientRect():(a=this.offsetParent(),b=this.offset(),n.nodeName(a[0],"html")||(d=a.offset()),d.top+=n.css(a[0],"borderTopWidth",!0),d.left+=n.css(a[0],"borderLeftWidth",!0)),{top:b.top-d.top-n.css(c,"marginTop",!0),left:b.left-d.left-n.css(c,"marginLeft",!0)}}},offsetParent:function(){return this.map(function(){var a=this.offsetParent||Ib;while(a&&!n.nodeName(a,"html")&&"static"===n.css(a,"position"))a=a.offsetParent;return a||Ib})}}),n.each({scrollLeft:"pageXOffset",scrollTop:"pageYOffset"},function(b,c){var d="pageYOffset"===c;n.fn[b]=function(e){return J(this,function(b,e,f){var g=Jb(b);return void 0===f?g?g[c]:b[e]:void(g?g.scrollTo(d?a.pageXOffset:f,d?f:a.pageYOffset):b[e]=f)},b,e,arguments.length,null)};}),n.each(["top","left"],function(a,b){n.cssHooks[b]=ya(k.pixelPosition,function(a,c){return c?(c=xa(a,b),va.test(c)?n(a).position()[b]+"px":c):void 0});}),n.each({Height:"height",Width:"width"},function(a,b){n.each({padding:"inner"+a,content:b,"":"outer"+a},function(c,d){n.fn[d]=function(d,e){var f=arguments.length&&(c||"boolean"!=typeof d),g=c||(d===!0||e===!0?"margin":"border");return J(this,function(b,c,d){var e;return n.isWindow(b)?b.document.documentElement["client"+a]:9===b.nodeType?(e=b.documentElement,Math.max(b.body["scroll"+a],e["scroll"+a],b.body["offset"+a],e["offset"+a],e["client"+a])):void 0===d?n.css(b,c,g):n.style(b,c,d,g)},b,f?d:void 0,f,null)};});}),n.fn.size=function(){return this.length},n.fn.andSelf=n.fn.addBack,"function"==typeof undefined&&undefined.amd&&undefined("jquery",[],function(){return n});var Kb=a.jQuery,Lb=a.$;return n.noConflict=function(b){return a.$===n&&(a.$=Lb),b&&a.jQuery===n&&(a.jQuery=Kb),n},typeof b===U&&(a.jQuery=a.$=n),n});
 });
 
+/**
+ * @author dmarcos / https://github.com/dmarcos
+ * @author mrdoob / http://mrdoob.com
+ */
+
+var VRControls = function VRControls(object, onError) {
+
+	var scope = this;
+
+	var vrInput;
+
+	var standingMatrix = new Matrix4();
+
+	function gotVRDevices(devices) {
+
+		for (var i = 0; i < devices.length; i++) {
+
+			if ('VRDisplay' in window && devices[i] instanceof VRDisplay || 'PositionSensorVRDevice' in window && devices[i] instanceof PositionSensorVRDevice) {
+
+				vrInput = devices[i];
+				break; // We keep the first we encounter
+			}
+		}
+
+		if (!vrInput) {
+
+			if (onError) onError('VR input not available.');
+		}
+	}
+
+	if (navigator.getVRDisplays) {
+
+		navigator.getVRDisplays().then(gotVRDevices);
+	} else if (navigator.getVRDevices) {
+
+		// Deprecated API.
+		navigator.getVRDevices().then(gotVRDevices);
+	}
+
+	// the Rift SDK returns the position in meters
+	// this scale factor allows the user to define how meters
+	// are converted to scene units.
+
+	this.scale = 1;
+
+	// If true will use "standing space" coordinate system where y=0 is the
+	// floor and x=0, z=0 is the center of the room.
+	this.standing = false;
+
+	// Distance from the users eyes to the floor in meters. Used when
+	// standing=true but the VRDisplay doesn't provide stageParameters.
+	this.userHeight = 1.6;
+
+	this.update = function () {
+
+		if (vrInput) {
+
+			if (vrInput.getPose) {
+
+				var pose = vrInput.getPose();
+
+				if (pose.orientation !== null) {
+
+					object.quaternion.fromArray(pose.orientation);
+				}
+
+				if (pose.position !== null) {
+
+					object.position.fromArray(pose.position);
+				} else {
+
+					object.position.set(0, 0, 0);
+				}
+			} else {
+
+				// Deprecated API.
+				var state = vrInput.getState();
+
+				if (state.orientation !== null) {
+
+					object.quaternion.copy(state.orientation);
+				}
+
+				if (state.position !== null) {
+
+					object.position.copy(state.position);
+				} else {
+
+					object.position.set(0, 0, 0);
+				}
+			}
+
+			if (this.standing) {
+
+				if (vrInput.stageParameters) {
+
+					object.updateMatrix();
+
+					standingMatrix.fromArray(vrInput.stageParameters.sittingToStandingTransform);
+					object.applyMatrix(standingMatrix);
+				} else {
+
+					object.position.setY(object.position.y + this.userHeight);
+				}
+			}
+
+			object.position.multiplyScalar(scope.scale);
+		}
+	};
+
+	this.resetPose = function () {
+
+		if (vrInput) {
+
+			if (vrInput.resetPose !== undefined) {
+
+				vrInput.resetPose();
+			} else if (vrInput.resetSensor !== undefined) {
+
+				// Deprecated API.
+				vrInput.resetSensor();
+			} else if (vrInput.zeroSensor !== undefined) {
+
+				// Really deprecated API.
+				vrInput.zeroSensor();
+			}
+		}
+	};
+
+	this.resetSensor = function () {
+
+		console.warn('THREE.VRControls: .resetSensor() is now .resetPose().');
+		this.resetPose();
+	};
+
+	this.zeroSensor = function () {
+
+		console.warn('THREE.VRControls: .zeroSensor() is now .resetPose().');
+		this.resetPose();
+	};
+
+	this.dispose = function () {
+
+		vrInput = null;
+	};
+};
+
+/**
+ * @author dmarcos / https://github.com/dmarcos
+ * @author mrdoob / http://mrdoob.com
+ *
+ * WebVR Spec: http://mozvr.github.io/webvr-spec/webvr.html
+ *
+ * Firefox: http://mozvr.com/downloads/
+ * Chromium: https://drive.google.com/folderview?id=0BzudLt22BqGRbW9WTHMtOWMzNjQ&usp=sharing#list
+ *
+ */
+
+var VREffect = function VREffect(renderer, onError) {
+
+			var vrHMD;
+			var isDeprecatedAPI = false;
+			var eyeTranslationL = new Vector3();
+			var eyeTranslationR = new Vector3();
+			var renderRectL, renderRectR;
+			var eyeFOVL, eyeFOVR;
+
+			function gotVRDevices(devices) {
+
+						for (var i = 0; i < devices.length; i++) {
+
+									if ('VRDisplay' in window && devices[i] instanceof VRDisplay) {
+
+												vrHMD = devices[i];
+												isDeprecatedAPI = false;
+												break; // We keep the first we encounter
+									} else if ('HMDVRDevice' in window && devices[i] instanceof HMDVRDevice) {
+
+												vrHMD = devices[i];
+												isDeprecatedAPI = true;
+												break; // We keep the first we encounter
+									}
+						}
+
+						if (vrHMD === undefined) {
+
+									if (onError) onError('HMD not available');
+						}
+			}
+
+			if (navigator.getVRDisplays) {
+
+						navigator.getVRDisplays().then(gotVRDevices);
+			} else if (navigator.getVRDevices) {
+
+						// Deprecated API.
+						navigator.getVRDevices().then(gotVRDevices);
+			}
+
+			//
+
+			this.scale = 1;
+
+			var isPresenting = false;
+
+			var rendererSize = renderer.getSize();
+			var rendererPixelRatio = renderer.getPixelRatio();
+
+			this.setSize = function (width, height) {
+
+						rendererSize = { width: width, height: height };
+
+						if (isPresenting) {
+
+									var eyeParamsL = vrHMD.getEyeParameters('left');
+									renderer.setPixelRatio(1);
+
+									if (isDeprecatedAPI) {
+
+												renderer.setSize(eyeParamsL.renderRect.width * 2, eyeParamsL.renderRect.height, false);
+									} else {
+
+												renderer.setSize(eyeParamsL.renderWidth * 2, eyeParamsL.renderHeight, false);
+									}
+						} else {
+
+									renderer.setPixelRatio(rendererPixelRatio);
+									renderer.setSize(width, height);
+						}
+			};
+
+			// fullscreen
+
+			var canvas = renderer.domElement;
+			var requestFullscreen;
+			var exitFullscreen;
+			var fullscreenElement;
+
+			function onFullscreenChange() {
+
+						var wasPresenting = isPresenting;
+						isPresenting = vrHMD !== undefined && (vrHMD.isPresenting || isDeprecatedAPI && document[fullscreenElement] instanceof window.HTMLElement);
+
+						if (wasPresenting === isPresenting) {
+
+									return;
+						}
+
+						if (isPresenting) {
+
+									rendererPixelRatio = renderer.getPixelRatio();
+									rendererSize = renderer.getSize();
+
+									var eyeParamsL = vrHMD.getEyeParameters('left');
+									var eyeWidth, eyeHeight;
+
+									if (isDeprecatedAPI) {
+
+												eyeWidth = eyeParamsL.renderRect.width;
+												eyeHeight = eyeParamsL.renderRect.height;
+									} else {
+
+												eyeWidth = eyeParamsL.renderWidth;
+												eyeHeight = eyeParamsL.renderHeight;
+									}
+
+									renderer.setPixelRatio(1);
+									renderer.setSize(eyeWidth * 2, eyeHeight, false);
+						} else {
+
+									renderer.setPixelRatio(rendererPixelRatio);
+									renderer.setSize(rendererSize.width, rendererSize.height);
+						}
+			}
+
+			if (canvas.requestFullscreen) {
+
+						requestFullscreen = 'requestFullscreen';
+						fullscreenElement = 'fullscreenElement';
+						exitFullscreen = 'exitFullscreen';
+						document.addEventListener('fullscreenchange', onFullscreenChange, false);
+			} else if (canvas.mozRequestFullScreen) {
+
+						requestFullscreen = 'mozRequestFullScreen';
+						fullscreenElement = 'mozFullScreenElement';
+						exitFullscreen = 'mozCancelFullScreen';
+						document.addEventListener('mozfullscreenchange', onFullscreenChange, false);
+			} else {
+
+						requestFullscreen = 'webkitRequestFullscreen';
+						fullscreenElement = 'webkitFullscreenElement';
+						exitFullscreen = 'webkitExitFullscreen';
+						document.addEventListener('webkitfullscreenchange', onFullscreenChange, false);
+			}
+
+			window.addEventListener('vrdisplaypresentchange', onFullscreenChange, false);
+
+			this.setFullScreen = function (boolean) {
+
+						return new Promise(function (resolve, reject) {
+
+									if (vrHMD === undefined) {
+
+												reject(new Error('No VR hardware found.'));
+												return;
+									}
+									if (isPresenting === boolean) {
+
+												resolve();
+												return;
+									}
+
+									if (!isDeprecatedAPI) {
+
+												if (boolean) {
+
+															resolve(vrHMD.requestPresent([{ source: canvas }]));
+												} else {
+
+															resolve(vrHMD.exitPresent());
+												}
+									} else {
+
+												if (canvas[requestFullscreen]) {
+
+															canvas[boolean ? requestFullscreen : exitFullscreen]({ vrDisplay: vrHMD });
+															resolve();
+												} else {
+
+															console.error('No compatible requestFullscreen method found.');
+															reject(new Error('No compatible requestFullscreen method found.'));
+												}
+									}
+						});
+			};
+
+			this.requestPresent = function () {
+
+						return this.setFullScreen(true);
+			};
+
+			this.exitPresent = function () {
+
+						return this.setFullScreen(false);
+			};
+
+			// render
+
+			var cameraL = new PerspectiveCamera();
+			cameraL.layers.enable(1);
+
+			var cameraR = new PerspectiveCamera();
+			cameraR.layers.enable(2);
+
+			this.render = function (scene, camera) {
+
+						if (vrHMD && isPresenting) {
+
+									var autoUpdate = scene.autoUpdate;
+
+									if (autoUpdate) {
+
+												scene.updateMatrixWorld();
+												scene.autoUpdate = false;
+									}
+
+									var eyeParamsL = vrHMD.getEyeParameters('left');
+									var eyeParamsR = vrHMD.getEyeParameters('right');
+
+									if (!isDeprecatedAPI) {
+
+												eyeTranslationL.fromArray(eyeParamsL.offset);
+												eyeTranslationR.fromArray(eyeParamsR.offset);
+												eyeFOVL = eyeParamsL.fieldOfView;
+												eyeFOVR = eyeParamsR.fieldOfView;
+									} else {
+
+												eyeTranslationL.copy(eyeParamsL.eyeTranslation);
+												eyeTranslationR.copy(eyeParamsR.eyeTranslation);
+												eyeFOVL = eyeParamsL.recommendedFieldOfView;
+												eyeFOVR = eyeParamsR.recommendedFieldOfView;
+									}
+
+									if (Array.isArray(scene)) {
+
+												console.warn('THREE.VREffect.render() no longer supports arrays. Use object.layers instead.');
+												scene = scene[0];
+									}
+
+									// When rendering we don't care what the recommended size is, only what the actual size
+									// of the backbuffer is.
+									var size = renderer.getSize();
+									renderRectL = { x: 0, y: 0, width: size.width / 2, height: size.height };
+									renderRectR = { x: size.width / 2, y: 0, width: size.width / 2, height: size.height };
+
+									renderer.setScissorTest(true);
+									renderer.clear();
+
+									if (camera.parent === null) camera.updateMatrixWorld();
+
+									cameraL.projectionMatrix = fovToProjection(eyeFOVL, true, camera.near, camera.far);
+									cameraR.projectionMatrix = fovToProjection(eyeFOVR, true, camera.near, camera.far);
+
+									camera.matrixWorld.decompose(cameraL.position, cameraL.quaternion, cameraL.scale);
+									camera.matrixWorld.decompose(cameraR.position, cameraR.quaternion, cameraR.scale);
+
+									var scale = this.scale;
+									cameraL.translateOnAxis(eyeTranslationL, scale);
+									cameraR.translateOnAxis(eyeTranslationR, scale);
+
+									// render left eye
+									renderer.setViewport(renderRectL.x, renderRectL.y, renderRectL.width, renderRectL.height);
+									renderer.setScissor(renderRectL.x, renderRectL.y, renderRectL.width, renderRectL.height);
+									renderer.render(scene, cameraL);
+
+									// render right eye
+									renderer.setViewport(renderRectR.x, renderRectR.y, renderRectR.width, renderRectR.height);
+									renderer.setScissor(renderRectR.x, renderRectR.y, renderRectR.width, renderRectR.height);
+									renderer.render(scene, cameraR);
+
+									renderer.setScissorTest(false);
+
+									if (autoUpdate) {
+
+												scene.autoUpdate = true;
+									}
+
+									if (!isDeprecatedAPI) {
+
+												vrHMD.submitFrame();
+									}
+
+									return;
+						}
+
+						// Regular render mode if not HMD
+
+						renderer.render(scene, camera);
+			};
+
+			//
+
+			function fovToNDCScaleOffset(fov) {
+
+						var pxscale = 2.0 / (fov.leftTan + fov.rightTan);
+						var pxoffset = (fov.leftTan - fov.rightTan) * pxscale * 0.5;
+						var pyscale = 2.0 / (fov.upTan + fov.downTan);
+						var pyoffset = (fov.upTan - fov.downTan) * pyscale * 0.5;
+						return { scale: [pxscale, pyscale], offset: [pxoffset, pyoffset] };
+			}
+
+			function fovPortToProjection(fov, rightHanded, zNear, zFar) {
+
+						rightHanded = rightHanded === undefined ? true : rightHanded;
+						zNear = zNear === undefined ? 0.01 : zNear;
+						zFar = zFar === undefined ? 10000.0 : zFar;
+
+						var handednessScale = rightHanded ? -1.0 : 1.0;
+
+						// start with an identity matrix
+						var mobj = new Matrix4();
+						var m = mobj.elements;
+
+						// and with scale/offset info for normalized device coords
+						var scaleAndOffset = fovToNDCScaleOffset(fov);
+
+						// X result, map clip edges to [-w,+w]
+						m[0 * 4 + 0] = scaleAndOffset.scale[0];
+						m[0 * 4 + 1] = 0.0;
+						m[0 * 4 + 2] = scaleAndOffset.offset[0] * handednessScale;
+						m[0 * 4 + 3] = 0.0;
+
+						// Y result, map clip edges to [-w,+w]
+						// Y offset is negated because this proj matrix transforms from world coords with Y=up,
+						// but the NDC scaling has Y=down (thanks D3D?)
+						m[1 * 4 + 0] = 0.0;
+						m[1 * 4 + 1] = scaleAndOffset.scale[1];
+						m[1 * 4 + 2] = -scaleAndOffset.offset[1] * handednessScale;
+						m[1 * 4 + 3] = 0.0;
+
+						// Z result (up to the app)
+						m[2 * 4 + 0] = 0.0;
+						m[2 * 4 + 1] = 0.0;
+						m[2 * 4 + 2] = zFar / (zNear - zFar) * -handednessScale;
+						m[2 * 4 + 3] = zFar * zNear / (zNear - zFar);
+
+						// W result (= Z in)
+						m[3 * 4 + 0] = 0.0;
+						m[3 * 4 + 1] = 0.0;
+						m[3 * 4 + 2] = handednessScale;
+						m[3 * 4 + 3] = 0.0;
+
+						mobj.transpose();
+
+						return mobj;
+			}
+
+			function fovToProjection(fov, rightHanded, zNear, zFar) {
+
+						var DEG2RAD = Math.PI / 180.0;
+
+						var fovPort = {
+									upTan: Math.tan(fov.upDegrees * DEG2RAD),
+									downTan: Math.tan(fov.downDegrees * DEG2RAD),
+									leftTan: Math.tan(fov.leftDegrees * DEG2RAD),
+									rightTan: Math.tan(fov.rightDegrees * DEG2RAD)
+						};
+
+						return fovPortToProjection(fovPort, rightHanded, zNear, zFar);
+			}
+};
+
 
 
 var lib = Object.freeze({
 	ammo: ammo,
 	grahamScan: graham_scan_min,
 	three: three_module,
+	VRControls: VRControls,
+	VREffect: VREffect,
 	$: jquery2_1_4_min
 });
 
@@ -45158,6 +45672,21 @@ var Camera$1 = function () {
             this.threeCamera.position.z = pos[2];
         }
     }, {
+        key: 'positionX',
+        set: function set$$1(x) {
+            this.threeCamera.position.x = x;
+        }
+    }, {
+        key: 'positionY',
+        set: function set$$1(y) {
+            this.threeCamera.position.y = y;
+        }
+    }, {
+        key: 'positionZ',
+        set: function set$$1(z) {
+            this.threeCamera.position.z = z;
+        }
+    }, {
         key: 'target',
         get: function get$$1() {
             return this._target;
@@ -45181,6 +45710,32 @@ var Camera$1 = function () {
     return Camera;
 }();
 
+var VRCamera = function (_Camera) {
+    inherits(VRCamera, _Camera);
+
+    function VRCamera() {
+        var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+        classCallCheck(this, VRCamera);
+
+        var _this = possibleConstructorReturn(this, (VRCamera.__proto__ || Object.getPrototypeOf(VRCamera)).call(this, opts));
+
+        _this.vrControls = new VRControls(_this.threeCamera);
+        _this.vrControls.standing = true;
+        _this.positionY = _this.vrControls.userHeight;
+        return _this;
+    }
+
+    createClass(VRCamera, [{
+        key: 'initialize',
+        value: function initialize() {
+            var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+            get(VRCamera.prototype.__proto__ || Object.getPrototypeOf(VRCamera.prototype), 'initialize', this).call(this, opts);
+        }
+    }]);
+    return VRCamera;
+}(Camera$1);
+
 /* global document */
 var Renderer = function () {
     function Renderer() {
@@ -45189,6 +45744,7 @@ var Renderer = function () {
         classCallCheck(this, Renderer);
 
         this.cameraOptions = opts.cameraOptions;
+        this.vrEnabled = opts.VR === undefined ? false : opts.VR;
 
         this.initializeGL();
         this.initializeWorld();
@@ -45198,6 +45754,7 @@ var Renderer = function () {
         this.joints = {};
 
         this.callback = opts.callback;
+
         this.element = element === undefined ? 'body' : element;
     }
 
@@ -45210,13 +45767,21 @@ var Renderer = function () {
             });
 
             this.renderer.setClearColor(0xffffff, 1);
+
+            if (this.vrEnabled) {
+                this.enableVR();
+            }
         }
     }, {
         key: 'initializeWorld',
         value: function initializeWorld() {
             this.scene = new Scene();
 
-            this.camera = new Camera$1(this.cameraOptions);
+            if (this.vrEnabled) {
+                this.camera = new VRCamera(this.cameraOptions);
+            } else {
+                this.camera = new Camera$1(this.cameraOptions);
+            }
 
             this.scene.add(this.camera.threeCamera);
 
@@ -45228,8 +45793,16 @@ var Renderer = function () {
             this.scene.add(this.light);
         }
     }, {
+        key: 'enableVR',
+        value: function enableVR() {
+            this.effect = new VREffect(this.renderer);
+            this.effect.setSize(400, 400);
+        }
+    }, {
         key: 'initializeDiv',
         value: function initializeDiv() {
+            var _this = this;
+
             var scope = this;
 
             /*
@@ -45246,26 +45819,34 @@ var Renderer = function () {
 
             this.renderer.setSize(400, 400);
 
-            this.canvas = jquery2_1_4_min(this.renderer.domElement).width(400).height(400).addClass('three-canvas');
-            jquery2_1_4_min(this.panel).append(this.canvas);
+            //        this.canvas = $(this.renderer.domElement).width(400).height(400).addClass('three-canvas');
+            //        $(this.panel).append(this.canvas);
 
             jquery2_1_4_min(document).ready(function () {
-                jquery2_1_4_min(scope.element).append(scope.panel);
-                scope.setSize();
+                document.body.appendChild(_this.renderer.domElement);
+                //            $(scope.element).append(scope.panel);
+                _this.setSize();
             });
         }
     }, {
         key: 'setSize',
         value: function setSize() {
-            var w = jquery2_1_4_min(this.element).width();
-            var h = jquery2_1_4_min(this.element).height();
+            //        const w = $(this.element).width();
+            //        const h = $(this.element).height();
 
-            this.canvas.width(w);
-            this.canvas.height(h);
+            //        this.canvas.width(w);
+            //        this.canvas.height(h);
+
+            var w = window.innerWidth;
+            var h = window.innerHeight;
 
             this.renderer.setSize(w, h);
 
             this.camera.aspectRatio = w / h;
+
+            if (this.vrEnabled && this.effect !== undefined) {
+                this.effect.setSize(w, h);
+            }
 
             //    this.panel.css({width: w, height: h});
         }
@@ -45281,7 +45862,11 @@ var Renderer = function () {
             if (this.callback !== undefined) {
                 this.callback(this.camera, time);
             }
-            this.renderer.render(this.scene, this.camera.threeCamera);
+            if (this.vrEnabled) {
+                this.effect.render(this.scene, this.camera.threeCamera);
+            } else {
+                this.renderer.render(this.scene, this.camera.threeCamera);
+            }
         }
     }, {
         key: 'updateEntities',
@@ -45913,9 +46498,11 @@ var Simulator = function () {
 
 /* eslint-enable */
 
-/* global requestAnimationFrame */
+/* global requestAnimationFrame, navigator */
 var World = function () {
     function World() {
+        var _this = this;
+
         var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
         var element = arguments[1];
         classCallCheck(this, World);
@@ -45924,7 +46511,26 @@ var World = function () {
         this.dt = opts.dt === undefined ? 0.0001 : opts.dt;
         this.is2D = opts['2D'] === undefined ? false : opts['2D'];
 
-        this.renderer = new Renderer({ cameraOptions: opts.cameraOptions }, element);
+        this.vrEnabled = opts.VR === undefined ? false : opts.VR;
+
+        if (this.vrEnabled) {
+            this.vrReady = false;
+            // eslint-disable-next-line no-param-reassign
+            this.vrDisplay = navigator.getVRDisplays().then(function (displays) {
+                if (displays.length > 0) {
+                    _this.vrDisplay = displays[0];
+                    if (_this.vrDisplay.stageParameters) {
+                        //                        this.setupVR(this.vrDisplay.stageParameters);
+                        _this.vrReady = true;
+                    }
+                }
+            });
+        }
+
+        this.renderer = new Renderer({
+            cameraOptions: opts.cameraOptions,
+            VR: this.vrEnabled
+        }, element);
         this.simulator = new Simulator(this.dt, { '2D': this.is2D });
 
         this.entities = {};
@@ -46056,8 +46662,6 @@ var World = function () {
             this.renderer.setCallback(opts.renderCallback);
 
             function animate() {
-                requestAnimationFrame(animate);
-
                 var now = Date.now();
                 if (ready) {
                     ready = false;
@@ -46069,7 +46673,16 @@ var World = function () {
                         }
                     }
 
+                    if (scope.vrEnabled) {
+                        scope.renderer.camera.vrControls.update();
+                    }
+
                     scope.render(time);
+                    if (scope.vrEnabled && scope.vrReady) {
+                        scope.vrDisplay.requestAnimationFrame(animate);
+                    } else {
+                        requestAnimationFrame(animate);
+                    }
                     ready = true;
                 }
             }
