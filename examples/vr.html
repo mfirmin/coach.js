@@ -5,29 +5,23 @@ title: coach.js Pendulum example
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-        <title>coach.js Example</title>
+        <title>coach.js VR</title>
         <link rel="stylesheet" type="text/css" href="css/coach.css">
         <script src="static/coach.js"></script>
     </head>
     <body>
-        <h1>coach.js Example: Pendulum</h1>
-        <div id='main'>
-            <div id='pendulum'>
-                <div id='simTime'>Simulation Time (% real time): <div id='simRate' style="display: inline-block">0</div></div>
-            </div>
-        </div>
-
         <script>
             var world = new coach.World({
-                "FPS": 30.,
-                "dt": 0.0001,
+                FPS: 30.0,
+                dt: 0.0001,
                 VR: true,
-                "cameraOptions": {
-                    "type": "perspective",
-                    "position": [2, 2, 2],
-                    "target": [0,1,0],
+                cameraOptions: {
+                    type: 'perspective',
+                    position: [2, 2, 2],
+                    target: [0,1,0],
                 },
-            }, '#pendulum');
+            }, 'body');
+
             var ground = new coach.entities.Box('ground', [5,1,5], {mass: 0, color: [100,100,100]});
             var pivot  = new coach.entities.Box('pivot', [0.1,0.1,0.1], {mass: 0, color: [255,0,0]});
             var link1  = new coach.entities.Box('link1', [0.5, 0.1, 0.1], {mass: 1, color: [0,255,0]});
@@ -57,27 +51,23 @@ title: coach.js Pendulum example
             world.addJoint(j1);
             world.addJoint(j2);
 
-            var renderCallback = function(camera, time) {
-                coach.lib.$('#simRate').text((time*30.).toFixed(1));
-            }
+//            var pdc = new coach.controllers.PDController3D(j1, {"X": 0, "Y": 0, "Z": 1.57}, {
+//                "kp": 200,
+//                "kd": 20
+//            });
+//            var pdc2 = new coach.controllers.PDController3D(j2, {"X": 0, "Y": 1.57, "Z": 0}, {
+//                "kp": 200,
+//                "kd": 20
+//            });
+//
+//            var controller = function(dt) {
+//                var T = pdc.evaluate(dt);
+//                j1.addTorque(T);
+//                var T2 = pdc2.evaluate(dt);
+//                j2.addTorque(T2);
+//            };
 
-            var pdc = new coach.controllers.PDController3D(j1, {"X": 0, "Y": 0, "Z": 1.57}, {
-                "kp": 200,
-                "kd": 20
-            });
-            var pdc2 = new coach.controllers.PDController3D(j2, {"X": 0, "Y": 1.57, "Z": 0}, {
-                "kp": 200,
-                "kd": 20
-            });
-
-            var controller = function(dt) {
-                var T = pdc.evaluate(dt);
-                j1.addTorque(T);
-                var T2 = pdc2.evaluate(dt);
-                j2.addTorque(T2);
-            };
-
-            world.go({renderCallback: renderCallback, simulationCallback: controller})
+            world.go()
 
 
         </script>
