@@ -13,12 +13,15 @@ class World {
         if (this.vrEnabled) {
             this.vrReady = false;
             // eslint-disable-next-line no-param-reassign
-            this.vrDisplay = navigator.getVRDisplays().then((displays) => {
+            navigator.getVRDisplays().then((displays) => {
                 if (displays.length > 0) {
                     this.vrDisplay = displays[0];
                     if (this.vrDisplay.stageParameters) {
 //                        this.setupVR(this.vrDisplay.stageParameters);
                         this.vrReady = true;
+                    }
+                    if (opts.vrReadyCallback) {
+                        opts.vrReadyCallback(this.vrDisplay);
                     }
                 }
             });
@@ -28,6 +31,7 @@ class World {
             cameraOptions: opts.cameraOptions,
             VR:            this.vrEnabled,
         }, element);
+
         this.simulator = new Simulator(this.dt, { '2D': this.is2D });
 
         this.entities = {};
@@ -94,39 +98,41 @@ class World {
 
     go(opts = {}) {
         const scope = this;
-        let ready = true;
-        const framerate = 1.0 / (this.FPS);
-        const framerateMS = framerate * 1000;
 
         this.simulator.setCallback(opts.simulationCallback);
         this.renderer.setCallback(opts.renderCallback);
 
+        let elapsed = 0;
+
+        let last = Date.now();
+
+        const dtMS = scope.dt * 1000;
+
         function animate() {
             const now = Date.now();
-            if (ready) {
-                ready = false;
-                let time = 0;
-                while (Date.now() - now < framerateMS) {
-                    if (time < framerate) {
-                        scope.step();
-                        time += scope.dt;
-                    }
-                }
+            elapsed = now - last;
+            let time = 0;
+            while (time < elapsed) {
+                scope.step();
+                time += dtMS;
+            }
 
-                if (scope.vrEnabled) {
-                    scope.renderer.camera.vrControls.update();
-                }
+            last = now;
 
-                scope.render(time);
-                if (scope.vrEnabled && scope.vrReady) {
-                    scope.vrDisplay.requestAnimationFrame(animate);
-                } else {
-                    requestAnimationFrame(animate);
-                }
-                ready = true;
+            if (scope.vrEnabled) {
+                scope.renderer.camera.vrControls.update();
+            }
+
+            scope.render(time);
+
+            if (scope.vrEnabled && scope.vrReady) {
+                scope.vrDisplay.requestAnimationFrame(animate);
+            } else {
+                requestAnimationFrame(animate);
             }
         }
-        requestAnimationFrame(animate);
+
+        animate();
     }
 
     render(time) {

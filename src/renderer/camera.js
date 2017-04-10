@@ -1,3 +1,4 @@
+/* global window */
 import { three as THREE } from '../lib/index';
 
 class Camera {
@@ -28,10 +29,10 @@ class Camera {
         this._type = 'perspective';
 
         this.threeCamera = new THREE.PerspectiveCamera(
-            (opts.fov === undefined) ? 45 : opts.fov,
-            (opts.aspect === undefined) ? 1 : opts.aspect,
-            (opts.near === undefined) ? 1 : opts.near,
-            (opts.far === undefined) ? 2000 : opts.far,
+            (opts.fov === undefined) ? 75 : opts.fov,
+            (opts.aspect === undefined) ? window.innerWidth / window.innerHeight : opts.aspect,
+            (opts.near === undefined) ? 0.1 : opts.near,
+            (opts.far === undefined) ? 10000 : opts.far,
         );
 
         return this.threeCamera;

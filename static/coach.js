@@ -45605,6 +45605,7 @@ var lib = Object.freeze({
 	$: jquery2_1_4_min
 });
 
+/* global window */
 var Camera$1 = function () {
     function Camera() {
         var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -45639,7 +45640,7 @@ var Camera$1 = function () {
         value: function setPerspective(opts) {
             this._type = 'perspective';
 
-            this.threeCamera = new PerspectiveCamera(opts.fov === undefined ? 45 : opts.fov, opts.aspect === undefined ? 1 : opts.aspect, opts.near === undefined ? 1 : opts.near, opts.far === undefined ? 2000 : opts.far);
+            this.threeCamera = new PerspectiveCamera(opts.fov === undefined ? 75 : opts.fov, opts.aspect === undefined ? window.innerWidth / window.innerHeight : opts.aspect, opts.near === undefined ? 0.1 : opts.near, opts.far === undefined ? 10000 : opts.far);
 
             return this.threeCamera;
         }
@@ -45736,7 +45737,7 @@ var VRCamera = function (_Camera) {
     return VRCamera;
 }(Camera$1);
 
-/* global document */
+/* global document, window */
 var Renderer = function () {
     function Renderer() {
         var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -45762,11 +45763,11 @@ var Renderer = function () {
         key: 'initializeGL',
         value: function initializeGL() {
             this.renderer = new WebGLRenderer({
-                preserveDrawingBuffer: true,
                 antialias: true
             });
 
-            this.renderer.setClearColor(0xffffff, 1);
+            this.renderer.setPixelRatio(window.devicePixelRatio);
+            //        this.renderer.setClearColor(0xffffff, 1);
 
             if (this.vrEnabled) {
                 this.enableVR();
@@ -45793,17 +45794,9 @@ var Renderer = function () {
             this.scene.add(this.light);
         }
     }, {
-        key: 'enableVR',
-        value: function enableVR() {
-            this.effect = new VREffect(this.renderer);
-            this.effect.setSize(400, 400);
-        }
-    }, {
         key: 'initializeDiv',
         value: function initializeDiv() {
             var _this = this;
-
-            var scope = this;
 
             /*
             this.panel = $('<div>')
@@ -45815,40 +45808,39 @@ var Renderer = function () {
                     height: 400,
                 });
             */
-            this.panel = jquery2_1_4_min('<div>').addClass('coach-context').attr({ tabindex: 0 });
-
-            this.renderer.setSize(400, 400);
+            //        this.panel = $('<div>')
+            //            .addClass('coach-context')
+            //            .attr({ tabindex: 0 });
 
             //        this.canvas = $(this.renderer.domElement).width(400).height(400).addClass('three-canvas');
             //        $(this.panel).append(this.canvas);
 
             jquery2_1_4_min(document).ready(function () {
                 document.body.appendChild(_this.renderer.domElement);
-                //            $(scope.element).append(scope.panel);
                 _this.setSize();
             });
+
+            //        window.addEventListener('resize', () => this.setSize(), true);
+        }
+    }, {
+        key: 'enableVR',
+        value: function enableVR() {
+            this.effect = new VREffect(this.renderer);
+            this.effect.setSize(window.innerWidth, window.innerHeight);
         }
     }, {
         key: 'setSize',
         value: function setSize() {
-            //        const w = $(this.element).width();
-            //        const h = $(this.element).height();
-
-            //        this.canvas.width(w);
-            //        this.canvas.height(h);
-
             var w = window.innerWidth;
             var h = window.innerHeight;
 
             this.renderer.setSize(w, h);
 
-            this.camera.aspectRatio = w / h;
-
             if (this.vrEnabled && this.effect !== undefined) {
                 this.effect.setSize(w, h);
             }
 
-            //    this.panel.css({width: w, height: h});
+            this.camera.aspectRatio = w / h;
         }
     }, {
         key: 'setCallback',
@@ -46516,12 +46508,15 @@ var World = function () {
         if (this.vrEnabled) {
             this.vrReady = false;
             // eslint-disable-next-line no-param-reassign
-            this.vrDisplay = navigator.getVRDisplays().then(function (displays) {
+            navigator.getVRDisplays().then(function (displays) {
                 if (displays.length > 0) {
                     _this.vrDisplay = displays[0];
                     if (_this.vrDisplay.stageParameters) {
                         //                        this.setupVR(this.vrDisplay.stageParameters);
                         _this.vrReady = true;
+                    }
+                    if (opts.vrReadyCallback) {
+                        opts.vrReadyCallback(_this.vrDisplay);
                     }
                 }
             });
@@ -46531,6 +46526,7 @@ var World = function () {
             cameraOptions: opts.cameraOptions,
             VR: this.vrEnabled
         }, element);
+
         this.simulator = new Simulator(this.dt, { '2D': this.is2D });
 
         this.entities = {};
@@ -46654,39 +46650,41 @@ var World = function () {
             var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
             var scope = this;
-            var ready = true;
-            var framerate = 1.0 / this.FPS;
-            var framerateMS = framerate * 1000;
 
             this.simulator.setCallback(opts.simulationCallback);
             this.renderer.setCallback(opts.renderCallback);
 
+            var elapsed = 0;
+
+            var last = Date.now();
+
+            var dtMS = scope.dt * 1000;
+
             function animate() {
                 var now = Date.now();
-                if (ready) {
-                    ready = false;
-                    var time = 0;
-                    while (Date.now() - now < framerateMS) {
-                        if (time < framerate) {
-                            scope.step();
-                            time += scope.dt;
-                        }
-                    }
+                elapsed = now - last;
+                var time = 0;
+                while (time < elapsed) {
+                    scope.step();
+                    time += dtMS;
+                }
 
-                    if (scope.vrEnabled) {
-                        scope.renderer.camera.vrControls.update();
-                    }
+                last = now;
 
-                    scope.render(time);
-                    if (scope.vrEnabled && scope.vrReady) {
-                        scope.vrDisplay.requestAnimationFrame(animate);
-                    } else {
-                        requestAnimationFrame(animate);
-                    }
-                    ready = true;
+                if (scope.vrEnabled) {
+                    scope.renderer.camera.vrControls.update();
+                }
+
+                scope.render(time);
+
+                if (scope.vrEnabled && scope.vrReady) {
+                    scope.vrDisplay.requestAnimationFrame(animate);
+                } else {
+                    requestAnimationFrame(animate);
                 }
             }
-            requestAnimationFrame(animate);
+
+            animate();
         }
     }, {
         key: 'render',

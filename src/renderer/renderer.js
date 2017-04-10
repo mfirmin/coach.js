@@ -1,10 +1,11 @@
-/* global document */
+/* global document, window */
 import { three as THREE, VREffect } from '../lib/index';
 import ConvexHullGrahamScan from '../lib/graham_scan.min';
-import $                    from '../lib/jquery-2.1.4.min';
 
 import Camera from './camera';
 import VRCamera from './vrCamera';
+
+import $ from '../lib/jquery-2.1.4.min';
 
 class Renderer {
     constructor(opts = {}, element) {
@@ -25,11 +26,11 @@ class Renderer {
 
     initializeGL() {
         this.renderer = new THREE.WebGLRenderer({
-            preserveDrawingBuffer: true,
-            antialias:             true,
+            antialias: true,
         });
 
-        this.renderer.setClearColor(0xffffff, 1);
+        this.renderer.setPixelRatio(window.devicePixelRatio);
+//        this.renderer.setClearColor(0xffffff, 1);
 
         if (this.vrEnabled) {
             this.enableVR();
@@ -55,14 +56,7 @@ class Renderer {
         this.scene.add(this.light);
     }
 
-    enableVR() {
-        this.effect = new VREffect(this.renderer);
-        this.effect.setSize(400, 400);
-    }
-
     initializeDiv() {
-        const scope = this;
-
         /*
         this.panel = $('<div>')
             .addClass('threeworld')
@@ -73,41 +67,37 @@ class Renderer {
                 height: 400,
             });
         */
-        this.panel = $('<div>')
-            .addClass('coach-context')
-            .attr({ tabindex: 0 });
-
-        this.renderer.setSize(400, 400);
+//        this.panel = $('<div>')
+//            .addClass('coach-context')
+//            .attr({ tabindex: 0 });
 
 //        this.canvas = $(this.renderer.domElement).width(400).height(400).addClass('three-canvas');
 //        $(this.panel).append(this.canvas);
 
         $(document).ready(() => {
             document.body.appendChild(this.renderer.domElement);
-//            $(scope.element).append(scope.panel);
             this.setSize();
         });
+
+//        window.addEventListener('resize', () => this.setSize(), true);
+    }
+
+    enableVR() {
+        this.effect = new VREffect(this.renderer);
+        this.effect.setSize(window.innerWidth, window.innerHeight);
     }
 
     setSize() {
-//        const w = $(this.element).width();
-//        const h = $(this.element).height();
-
-//        this.canvas.width(w);
-//        this.canvas.height(h);
-
         const w = window.innerWidth;
         const h = window.innerHeight;
 
         this.renderer.setSize(w, h);
 
-        this.camera.aspectRatio = w / h;
-
         if (this.vrEnabled && this.effect !== undefined) {
             this.effect.setSize(w, h);
         }
 
-    //    this.panel.css({width: w, height: h});
+        this.camera.aspectRatio = w / h;
     }
 
     setCallback(fn) {

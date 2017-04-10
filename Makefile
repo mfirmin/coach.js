@@ -18,4 +18,4 @@ $(COACH): $(SOURCES)
 	cp build/coach.js static/coach.js
 
 run:
-	bundle exec jekyll serve --force_polling
+	bundle exec jekyll serve 
