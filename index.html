@@ -56,10 +56,6 @@ title: Coach.js Pendulum example
             world.addJoint(j1);
             world.addJoint(j2);
 
-            var renderCallback = function(camera, time) {
-                coach.lib.$('#simRate').text((time*30.).toFixed(1));
-            }
-
             var pdc = new coach.controllers.PDController3D(j1, {"X": 0, "Y": 0, "Z": 1.57}, {
                 "kp": 200,
                 "kd": 20
@@ -76,7 +72,11 @@ title: Coach.js Pendulum example
                 j2.addTorque(T2);
             };
 
-            world.go({renderCallback: renderCallback, simulationCallback: controller})
+            var renderCallback = function(camera, rate) {
+                coach.lib.$('#simRate').text((rate).toFixed(1));
+            }
+
+            world.go({renderCallback: renderCallback, simulationCallback: controller })
 
 
         </script>

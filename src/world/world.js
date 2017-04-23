@@ -1,4 +1,4 @@
-/* global requestAnimationFrame, navigator */
+/* global requestAnimationFrame, navigator, performance */
 import Renderer  from '../renderer/renderer';
 import Simulator from '../simulator/simulator';
 
@@ -104,26 +104,31 @@ class World {
 
         let elapsed = 0;
 
-        let last = Date.now();
+        let last = performance.now();
 
         const dtMS = scope.dt * 1000;
 
-        function animate() {
-            const now = Date.now();
+        let renderTime = 1000;
+
+        function animate(now) {
             elapsed = now - last;
             let time = 0;
-            while (time < elapsed) {
+            let realTime = performance.now() - now;
+            while (time < elapsed && realTime < elapsed - (2 * renderTime)) {
                 scope.step();
                 time += dtMS;
+                realTime = performance.now() - now;
             }
-
-            last = now;
 
             if (scope.vrEnabled) {
                 scope.renderer.camera.vrControls.update();
             }
 
-            scope.render(time);
+            const renderStart = performance.now();
+            scope.render(time / elapsed);
+            renderTime = performance.now() - renderStart;
+
+            last = now;
 
             if (scope.vrEnabled && scope.vrReady) {
                 scope.vrDisplay.requestAnimationFrame(animate);

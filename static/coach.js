@@ -46490,7 +46490,7 @@ var Simulator = function () {
 
 /* eslint-enable */
 
-/* global requestAnimationFrame, navigator */
+/* global requestAnimationFrame, navigator, performance */
 var World = function () {
     function World() {
         var _this = this;
@@ -46656,26 +46656,31 @@ var World = function () {
 
             var elapsed = 0;
 
-            var last = Date.now();
+            var last = performance.now();
 
             var dtMS = scope.dt * 1000;
 
-            function animate() {
-                var now = Date.now();
+            var renderTime = 1000;
+
+            function animate(now) {
                 elapsed = now - last;
                 var time = 0;
-                while (time < elapsed) {
+                var realTime = performance.now() - now;
+                while (time < elapsed && realTime < elapsed - 2 * renderTime) {
                     scope.step();
                     time += dtMS;
+                    realTime = performance.now() - now;
                 }
-
-                last = now;
 
                 if (scope.vrEnabled) {
                     scope.renderer.camera.vrControls.update();
                 }
 
-                scope.render(time);
+                var renderStart = performance.now();
+                scope.render(time / elapsed);
+                renderTime = performance.now() - renderStart;
+
+                last = now;
 
                 if (scope.vrEnabled && scope.vrReady) {
                     scope.vrDisplay.requestAnimationFrame(animate);
