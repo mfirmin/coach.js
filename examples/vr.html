@@ -38,8 +38,7 @@ title: coach.js Pendulum example
             const sittingToStandingMatrix = new THREE.Matrix4();
 
             var world = new coach.World({
-                FPS: 30.0,
-                dt: 0.001,
+                dt: 0.0001,
                 VR: true,
                 cameraOptions: {
                     type: 'perspective',
@@ -56,7 +55,8 @@ title: coach.js Pendulum example
             var link1  = new coach.entities.Cylinder('link1', 0.05, 0.7, {mass: 1, color: [0,255,0]});
             ground.position = [0.,-0.5,0];
             pivot.position = [0,1.6,0];
-            link1.position = [0.0,1.25,0];
+            link1.position = [0.35,1.6,0];
+            link1.orientation = [0, 0, 1, 1];
             world.addEntity(ground);
             world.addEntity(pivot);
             world.addEntity(link1);
@@ -66,10 +66,10 @@ title: coach.js Pendulum example
             });
             world.addJoint(j0);
 
-            var pdc = new coach.controllers.PDController3D(j0, {"X": 0, "Y": 0, "Z": 1.57}, {
-                "kp": 200,
-                "kd": 20
-            });
+//            var pdc = new coach.controllers.PDController3D(j0, {"X": 0, "Y": 0, "Z": 1.57}, {
+//                "kp": 200,
+//                "kd": 20
+//            });
 
             world.go()
 
@@ -130,16 +130,16 @@ title: coach.js Pendulum example
                 }
             }
 
-            function simulationUpdate() {
-                if (g1Info &&
-                    Math.abs(g1Info.elements[12] - 0) < 0.1 &&
-                    Math.abs(g1Info.elements[13] - 1.6) < 0.1 &&
-                    Math.abs(g1Info.elements[14] - 0) < 0.1)
-                {
-                    var T = pdc.evaluate(0.001);
-                    j0.addTorque(T);
-                }
-            }
+//            function simulationUpdate() {
+//                if (g1Info &&
+//                    Math.abs(g1Info.elements[12] - 0) < 0.1 &&
+//                    Math.abs(g1Info.elements[13] - 1.6) < 0.1 &&
+//                    Math.abs(g1Info.elements[14] - 0) < 0.1)
+//                {
+//                    var T = pdc.evaluate(0.001);
+//                    j0.addTorque(T);
+//                }
+//            }
 
             function initGamepads() {
                 const bGeom = new THREE.BoxGeometry(0.1, 0.1, 0.1);
@@ -158,7 +158,7 @@ title: coach.js Pendulum example
                 world.renderer.scene.add(c2);
 
                 world.renderer.callback = () => updateGamepads();
-                world.simulator.callback = () => simulationUpdate();
+//                world.simulator.callback = () => simulationUpdate();
             }
 
             initGamepads();

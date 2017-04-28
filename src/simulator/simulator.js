@@ -179,6 +179,11 @@ class Simulator {
         const pos = e.position;
         startTransform.setOrigin(new Ammo.btVector3(pos[0], pos[1], pos[2]));
 
+        const ori = e.orientation;
+        if (ori) {
+            startTransform.setRotation(new Ammo.btQuaternion(ori[1], ori[2], ori[3], ori[0]));
+        }
+
         const myMotionState = new Ammo.btDefaultMotionState(startTransform);
         const rbInfo = new Ammo.btRigidBodyConstructionInfo(
             mass,

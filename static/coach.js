@@ -46321,6 +46321,11 @@ var Simulator = function () {
             var pos = e.position;
             startTransform.setOrigin(new ammo.btVector3(pos[0], pos[1], pos[2]));
 
+            var ori = e.orientation;
+            if (ori) {
+                startTransform.setRotation(new ammo.btQuaternion(ori[1], ori[2], ori[3], ori[0]));
+            }
+
             var myMotionState = new ammo.btDefaultMotionState(startTransform);
             var rbInfo = new ammo.btRigidBodyConstructionInfo(mass, myMotionState, shape, localInertia);
             var body = new ammo.btRigidBody(rbInfo);
