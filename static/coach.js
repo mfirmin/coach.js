@@ -46321,10 +46321,10 @@ var Simulator = function () {
             var pos = e.position;
             startTransform.setOrigin(new ammo.btVector3(pos[0], pos[1], pos[2]));
 
-            var ori = e.orientation;
-            if (ori) {
-                startTransform.setRotation(new ammo.btQuaternion(ori[1], ori[2], ori[3], ori[0]));
-            }
+            //        const ori = e.orientation;
+            //        if (ori) {
+            //            startTransform.setRotation(new Ammo.btQuaternion(ori[1], ori[2], ori[3], ori[0]));
+            //        }
 
             var myMotionState = new ammo.btDefaultMotionState(startTransform);
             var rbInfo = new ammo.btRigidBodyConstructionInfo(mass, myMotionState, shape, localInertia);
@@ -46661,14 +46661,15 @@ var World = function () {
 
             var elapsed = 0;
 
-            var last = performance.now();
+            var last = void 0;
 
             var dtMS = scope.dt * 1000;
 
-            var renderTime = 1000;
+            var renderTime = 8;
 
             function animate(now) {
                 elapsed = now - last;
+                elapsed = Math.min(16.66, elapsed);
                 var time = 0;
                 var realTime = performance.now() - now;
                 while (time < elapsed && realTime < elapsed - 2 * renderTime) {
@@ -46693,8 +46694,8 @@ var World = function () {
                     requestAnimationFrame(animate);
                 }
             }
-
-            animate();
+            last = performance.now();
+            requestAnimationFrame(animate);
         }
     }, {
         key: 'render',
