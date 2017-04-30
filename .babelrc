@@ -1,0 +1,20 @@
+{
+    "presets": [
+        "es2015-rollup",
+        "es2016"
+    ],
+    "plugins": [
+        "external-helpers",
+    ],
+    "env": {
+        "production": {
+            "presets": ["babili"]
+        }
+    },
+    "ignore": [
+        "src/lib/three.module.js",
+        "src/lib/ammo.js",
+        "src/lib/graham_scan.min.js",
+        "src/lib/jquery-2.1.4.min.js"
+    ]
+}

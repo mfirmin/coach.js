@@ -1,5 +1,5 @@
 ---
-title: Robotic Arm
+title: Coach.js Pendulum example
 ---
 <!doctype html>
 <html>
@@ -10,15 +10,16 @@ title: Robotic Arm
         <script src="../static/coach.js"></script>
     </head>
     <body>
-        <h1>Coach.js Example: </h1>
+        <h1>Coach.js Example: VPD Controller</h1>
         <div id='main'>
-            <div id='robot'>
+            <div id='pendulum'>
                 <div id='simTime'>Simulation Time (% real time): <div id='simRate' style="display: inline-block">0</div></div>
             </div>
         </div>
 
         <script>
-            var world;
+            var FPS = 30;
+            var dt = 0.00025;
             coach.lib.$(document).ready(function() {
                 world = new coach.World({
                     "FPS": 30.,
@@ -28,62 +29,48 @@ title: Robotic Arm
                         "position": [1, 2, 5],
                         "target": [0,1,0],
                     },
-                }, '#robot');
-                var ground = new coach.entities.Box('ground', [50,1,50], {mass: 0, color: [100,100,100]});
-                var pivot  = new coach.entities.Sphere('pivot', .1, {mass: 0, color: [255,0,0]});
-                var link1  = new coach.entities.Box('link1', [0.1, 0.5, 0.1], {mass: 1, color: [0,255,0]});
-                var link2  = new coach.entities.Box('link2', [0.1, 0.5, 0.1], {mass: 1, color: [0,140,255]});
-
-                ground.position = [0.,-3,0]
-                pivot.position = [0.,1.00,0]
-                link1.position = [0.,1.25,0]
-                link2.position = [0.,1.75,0]
+                }, '#pendulum');
+                var ground = new coach.entities.Box('ground', [5,1,5], {mass: 0, color: [100,100,100]});
+                var pivot  = new coach.entities.Box('pivot', [0.1,0.1,0.1], {mass: 0, color: [255,0,0]});
+                var link1  = new coach.entities.Box('link1', [0.5, 0.1, 0.1], {mass: 1, color: [0,255,0]});
+                var link2  = new coach.entities.Box('link2', [0.5, 0.1, 0.1], {mass: 1, color: [0,0,255]});
+                var link3  = new coach.entities.Box('link3', [0.5, 0.1, 0.1], {mass: 1, color: [0,255,255]});
+                ground.position = [0.,-0.5,0]
+                pivot.position = [0,2,0]
+                link1.position = [0.25,2,0]
+                link2.position = [0.75,2,0]
+                link3.position = [1.25,2,0]
                 world.addEntity(ground,{shader: {fragmentShader: 'ground_fragShader', vertexShader: 'ground_vertShader'}} );
                 world.addEntity(pivot);
                 world.addEntity(link1);
                 world.addEntity(link2);
+                world.addEntity(link3);
 
-                var j0 = new coach.joints.Ball('joint0', pivot, link1, [0,1,0], {
-                    "torqueScale": [1,.66,1],
+                var j0 = new coach.joints.Ball('joint0', pivot, link1, [0,2,0], {
+                    "torqueScale": [0.1,1,1.0],
                 });
-                var j1 = new coach.joints.Ball('joint1', link1, link2, [0.,1.5,0], {
-                    "torqueScale": [1,0.1,1],
+                var j1 = new coach.joints.Ball('joint1', link1, link2, [0.5,2,0], {
+                    "torqueScale": [0.1,1,1.0],
                 });
-
+                var j2 = new coach.joints.Ball('joint2', link2, link3, [1,2,0], {
+                    "torqueScale": [0.1,1,1.0],
+                });
                 world.addJoint(j0);
                 world.addJoint(j1);
+                world.addJoint(j2);
 
                 var renderCallback = function(camera, time) {
                     coach.lib.$('#simRate').text((time*30.).toFixed(1));
                 }
 
-                var pdc0 = new coach.controllers.VPDController3D(j0, link2, {"X": 0., "Y": 0, "Z": 0}, {
-                    "kp": 300,
-                    "kd": 30
-                });
-
-                var pdc1 = new coach.controllers.PDController3D(j1, {"X": 0, "Y": 0, "Z": 0}, {
-                    "kp": 300,
-                    "kd": 30
-                });
-
                 var controller = function(dt) {
-                    var torque = pdc0.evaluate(dt);
-                    j0.addTorque(torque);
-
-                    var torque = pdc1.evaluate(dt);
-                    j1.addTorque(torque);
                 };
 
-                world.go({renderCallback: renderCallback, simulationCallback: controller})
+                world.go({renderCallback: renderCallback, simulationCallback: controller});
 
-                window.c0 = pdc0;
-                window.c1 = pdc1;
             });
 
-
         </script>
-
         <script id="ground_fragShader" type="x-shader/x-fragment">
             varying vec4 vPosition;
             void main() {

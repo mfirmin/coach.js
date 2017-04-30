@@ -18,8 +18,7 @@ title: Coach.js Pendulum example
         </div>
 
         <script>
-            var world = new Coach.World({
-                "FPS": 30.,
+            var world = new coach.World({
                 "dt": 0.0001,
                 "cameraOptions": {
                     "type": "perspective",
@@ -27,44 +26,40 @@ title: Coach.js Pendulum example
                     "target": [0,1,0],
                 },
             }, '#pendulum');
-            var ground = new Coach.entities.Box('ground', [5,1,5], {mass: 0, color: [100,100,100]});
-            var pivot  = new Coach.entities.Box('pivot', [0.1,0.1,0.1], {mass: 0, color: [255,0,0]});
-            var link1  = new Coach.entities.Box('link1', [0.5, 0.1, 0.1], {mass: 1, color: [0,255,0]});
-            var link2  = new Coach.entities.Box('link2', [0.5, 0.1, 0.1], {mass: 1, color: [0,0,255]});
-            var link3  = new Coach.entities.Box('link3', [0.5, 0.1, 0.1], {mass: 1, color: [0,255,255]});
-            ground.setPosition([0.,-0.5,0]);
-            pivot.setPosition([0,2,0]);
-            link1.setPosition([0.25,2,0]);
-            link2.setPosition([0.75,2,0]);
-            link3.setPosition([1.25,2,0]);
+            var ground = new coach.entities.Box('ground', [5,1,5], {mass: 0, color: [100,100,100]});
+            var pivot  = new coach.entities.Box('pivot', [0.1,0.1,0.1], {mass: 0, color: [255,0,0]});
+            var link1  = new coach.entities.Box('link1', [0.5, 0.1, 0.1], {mass: 1, color: [0,255,0]});
+            var link2  = new coach.entities.Box('link2', [0.5, 0.1, 0.1], {mass: 1, color: [0,0,255]});
+            var link3  = new coach.entities.Box('link3', [0.5, 0.1, 0.1], {mass: 1, color: [0,255,255]});
+            ground.position = [0.,-0.5,0];
+            pivot.position = [0,2,0];
+            link1.position = [0.25,2,0];
+            link2.position = [0.75,2,0];
+            link3.position = [1.25,2,0];
             world.addEntity(ground);
             world.addEntity(pivot);
             world.addEntity(link1);
             world.addEntity(link2);
             world.addEntity(link3);
 
-            var j0 = new Coach.joints.Ball('joint0', pivot, link1, [0,2,0], {
+            var j0 = new coach.joints.Ball('joint0', pivot, link1, [0,2,0], {
                 "torqueScale": [0.1,1,1.0],
             });
-            var j1 = new Coach.joints.Ball('joint1', link1, link2, [0.5,2,0], {
+            var j1 = new coach.joints.Ball('joint1', link1, link2, [0.5,2,0], {
                 "torqueScale": [0.1,1,1.0],
             });
-            var j2 = new Coach.joints.Ball('joint2', link2, link3, [1,2,0], {
+            var j2 = new coach.joints.Ball('joint2', link2, link3, [1,2,0], {
                 "torqueScale": [0.1,1,1.0],
             });
             world.addJoint(j0);
             world.addJoint(j1);
             world.addJoint(j2);
 
-            var renderCallback = function(camera, time) {
-                Coach.lib.$('#simRate').text((time*30.).toFixed(1));
-            }
-
-            var pdc = new Coach.controllers.PDController3D(j1, {"X": 0, "Y": 0, "Z": 1.57}, {
+            var pdc = new coach.controllers.PDController3D(j1, {"X": 0, "Y": 0, "Z": 1.57}, {
                 "kp": 200,
                 "kd": 20
             });
-            var pdc2 = new Coach.controllers.PDController3D(j2, {"X": 0, "Y": 1.57, "Z": 0}, {
+            var pdc2 = new coach.controllers.PDController3D(j2, {"X": 0, "Y": 1.57, "Z": 0}, {
                 "kp": 200,
                 "kd": 20
             });
@@ -76,8 +71,11 @@ title: Coach.js Pendulum example
                 j2.addTorque(T2);
             };
 
-            world.go({renderCallback: renderCallback, simulationCallback: controller})
+            var renderCallback = function(camera, rate) {
+                coach.lib.$('#simRate').text((rate).toFixed(1));
+            }
 
+            world.go({renderCallback: renderCallback, simulationCallback: controller })
 
         </script>
 

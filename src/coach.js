@@ -1,33 +1,28 @@
+import controllers from './controller/index';
+import Character   from './character';
+import entities    from './entity/index';
+import joints      from './joint/index';
+import Renderer    from './renderer/renderer';
+import Simulator   from './simulator/simulator';
+import World       from './world/world';
+import utils       from './utils/utils';
 
-var World     = require('./world/world');
-var Simulator = require('./simulator/simulator');
-var Renderer  = require('./renderer/renderer');
+import * as lib    from './lib/index';
 
-var Character = require('./character');
+const Coach = {
+    version: '0.0.1',
 
-var entities  = require('./entity/index');
-var joints    = require('./joint/index');
+    controllers,
+    entities,
+    joints,
+    utils,
 
-var controllers = require('./controller/index');
-var utils     = require('./utils/utils');
+    Character,
+    Renderer,
+    Simulator,
+    World,
 
-var lib       = require('./lib/index');
+    lib,
+};
 
-var Coach = { "version": "0.0.0" };
-
-Coach.World = World;
-Coach.Renderer = Renderer;
-Coach.Simulator = Simulator;
-
-Coach.Character = Character;
-
-Coach.entities = entities;
-Coach.joints = joints;
-
-Coach.controllers = controllers;
-
-Coach.utils = utils;
-
-Coach.lib = lib;
-
-module.exports = Coach;
+export default Coach;

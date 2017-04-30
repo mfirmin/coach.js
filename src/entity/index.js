@@ -1,10 +1,15 @@
+import Entity   from './entity';
+import Box      from './box';
+import Capsule  from './capsule';
+import Cylinder from './cylinder';
+import Sphere   from './sphere';
 
-var entities = {
-    "Entity":   require('./entity'),
-    "Box":      require('./box'),
-    "Capsule":  require('./capsule'),
-    "Cylinder": require('./cylinder'),
-    "Sphere":   require('./sphere')
+const entities = {
+    Entity,
+    Box,
+    Capsule,
+    Cylinder,
+    Sphere,
 };
 
-module.exports = entities;
+export default entities;
