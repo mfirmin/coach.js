@@ -17,5 +17,8 @@ $(COACH): $(SOURCES)
 	cd bin && node build-umd.js
 	cp build/coach.js static/coach.js
 
+watch: build
+	watchman-make -p '$(SOURCEDIR)/**/*.js' -t build
+
 run:
-	bundle exec jekyll serve
+	bundle exec jekyll serve 

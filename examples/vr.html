@@ -1,0 +1,166 @@
+---
+title: coach.js Pendulum example
+---
+<!doctype html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
+        <title>coach.js VR</title>
+        <link rel="stylesheet" type="text/css" href="/css/coach.css">
+        <script src="/static/webvr-ui.min.js"></script>
+        <script src="/static/coach.js"></script>
+<style>
+    body {
+        width: 100vw;
+        height: 100vh;
+        background-color: #000;
+        color: #fff;
+        margin: 0px;
+        padding 0;
+        overflow: hidden;
+    }
+</style>
+</head>
+    <body>
+    </body>
+    <script>
+        WebVRConfig = {
+            BUFFER_SCALE: 0.5,
+        }
+    </script>
+        <script>
+
+            var THREE = coach.lib.three
+
+            var VRControls = coach.lib.VRControls;
+            var VREffect = coach.lib.VREffect;
+
+            const sittingToStandingMatrix = new THREE.Matrix4();
+
+            var world = new coach.World({
+                dt: 0.0001,
+                VR: true,
+                cameraOptions: {
+                    type: 'perspective',
+                    position: [2, 2, 2],
+                    target: [0,1,0],
+                },
+                vrReadyCallback: (vrDisplay) => {
+                    sittingToStandingMatrix.elements = new Float32Array(vrDisplay.stageParameters.sittingToStandingTransform);
+                },
+            });
+
+            var ground = new coach.entities.Box('ground', [10, 1, 10], {mass: 0, color: [100,100,100]});
+            var pivot  = new coach.entities.Sphere('pivot', 0.1, {mass: 0, color: [255,0,0]});
+            var link1  = new coach.entities.Cylinder('link1', 0.05, 0.7, {mass: 1, color: [0,255,0]});
+            ground.position = [0.,-0.5,0];
+            pivot.position = [0,1.6,0];
+            link1.position = [0.35,1.6,0];
+            link1.orientation = [0, 0, 1, 1];
+            world.addEntity(ground);
+            world.addEntity(pivot);
+            world.addEntity(link1);
+
+            var j0 = new coach.joints.Ball('joint0', pivot, link1, [0.0,1.6,0], {
+                "torqueScale": [0.1,1,1.0],
+            });
+            world.addJoint(j0);
+
+//            var pdc = new coach.controllers.PDController3D(j0, {"X": 0, "Y": 0, "Z": 1.57}, {
+//                "kp": 200,
+//                "kd": 20
+//            });
+
+            world.go()
+
+            const vrButton = new webvrui.EnterVRButton(world.renderer.renderer.domElement, {
+                color: 'black',
+                background: 'white',
+                corners: 'square',
+            });
+
+            document.querySelector('body').appendChild(vrButton.domElement);
+
+            vrButton.domElement.addEventListener('click', () => vrButton.requestEnterFullscreen());
+
+            let c1, c2;
+
+            function updateGamepad(g, c) {
+                var pos = new THREE.Vector3(g.pose.position[0], g.pose.position[1], g.pose.position[2]);
+                var ori = new THREE.Quaternion(g.pose.orientation[0], g.pose.orientation[1], g.pose.orientation[2], g.pose.orientation[3]);
+                var mout = new THREE.Matrix4();
+                var mpos = new THREE.Matrix4();
+                var mori = new THREE.Matrix4();
+                mpos.setPosition(pos);
+                mori.makeRotationFromQuaternion(ori);
+                mpos.multiply(mori);
+                mout.multiply(sittingToStandingMatrix);
+                mout.multiply(mpos);
+                c.matrix = mout;
+
+                return mout;
+            }
+
+            let g1Info;
+            let torque = 0;
+
+            function updateGamepads() {
+                let vrGs = [];
+                const gpads = navigator.getGamepads();
+                let g1;
+                let g2;
+                for (let i = 0; i < 4; i++) {
+                    if (gpads[i] && gpads[i].id === 'OpenVR Gamepad') {
+                        if (gpads[i].index === 0) {
+                            g1 = gpads[i];
+                        }
+                        if (gpads[i].index === 1) {
+                            g2 = gpads[i];
+                        }
+                    }
+                }
+
+                if (g1 && g1.pose) {
+                    const mout = updateGamepad(g1, c1);
+                    g1Info = mout;
+
+                }
+                if (g2 && g2.pose) {
+                    updateGamepad(g2, c2);
+                }
+            }
+
+//            function simulationUpdate() {
+//                if (g1Info &&
+//                    Math.abs(g1Info.elements[12] - 0) < 0.1 &&
+//                    Math.abs(g1Info.elements[13] - 1.6) < 0.1 &&
+//                    Math.abs(g1Info.elements[14] - 0) < 0.1)
+//                {
+//                    var T = pdc.evaluate(0.001);
+//                    j0.addTorque(T);
+//                }
+//            }
+
+            function initGamepads() {
+                const bGeom = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+                const m1 = new THREE.MeshBasicMaterial({ color: 'red' });
+                const m2 = new THREE.MeshBasicMaterial({ color: 'blue' });
+
+                c1 = new THREE.Mesh(bGeom, m1);
+                c2 = new THREE.Mesh(bGeom, m2);
+
+                c1.position.y = 1;
+                c1.matrixAutoUpdate = false;
+                c2.position.y = 1;
+                c2.matrixAutoUpdate = false;
+
+                world.renderer.scene.add(c1);
+                world.renderer.scene.add(c2);
+
+                world.renderer.callback = () => updateGamepads();
+//                world.simulator.callback = () => simulationUpdate();
+            }
+
+            initGamepads();
+        </script>
+</html>

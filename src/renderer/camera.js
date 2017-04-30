@@ -1,4 +1,6 @@
-import { three as THREE } from '../lib/index';
+/* global window */
+import { three as THREE, OrbitControls } from '../lib/index';
+import $ from '../lib/jquery-2.1.4.min';
 
 class Camera {
     constructor(opts = {}) {
@@ -22,16 +24,18 @@ class Camera {
 
         const target = (opts.target === undefined) ? [0, 0, 0] : opts.target;
         this.target = target;
+
+        this.initControls();
     }
 
     setPerspective(opts) {
         this._type = 'perspective';
 
         this.threeCamera = new THREE.PerspectiveCamera(
-            (opts.fov === undefined) ? 45 : opts.fov,
-            (opts.aspect === undefined) ? 1 : opts.aspect,
-            (opts.near === undefined) ? 1 : opts.near,
-            (opts.far === undefined) ? 2000 : opts.far,
+            (opts.fov === undefined) ? 75 : opts.fov,
+            (opts.aspect === undefined) ? window.innerWidth / window.innerHeight : opts.aspect,
+            (opts.near === undefined) ? 0.1 : opts.near,
+            (opts.far === undefined) ? 10000 : opts.far,
         );
 
         return this.threeCamera;
@@ -50,6 +54,15 @@ class Camera {
         );
 
         return this.threeCamera;
+    }
+
+    initControls() {
+        const controls = new OrbitControls(this.threeCamera, $('body')[0]);
+
+        controls.rotateSpeed = 5.0;
+        controls.zoomSpeed = 1.2;
+
+        this.controls = controls;
     }
 
     set aspectRatio(aspect) {
@@ -72,6 +85,18 @@ class Camera {
         this.threeCamera.position.x = pos[0];
         this.threeCamera.position.y = pos[1];
         this.threeCamera.position.z = pos[2];
+    }
+
+    set positionX(x) {
+        this.threeCamera.position.x = x;
+    }
+
+    set positionY(y) {
+        this.threeCamera.position.y = y;
+    }
+
+    set positionZ(z) {
+        this.threeCamera.position.z = z;
     }
 
     get target() {

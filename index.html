@@ -1,16 +1,16 @@
 ---
-title: coach.js Pendulum example
+title: Coach.js Pendulum example
 ---
 <!doctype html>
 <html>
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-        <title>coach.js Example</title>
+        <title>Coach.js Example</title>
         <link rel="stylesheet" type="text/css" href="css/coach.css">
         <script src="static/coach.js"></script>
     </head>
     <body>
-        <h1>coach.js Example: Pendulum</h1>
+        <h1>Coach.js Example: Pendulum</h1>
         <div id='main'>
             <div id='pendulum'>
                 <div id='simTime'>Simulation Time (% real time): <div id='simRate' style="display: inline-block">0</div></div>
@@ -19,7 +19,6 @@ title: coach.js Pendulum example
 
         <script>
             var world = new coach.World({
-                "FPS": 30.,
                 "dt": 0.0001,
                 "cameraOptions": {
                     "type": "perspective",
@@ -32,11 +31,11 @@ title: coach.js Pendulum example
             var link1  = new coach.entities.Box('link1', [0.5, 0.1, 0.1], {mass: 1, color: [0,255,0]});
             var link2  = new coach.entities.Box('link2', [0.5, 0.1, 0.1], {mass: 1, color: [0,0,255]});
             var link3  = new coach.entities.Box('link3', [0.5, 0.1, 0.1], {mass: 1, color: [0,255,255]});
-            ground.position = [0.,-0.5,0]
-            pivot.position = [0,2,0]
-            link1.position = [0.25,2,0]
-            link2.position = [0.75,2,0]
-            link3.position = [1.25,2,0]
+            ground.position = [0.,-0.5,0];
+            pivot.position = [0,2,0];
+            link1.position = [0.25,2,0];
+            link2.position = [0.75,2,0];
+            link3.position = [1.25,2,0];
             world.addEntity(ground);
             world.addEntity(pivot);
             world.addEntity(link1);
@@ -56,10 +55,6 @@ title: coach.js Pendulum example
             world.addJoint(j1);
             world.addJoint(j2);
 
-            var renderCallback = function(camera, time) {
-                coach.lib.$('#simRate').text((time*30.).toFixed(1));
-            }
-
             var pdc = new coach.controllers.PDController3D(j1, {"X": 0, "Y": 0, "Z": 1.57}, {
                 "kp": 200,
                 "kd": 20
@@ -76,8 +71,11 @@ title: coach.js Pendulum example
                 j2.addTorque(T2);
             };
 
-            world.go({renderCallback: renderCallback, simulationCallback: controller})
+            var renderCallback = function(camera, rate) {
+                coach.lib.$('#simRate').text((rate).toFixed(1));
+            }
 
+            world.go({renderCallback: renderCallback, simulationCallback: controller })
 
         </script>
 

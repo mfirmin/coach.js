@@ -45082,15 +45082,1496 @@ return M.access(a,b,c)},removeData:function(a,b){M.remove(a,b);},_data:function(
 void 0===c?d&&"get"in d&&null!==(e=d.get(a,b))?e:(e=n.find.attr(a,b),null==e?void 0:e):null!==c?d&&"set"in d&&void 0!==(e=d.set(a,c,b))?e:(a.setAttribute(b,c+""),c):void n.removeAttr(a,b))},removeAttr:function(a,b){var c,d,e=0,f=b&&b.match(E);if(f&&1===a.nodeType)while(c=f[e++])d=n.propFix[c]||c,n.expr.match.bool.test(c)&&(a[d]=!1),a.removeAttribute(c);},attrHooks:{type:{set:function(a,b){if(!k.radioValue&&"radio"===b&&n.nodeName(a,"input")){var c=a.value;return a.setAttribute("type",b),c&&(a.value=c),b}}}}}),Za={set:function(a,b,c){return b===!1?n.removeAttr(a,c):a.setAttribute(c,c),c}},n.each(n.expr.match.bool.source.match(/\w+/g),function(a,b){var c=$a[b]||n.find.attr;$a[b]=function(a,b,d){var e,f;return d||(f=$a[b],$a[b]=e,e=null!=c(a,b,d)?b.toLowerCase():null,$a[b]=f),e};});var _a=/^(?:input|select|textarea|button)$/i;n.fn.extend({prop:function(a,b){return J(this,n.prop,a,b,arguments.length>1)},removeProp:function(a){return this.each(function(){delete this[n.propFix[a]||a];})}}),n.extend({propFix:{"for":"htmlFor","class":"className"},prop:function(a,b,c){var d,e,f,g=a.nodeType;if(a&&3!==g&&8!==g&&2!==g)return f=1!==g||!n.isXMLDoc(a),f&&(b=n.propFix[b]||b,e=n.propHooks[b]),void 0!==c?e&&"set"in e&&void 0!==(d=e.set(a,c,b))?d:a[b]=c:e&&"get"in e&&null!==(d=e.get(a,b))?d:a[b]},propHooks:{tabIndex:{get:function(a){return a.hasAttribute("tabindex")||_a.test(a.nodeName)||a.href?a.tabIndex:-1}}}}),k.optSelected||(n.propHooks.selected={get:function(a){var b=a.parentNode;return b&&b.parentNode&&b.parentNode.selectedIndex,null}}),n.each(["tabIndex","readOnly","maxLength","cellSpacing","cellPadding","rowSpan","colSpan","useMap","frameBorder","contentEditable"],function(){n.propFix[this.toLowerCase()]=this;});var ab=/[\t\r\n\f]/g;n.fn.extend({addClass:function(a){var b,c,d,e,f,g,h="string"==typeof a&&a,i=0,j=this.length;if(n.isFunction(a))return this.each(function(b){n(this).addClass(a.call(this,b,this.className));});if(h)for(b=(a||"").match(E)||[];j>i;i++)if(c=this[i],d=1===c.nodeType&&(c.className?(" "+c.className+" ").replace(ab," "):" ")){f=0;while(e=b[f++])d.indexOf(" "+e+" ")<0&&(d+=e+" ");g=n.trim(d),c.className!==g&&(c.className=g);}return this},removeClass:function(a){var b,c,d,e,f,g,h=0===arguments.length||"string"==typeof a&&a,i=0,j=this.length;if(n.isFunction(a))return this.each(function(b){n(this).removeClass(a.call(this,b,this.className));});if(h)for(b=(a||"").match(E)||[];j>i;i++)if(c=this[i],d=1===c.nodeType&&(c.className?(" "+c.className+" ").replace(ab," "):"")){f=0;while(e=b[f++])while(d.indexOf(" "+e+" ")>=0)d=d.replace(" "+e+" "," ");g=a?n.trim(d):"",c.className!==g&&(c.className=g);}return this},toggleClass:function(a,b){var c=typeof a;return"boolean"==typeof b&&"string"===c?b?this.addClass(a):this.removeClass(a):this.each(n.isFunction(a)?function(c){n(this).toggleClass(a.call(this,c,this.className,b),b);}:function(){if("string"===c){var b,d=0,e=n(this),f=a.match(E)||[];while(b=f[d++])e.hasClass(b)?e.removeClass(b):e.addClass(b);}else(c===U||"boolean"===c)&&(this.className&&L.set(this,"__className__",this.className),this.className=this.className||a===!1?"":L.get(this,"__className__")||"");})},hasClass:function(a){for(var b=" "+a+" ",c=0,d=this.length;d>c;c++)if(1===this[c].nodeType&&(" "+this[c].className+" ").replace(ab," ").indexOf(b)>=0)return!0;return!1}});var bb=/\r/g;n.fn.extend({val:function(a){var b,c,d,e=this[0];{if(arguments.length)return d=n.isFunction(a),this.each(function(c){var e;1===this.nodeType&&(e=d?a.call(this,c,n(this).val()):a,null==e?e="":"number"==typeof e?e+="":n.isArray(e)&&(e=n.map(e,function(a){return null==a?"":a+""})),b=n.valHooks[this.type]||n.valHooks[this.nodeName.toLowerCase()],b&&"set"in b&&void 0!==b.set(this,e,"value")||(this.value=e));});if(e)return b=n.valHooks[e.type]||n.valHooks[e.nodeName.toLowerCase()],b&&"get"in b&&void 0!==(c=b.get(e,"value"))?c:(c=e.value,"string"==typeof c?c.replace(bb,""):null==c?"":c)}}}),n.extend({valHooks:{option:{get:function(a){var b=n.find.attr(a,"value");return null!=b?b:n.trim(n.text(a))}},select:{get:function(a){for(var b,c,d=a.options,e=a.selectedIndex,f="select-one"===a.type||0>e,g=f?null:[],h=f?e+1:d.length,i=0>e?h:f?e:0;h>i;i++)if(c=d[i],!(!c.selected&&i!==e||(k.optDisabled?c.disabled:null!==c.getAttribute("disabled"))||c.parentNode.disabled&&n.nodeName(c.parentNode,"optgroup"))){if(b=n(c).val(),f)return b;g.push(b);}return g},set:function(a,b){var c,d,e=a.options,f=n.makeArray(b),g=e.length;while(g--)d=e[g],(d.selected=n.inArray(d.value,f)>=0)&&(c=!0);return c||(a.selectedIndex=-1),f}}}}),n.each(["radio","checkbox"],function(){n.valHooks[this]={set:function(a,b){return n.isArray(b)?a.checked=n.inArray(n(a).val(),b)>=0:void 0}},k.checkOn||(n.valHooks[this].get=function(a){return null===a.getAttribute("value")?"on":a.value});}),n.each("blur focus focusin focusout load resize scroll unload click dblclick mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave change select submit keydown keypress keyup error contextmenu".split(" "),function(a,b){n.fn[b]=function(a,c){return arguments.length>0?this.on(b,null,a,c):this.trigger(b)};}),n.fn.extend({hover:function(a,b){return this.mouseenter(a).mouseleave(b||a)},bind:function(a,b,c){return this.on(a,null,b,c)},unbind:function(a,b){return this.off(a,null,b)},delegate:function(a,b,c,d){return this.on(b,a,c,d)},undelegate:function(a,b,c){return 1===arguments.length?this.off(a,"**"):this.off(b,a||"**",c)}});var cb=n.now(),db=/\?/;n.parseJSON=function(a){return JSON.parse(a+"")},n.parseXML=function(a){var b,c;if(!a||"string"!=typeof a)return null;try{c=new DOMParser,b=c.parseFromString(a,"text/xml");}catch(d){b=void 0;}return(!b||b.getElementsByTagName("parsererror").length)&&n.error("Invalid XML: "+a),b};var eb=/#.*$/,fb=/([?&])_=[^&]*/,gb=/^(.*?):[ \t]*([^\r\n]*)$/gm,hb=/^(?:about|app|app-storage|.+-extension|file|res|widget):$/,ib=/^(?:GET|HEAD)$/,jb=/^\/\//,kb=/^([\w.+-]+:)(?:\/\/(?:[^\/?#]*@|)([^\/?#:]*)(?::(\d+)|)|)/,lb={},mb={},nb="*/".concat("*"),ob=a.location.href,pb=kb.exec(ob.toLowerCase())||[];function qb(a){return function(b,c){"string"!=typeof b&&(c=b,b="*");var d,e=0,f=b.toLowerCase().match(E)||[];if(n.isFunction(c))while(d=f[e++])"+"===d[0]?(d=d.slice(1)||"*",(a[d]=a[d]||[]).unshift(c)):(a[d]=a[d]||[]).push(c);}}function rb(a,b,c,d){var e={},f=a===mb;function g(h){var i;return e[h]=!0,n.each(a[h]||[],function(a,h){var j=h(b,c,d);return"string"!=typeof j||f||e[j]?f?!(i=j):void 0:(b.dataTypes.unshift(j),g(j),!1)}),i}return g(b.dataTypes[0])||!e["*"]&&g("*")}function sb(a,b){var c,d,e=n.ajaxSettings.flatOptions||{};for(c in b)void 0!==b[c]&&((e[c]?a:d||(d={}))[c]=b[c]);return d&&n.extend(!0,a,d),a}function tb(a,b,c){var d,e,f,g,h=a.contents,i=a.dataTypes;while("*"===i[0])i.shift(),void 0===d&&(d=a.mimeType||b.getResponseHeader("Content-Type"));if(d)for(e in h)if(h[e]&&h[e].test(d)){i.unshift(e);break}if(i[0]in c)f=i[0];else{for(e in c){if(!i[0]||a.converters[e+" "+i[0]]){f=e;break}g||(g=e);}f=f||g;}return f?(f!==i[0]&&i.unshift(f),c[f]):void 0}function ub(a,b,c,d){var e,f,g,h,i,j={},k=a.dataTypes.slice();if(k[1])for(g in a.converters)j[g.toLowerCase()]=a.converters[g];f=k.shift();while(f)if(a.responseFields[f]&&(c[a.responseFields[f]]=b),!i&&d&&a.dataFilter&&(b=a.dataFilter(b,a.dataType)),i=f,f=k.shift())if("*"===f)f=i;else if("*"!==i&&i!==f){if(g=j[i+" "+f]||j["* "+f],!g)for(e in j)if(h=e.split(" "),h[1]===f&&(g=j[i+" "+h[0]]||j["* "+h[0]])){g===!0?g=j[e]:j[e]!==!0&&(f=h[0],k.unshift(h[1]));break}if(g!==!0)if(g&&a["throws"])b=g(b);else try{b=g(b);}catch(l){return{state:"parsererror",error:g?l:"No conversion from "+i+" to "+f}}}return{state:"success",data:b}}n.extend({active:0,lastModified:{},etag:{},ajaxSettings:{url:ob,type:"GET",isLocal:hb.test(pb[1]),global:!0,processData:!0,async:!0,contentType:"application/x-www-form-urlencoded; charset=UTF-8",accepts:{"*":nb,text:"text/plain",html:"text/html",xml:"application/xml, text/xml",json:"application/json, text/javascript"},contents:{xml:/xml/,html:/html/,json:/json/},responseFields:{xml:"responseXML",text:"responseText",json:"responseJSON"},converters:{"* text":String,"text html":!0,"text json":n.parseJSON,"text xml":n.parseXML},flatOptions:{url:!0,context:!0}},ajaxSetup:function(a,b){return b?sb(sb(a,n.ajaxSettings),b):sb(n.ajaxSettings,a)},ajaxPrefilter:qb(lb),ajaxTransport:qb(mb),ajax:function(a,b){"object"==typeof a&&(b=a,a=void 0),b=b||{};var c,d,e,f,g,h,i,j,k=n.ajaxSetup({},b),l=k.context||k,m=k.context&&(l.nodeType||l.jquery)?n(l):n.event,o=n.Deferred(),p=n.Callbacks("once memory"),q=k.statusCode||{},r={},s={},t=0,u="canceled",v={readyState:0,getResponseHeader:function(a){var b;if(2===t){if(!f){f={};while(b=gb.exec(e))f[b[1].toLowerCase()]=b[2];}b=f[a.toLowerCase()];}return null==b?null:b},getAllResponseHeaders:function(){return 2===t?e:null},setRequestHeader:function(a,b){var c=a.toLowerCase();return t||(a=s[c]=s[c]||a,r[a]=b),this},overrideMimeType:function(a){return t||(k.mimeType=a),this},statusCode:function(a){var b;if(a)if(2>t)for(b in a)q[b]=[q[b],a[b]];else v.always(a[v.status]);return this},abort:function(a){var b=a||u;return c&&c.abort(b),x(0,b),this}};if(o.promise(v).complete=p.add,v.success=v.done,v.error=v.fail,k.url=((a||k.url||ob)+"").replace(eb,"").replace(jb,pb[1]+"//"),k.type=b.method||b.type||k.method||k.type,k.dataTypes=n.trim(k.dataType||"*").toLowerCase().match(E)||[""],null==k.crossDomain&&(h=kb.exec(k.url.toLowerCase()),k.crossDomain=!(!h||h[1]===pb[1]&&h[2]===pb[2]&&(h[3]||("http:"===h[1]?"80":"443"))===(pb[3]||("http:"===pb[1]?"80":"443")))),k.data&&k.processData&&"string"!=typeof k.data&&(k.data=n.param(k.data,k.traditional)),rb(lb,k,b,v),2===t)return v;i=n.event&&k.global,i&&0===n.active++&&n.event.trigger("ajaxStart"),k.type=k.type.toUpperCase(),k.hasContent=!ib.test(k.type),d=k.url,k.hasContent||(k.data&&(d=k.url+=(db.test(d)?"&":"?")+k.data,delete k.data),k.cache===!1&&(k.url=fb.test(d)?d.replace(fb,"$1_="+cb++):d+(db.test(d)?"&":"?")+"_="+cb++)),k.ifModified&&(n.lastModified[d]&&v.setRequestHeader("If-Modified-Since",n.lastModified[d]),n.etag[d]&&v.setRequestHeader("If-None-Match",n.etag[d])),(k.data&&k.hasContent&&k.contentType!==!1||b.contentType)&&v.setRequestHeader("Content-Type",k.contentType),v.setRequestHeader("Accept",k.dataTypes[0]&&k.accepts[k.dataTypes[0]]?k.accepts[k.dataTypes[0]]+("*"!==k.dataTypes[0]?", "+nb+"; q=0.01":""):k.accepts["*"]);for(j in k.headers)v.setRequestHeader(j,k.headers[j]);if(k.beforeSend&&(k.beforeSend.call(l,v,k)===!1||2===t))return v.abort();u="abort";for(j in{success:1,error:1,complete:1})v[j](k[j]);if(c=rb(mb,k,b,v)){v.readyState=1,i&&m.trigger("ajaxSend",[v,k]),k.async&&k.timeout>0&&(g=setTimeout(function(){v.abort("timeout");},k.timeout));try{t=1,c.send(r,x);}catch(w){if(!(2>t))throw w;x(-1,w);}}else x(-1,"No Transport");function x(a,b,f,h){var j,r,s,u,w,x=b;2!==t&&(t=2,g&&clearTimeout(g),c=void 0,e=h||"",v.readyState=a>0?4:0,j=a>=200&&300>a||304===a,f&&(u=tb(k,v,f)),u=ub(k,u,v,j),j?(k.ifModified&&(w=v.getResponseHeader("Last-Modified"),w&&(n.lastModified[d]=w),w=v.getResponseHeader("etag"),w&&(n.etag[d]=w)),204===a||"HEAD"===k.type?x="nocontent":304===a?x="notmodified":(x=u.state,r=u.data,s=u.error,j=!s)):(s=x,(a||!x)&&(x="error",0>a&&(a=0))),v.status=a,v.statusText=(b||x)+"",j?o.resolveWith(l,[r,x,v]):o.rejectWith(l,[v,x,s]),v.statusCode(q),q=void 0,i&&m.trigger(j?"ajaxSuccess":"ajaxError",[v,k,j?r:s]),p.fireWith(l,[v,x]),i&&(m.trigger("ajaxComplete",[v,k]),--n.active||n.event.trigger("ajaxStop")));}return v},getJSON:function(a,b,c){return n.get(a,b,c,"json")},getScript:function(a,b){return n.get(a,void 0,b,"script")}}),n.each(["get","post"],function(a,b){n[b]=function(a,c,d,e){return n.isFunction(c)&&(e=e||d,d=c,c=void 0),n.ajax({url:a,type:b,dataType:e,data:c,success:d})};}),n._evalUrl=function(a){return n.ajax({url:a,type:"GET",dataType:"script",async:!1,global:!1,"throws":!0})},n.fn.extend({wrapAll:function(a){var b;return n.isFunction(a)?this.each(function(b){n(this).wrapAll(a.call(this,b));}):(this[0]&&(b=n(a,this[0].ownerDocument).eq(0).clone(!0),this[0].parentNode&&b.insertBefore(this[0]),b.map(function(){var a=this;while(a.firstElementChild)a=a.firstElementChild;return a}).append(this)),this)},wrapInner:function(a){return this.each(n.isFunction(a)?function(b){n(this).wrapInner(a.call(this,b));}:function(){var b=n(this),c=b.contents();c.length?c.wrapAll(a):b.append(a);})},wrap:function(a){var b=n.isFunction(a);return this.each(function(c){n(this).wrapAll(b?a.call(this,c):a);})},unwrap:function(){return this.parent().each(function(){n.nodeName(this,"body")||n(this).replaceWith(this.childNodes);}).end()}}),n.expr.filters.hidden=function(a){return a.offsetWidth<=0&&a.offsetHeight<=0},n.expr.filters.visible=function(a){return!n.expr.filters.hidden(a)};var vb=/%20/g,wb=/\[\]$/,xb=/\r?\n/g,yb=/^(?:submit|button|image|reset|file)$/i,zb=/^(?:input|select|textarea|keygen)/i;function Ab(a,b,c,d){var e;if(n.isArray(b))n.each(b,function(b,e){c||wb.test(a)?d(a,e):Ab(a+"["+("object"==typeof e?b:"")+"]",e,c,d);});else if(c||"object"!==n.type(b))d(a,b);else for(e in b)Ab(a+"["+e+"]",b[e],c,d);}n.param=function(a,b){var c,d=[],e=function(a,b){b=n.isFunction(b)?b():null==b?"":b,d[d.length]=encodeURIComponent(a)+"="+encodeURIComponent(b);};if(void 0===b&&(b=n.ajaxSettings&&n.ajaxSettings.traditional),n.isArray(a)||a.jquery&&!n.isPlainObject(a))n.each(a,function(){e(this.name,this.value);});else for(c in a)Ab(c,a[c],b,e);return d.join("&").replace(vb,"+")},n.fn.extend({serialize:function(){return n.param(this.serializeArray())},serializeArray:function(){return this.map(function(){var a=n.prop(this,"elements");return a?n.makeArray(a):this}).filter(function(){var a=this.type;return this.name&&!n(this).is(":disabled")&&zb.test(this.nodeName)&&!yb.test(a)&&(this.checked||!T.test(a))}).map(function(a,b){var c=n(this).val();return null==c?null:n.isArray(c)?n.map(c,function(a){return{name:b.name,value:a.replace(xb,"\r\n")}}):{name:b.name,value:c.replace(xb,"\r\n")}}).get()}}),n.ajaxSettings.xhr=function(){try{return new XMLHttpRequest}catch(a){}};var Bb=0,Cb={},Db={0:200,1223:204},Eb=n.ajaxSettings.xhr();a.attachEvent&&a.attachEvent("onunload",function(){for(var a in Cb)Cb[a]();}),k.cors=!!Eb&&"withCredentials"in Eb,k.ajax=Eb=!!Eb,n.ajaxTransport(function(a){var b;return k.cors||Eb&&!a.crossDomain?{send:function(c,d){var e,f=a.xhr(),g=++Bb;if(f.open(a.type,a.url,a.async,a.username,a.password),a.xhrFields)for(e in a.xhrFields)f[e]=a.xhrFields[e];a.mimeType&&f.overrideMimeType&&f.overrideMimeType(a.mimeType),a.crossDomain||c["X-Requested-With"]||(c["X-Requested-With"]="XMLHttpRequest");for(e in c)f.setRequestHeader(e,c[e]);b=function(a){return function(){b&&(delete Cb[g],b=f.onload=f.onerror=null,"abort"===a?f.abort():"error"===a?d(f.status,f.statusText):d(Db[f.status]||f.status,f.statusText,"string"==typeof f.responseText?{text:f.responseText}:void 0,f.getAllResponseHeaders()));}},f.onload=b(),f.onerror=b("error"),b=Cb[g]=b("abort");try{f.send(a.hasContent&&a.data||null);}catch(h){if(b)throw h}},abort:function(){b&&b();}}:void 0}),n.ajaxSetup({accepts:{script:"text/javascript, application/javascript, application/ecmascript, application/x-ecmascript"},contents:{script:/(?:java|ecma)script/},converters:{"text script":function(a){return n.globalEval(a),a}}}),n.ajaxPrefilter("script",function(a){void 0===a.cache&&(a.cache=!1),a.crossDomain&&(a.type="GET");}),n.ajaxTransport("script",function(a){if(a.crossDomain){var b,c;return{send:function(d,e){b=n("<script>").prop({async:!0,charset:a.scriptCharset,src:a.url}).on("load error",c=function(a){b.remove(),c=null,a&&e("error"===a.type?404:200,a.type);}),l.head.appendChild(b[0]);},abort:function(){c&&c();}}}});var Fb=[],Gb=/(=)\?(?=&|$)|\?\?/;n.ajaxSetup({jsonp:"callback",jsonpCallback:function(){var a=Fb.pop()||n.expando+"_"+cb++;return this[a]=!0,a}}),n.ajaxPrefilter("json jsonp",function(b,c,d){var e,f,g,h=b.jsonp!==!1&&(Gb.test(b.url)?"url":"string"==typeof b.data&&!(b.contentType||"").indexOf("application/x-www-form-urlencoded")&&Gb.test(b.data)&&"data");return h||"jsonp"===b.dataTypes[0]?(e=b.jsonpCallback=n.isFunction(b.jsonpCallback)?b.jsonpCallback():b.jsonpCallback,h?b[h]=b[h].replace(Gb,"$1"+e):b.jsonp!==!1&&(b.url+=(db.test(b.url)?"&":"?")+b.jsonp+"="+e),b.converters["script json"]=function(){return g||n.error(e+" was not called"),g[0]},b.dataTypes[0]="json",f=a[e],a[e]=function(){g=arguments;},d.always(function(){a[e]=f,b[e]&&(b.jsonpCallback=c.jsonpCallback,Fb.push(e)),g&&n.isFunction(f)&&f(g[0]),g=f=void 0;}),"script"):void 0}),n.parseHTML=function(a,b,c){if(!a||"string"!=typeof a)return null;"boolean"==typeof b&&(c=b,b=!1),b=b||l;var d=v.exec(a),e=!c&&[];return d?[b.createElement(d[1])]:(d=n.buildFragment([a],b,e),e&&e.length&&n(e).remove(),n.merge([],d.childNodes))};var Hb=n.fn.load;n.fn.load=function(a,b,c){if("string"!=typeof a&&Hb)return Hb.apply(this,arguments);var d,e,f,g=this,h=a.indexOf(" ");return h>=0&&(d=n.trim(a.slice(h)),a=a.slice(0,h)),n.isFunction(b)?(c=b,b=void 0):b&&"object"==typeof b&&(e="POST"),g.length>0&&n.ajax({url:a,type:e,dataType:"html",data:b}).done(function(a){f=arguments,g.html(d?n("<div>").append(n.parseHTML(a)).find(d):a);}).complete(c&&function(a,b){g.each(c,f||[a.responseText,b,a]);}),this},n.each(["ajaxStart","ajaxStop","ajaxComplete","ajaxError","ajaxSuccess","ajaxSend"],function(a,b){n.fn[b]=function(a){return this.on(b,a)};}),n.expr.filters.animated=function(a){return n.grep(n.timers,function(b){return a===b.elem}).length};var Ib=a.document.documentElement;function Jb(a){return n.isWindow(a)?a:9===a.nodeType&&a.defaultView}n.offset={setOffset:function(a,b,c){var d,e,f,g,h,i,j,k=n.css(a,"position"),l=n(a),m={};"static"===k&&(a.style.position="relative"),h=l.offset(),f=n.css(a,"top"),i=n.css(a,"left"),j=("absolute"===k||"fixed"===k)&&(f+i).indexOf("auto")>-1,j?(d=l.position(),g=d.top,e=d.left):(g=parseFloat(f)||0,e=parseFloat(i)||0),n.isFunction(b)&&(b=b.call(a,c,h)),null!=b.top&&(m.top=b.top-h.top+g),null!=b.left&&(m.left=b.left-h.left+e),"using"in b?b.using.call(a,m):l.css(m);}},n.fn.extend({offset:function(a){if(arguments.length)return void 0===a?this:this.each(function(b){n.offset.setOffset(this,a,b);});var b,c,d=this[0],e={top:0,left:0},f=d&&d.ownerDocument;if(f)return b=f.documentElement,n.contains(b,d)?(typeof d.getBoundingClientRect!==U&&(e=d.getBoundingClientRect()),c=Jb(f),{top:e.top+c.pageYOffset-b.clientTop,left:e.left+c.pageXOffset-b.clientLeft}):e},position:function(){if(this[0]){var a,b,c=this[0],d={top:0,left:0};return"fixed"===n.css(c,"position")?b=c.getBoundingClientRect():(a=this.offsetParent(),b=this.offset(),n.nodeName(a[0],"html")||(d=a.offset()),d.top+=n.css(a[0],"borderTopWidth",!0),d.left+=n.css(a[0],"borderLeftWidth",!0)),{top:b.top-d.top-n.css(c,"marginTop",!0),left:b.left-d.left-n.css(c,"marginLeft",!0)}}},offsetParent:function(){return this.map(function(){var a=this.offsetParent||Ib;while(a&&!n.nodeName(a,"html")&&"static"===n.css(a,"position"))a=a.offsetParent;return a||Ib})}}),n.each({scrollLeft:"pageXOffset",scrollTop:"pageYOffset"},function(b,c){var d="pageYOffset"===c;n.fn[b]=function(e){return J(this,function(b,e,f){var g=Jb(b);return void 0===f?g?g[c]:b[e]:void(g?g.scrollTo(d?a.pageXOffset:f,d?f:a.pageYOffset):b[e]=f)},b,e,arguments.length,null)};}),n.each(["top","left"],function(a,b){n.cssHooks[b]=ya(k.pixelPosition,function(a,c){return c?(c=xa(a,b),va.test(c)?n(a).position()[b]+"px":c):void 0});}),n.each({Height:"height",Width:"width"},function(a,b){n.each({padding:"inner"+a,content:b,"":"outer"+a},function(c,d){n.fn[d]=function(d,e){var f=arguments.length&&(c||"boolean"!=typeof d),g=c||(d===!0||e===!0?"margin":"border");return J(this,function(b,c,d){var e;return n.isWindow(b)?b.document.documentElement["client"+a]:9===b.nodeType?(e=b.documentElement,Math.max(b.body["scroll"+a],e["scroll"+a],b.body["offset"+a],e["offset"+a],e["client"+a])):void 0===d?n.css(b,c,g):n.style(b,c,d,g)},b,f?d:void 0,f,null)};});}),n.fn.size=function(){return this.length},n.fn.andSelf=n.fn.addBack,"function"==typeof undefined&&undefined.amd&&undefined("jquery",[],function(){return n});var Kb=a.jQuery,Lb=a.$;return n.noConflict=function(b){return a.$===n&&(a.$=Lb),b&&a.jQuery===n&&(a.jQuery=Kb),n},typeof b===U&&(a.jQuery=a.$=n),n});
 });
 
+/**
+ * @author dmarcos / https://github.com/dmarcos
+ * @author mrdoob / http://mrdoob.com
+ */
+
+var VRControls = function VRControls(object, onError) {
+
+	var scope = this;
+
+	var vrInput;
+
+	var standingMatrix = new Matrix4();
+
+	function gotVRDevices(devices) {
+
+		for (var i = 0; i < devices.length; i++) {
+
+			if ('VRDisplay' in window && devices[i] instanceof VRDisplay || 'PositionSensorVRDevice' in window && devices[i] instanceof PositionSensorVRDevice) {
+
+				vrInput = devices[i];
+				break; // We keep the first we encounter
+			}
+		}
+
+		if (!vrInput) {
+
+			if (onError) onError('VR input not available.');
+		}
+	}
+
+	if (navigator.getVRDisplays) {
+
+		navigator.getVRDisplays().then(gotVRDevices);
+	} else if (navigator.getVRDevices) {
+
+		// Deprecated API.
+		navigator.getVRDevices().then(gotVRDevices);
+	}
+
+	// the Rift SDK returns the position in meters
+	// this scale factor allows the user to define how meters
+	// are converted to scene units.
+
+	this.scale = 1;
+
+	// If true will use "standing space" coordinate system where y=0 is the
+	// floor and x=0, z=0 is the center of the room.
+	this.standing = false;
+
+	// Distance from the users eyes to the floor in meters. Used when
+	// standing=true but the VRDisplay doesn't provide stageParameters.
+	this.userHeight = 1.6;
+
+	this.update = function () {
+
+		if (vrInput) {
+
+			if (vrInput.getPose) {
+
+				var pose = vrInput.getPose();
+
+				if (pose.orientation !== null) {
+
+					object.quaternion.fromArray(pose.orientation);
+				}
+
+				if (pose.position !== null) {
+
+					object.position.fromArray(pose.position);
+				} else {
+
+					object.position.set(0, 0, 0);
+				}
+			} else {
+
+				// Deprecated API.
+				var state = vrInput.getState();
+
+				if (state.orientation !== null) {
+
+					object.quaternion.copy(state.orientation);
+				}
+
+				if (state.position !== null) {
+
+					object.position.copy(state.position);
+				} else {
+
+					object.position.set(0, 0, 0);
+				}
+			}
+
+			if (this.standing) {
+
+				if (vrInput.stageParameters) {
+
+					object.updateMatrix();
+
+					standingMatrix.fromArray(vrInput.stageParameters.sittingToStandingTransform);
+					object.applyMatrix(standingMatrix);
+				} else {
+
+					object.position.setY(object.position.y + this.userHeight);
+				}
+			}
+
+			object.position.multiplyScalar(scope.scale);
+		}
+	};
+
+	this.resetPose = function () {
+
+		if (vrInput) {
+
+			if (vrInput.resetPose !== undefined) {
+
+				vrInput.resetPose();
+			} else if (vrInput.resetSensor !== undefined) {
+
+				// Deprecated API.
+				vrInput.resetSensor();
+			} else if (vrInput.zeroSensor !== undefined) {
+
+				// Really deprecated API.
+				vrInput.zeroSensor();
+			}
+		}
+	};
+
+	this.resetSensor = function () {
+
+		console.warn('THREE.VRControls: .resetSensor() is now .resetPose().');
+		this.resetPose();
+	};
+
+	this.zeroSensor = function () {
+
+		console.warn('THREE.VRControls: .zeroSensor() is now .resetPose().');
+		this.resetPose();
+	};
+
+	this.dispose = function () {
+
+		vrInput = null;
+	};
+};
+
+/**
+ * @author qiao / https://github.com/qiao
+ * @author mrdoob / http://mrdoob.com
+ * @author alteredq / http://alteredqualia.com/
+ * @author WestLangley / http://github.com/WestLangley
+ * @author erich666 / http://erichaines.com
+ */
+
+// This set of controls performs orbiting, dollying (zooming), and panning.
+// Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
+//
+//    Orbit - left mouse / touch: one finger move
+//    Zoom - middle mouse, or mousewheel / touch: two finger spread or squish
+//    Pan - right mouse, or arrow keys / touch: three finger swipe
+
+var OrbitControls = function OrbitControls(object, domElement) {
+
+	this.object = object;
+
+	this.domElement = domElement !== undefined ? domElement : document;
+
+	// Set to false to disable this control
+	this.enabled = true;
+
+	// "target" sets the location of focus, where the object orbits around
+	this.target = new Vector3();
+
+	// How far you can dolly in and out ( PerspectiveCamera only )
+	this.minDistance = 0;
+	this.maxDistance = Infinity;
+
+	// How far you can zoom in and out ( OrthographicCamera only )
+	this.minZoom = 0;
+	this.maxZoom = Infinity;
+
+	// How far you can orbit vertically, upper and lower limits.
+	// Range is 0 to Math.PI radians.
+	this.minPolarAngle = 0; // radians
+	this.maxPolarAngle = Math.PI; // radians
+
+	// How far you can orbit horizontally, upper and lower limits.
+	// If set, must be a sub-interval of the interval [ - Math.PI, Math.PI ].
+	this.minAzimuthAngle = -Infinity; // radians
+	this.maxAzimuthAngle = Infinity; // radians
+
+	// Set to true to enable damping (inertia)
+	// If damping is enabled, you must call controls.update() in your animation loop
+	this.enableDamping = false;
+	this.dampingFactor = 0.25;
+
+	// This option actually enables dollying in and out; left as "zoom" for backwards compatibility.
+	// Set to false to disable zooming
+	this.enableZoom = true;
+	this.zoomSpeed = 1.0;
+
+	// Set to false to disable rotating
+	this.enableRotate = true;
+	this.rotateSpeed = 1.0;
+
+	// Set to false to disable panning
+	this.enablePan = true;
+	this.keyPanSpeed = 7.0; // pixels moved per arrow key push
+
+	// Set to true to automatically rotate around the target
+	// If auto-rotate is enabled, you must call controls.update() in your animation loop
+	this.autoRotate = false;
+	this.autoRotateSpeed = 2.0; // 30 seconds per round when fps is 60
+
+	// Set to false to disable use of the keys
+	this.enableKeys = true;
+
+	// The four arrow keys
+	this.keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40 };
+
+	// Mouse buttons
+	this.mouseButtons = { ORBIT: MOUSE.LEFT, ZOOM: MOUSE.MIDDLE, PAN: MOUSE.RIGHT };
+
+	// for reset
+	this.target0 = this.target.clone();
+	this.position0 = this.object.position.clone();
+	this.zoom0 = this.object.zoom;
+
+	//
+	// public methods
+	//
+
+	this.getPolarAngle = function () {
+
+		return spherical.phi;
+	};
+
+	this.getAzimuthalAngle = function () {
+
+		return spherical.theta;
+	};
+
+	this.saveState = function () {
+
+		scope.target0.copy(scope.target);
+		scope.position0.copy(scope.object.position);
+		scope.zoom0 = scope.object.zoom;
+	};
+
+	this.reset = function () {
+
+		scope.target.copy(scope.target0);
+		scope.object.position.copy(scope.position0);
+		scope.object.zoom = scope.zoom0;
+
+		scope.object.updateProjectionMatrix();
+		scope.dispatchEvent(changeEvent);
+
+		scope.update();
+
+		state = STATE.NONE;
+	};
+
+	// this method is exposed, but perhaps it would be better if we can make it private...
+	this.update = function () {
+
+		var offset = new Vector3();
+
+		// so camera.up is the orbit axis
+		var quat = new Quaternion().setFromUnitVectors(object.up, new Vector3(0, 1, 0));
+		var quatInverse = quat.clone().inverse();
+
+		var lastPosition = new Vector3();
+		var lastQuaternion = new Quaternion();
+
+		return function update() {
+
+			var position = scope.object.position;
+
+			offset.copy(position).sub(scope.target);
+
+			// rotate offset to "y-axis-is-up" space
+			offset.applyQuaternion(quat);
+
+			// angle from z-axis around y-axis
+			spherical.setFromVector3(offset);
+
+			if (scope.autoRotate && state === STATE.NONE) {
+
+				rotateLeft(getAutoRotationAngle());
+			}
+
+			spherical.theta += sphericalDelta.theta;
+			spherical.phi += sphericalDelta.phi;
+
+			// restrict theta to be between desired limits
+			spherical.theta = Math.max(scope.minAzimuthAngle, Math.min(scope.maxAzimuthAngle, spherical.theta));
+
+			// restrict phi to be between desired limits
+			spherical.phi = Math.max(scope.minPolarAngle, Math.min(scope.maxPolarAngle, spherical.phi));
+
+			spherical.makeSafe();
+
+			spherical.radius *= scale;
+
+			// restrict radius to be between desired limits
+			spherical.radius = Math.max(scope.minDistance, Math.min(scope.maxDistance, spherical.radius));
+
+			// move target to panned location
+			scope.target.add(panOffset);
+
+			offset.setFromSpherical(spherical);
+
+			// rotate offset back to "camera-up-vector-is-up" space
+			offset.applyQuaternion(quatInverse);
+
+			position.copy(scope.target).add(offset);
+
+			scope.object.lookAt(scope.target);
+
+			if (scope.enableDamping === true) {
+
+				sphericalDelta.theta *= 1 - scope.dampingFactor;
+				sphericalDelta.phi *= 1 - scope.dampingFactor;
+			} else {
+
+				sphericalDelta.set(0, 0, 0);
+			}
+
+			scale = 1;
+			panOffset.set(0, 0, 0);
+
+			// update condition is:
+			// min(camera displacement, camera rotation in radians)^2 > EPS
+			// using small-angle approximation cos(x/2) = 1 - x^2 / 8
+
+			if (zoomChanged || lastPosition.distanceToSquared(scope.object.position) > EPS || 8 * (1 - lastQuaternion.dot(scope.object.quaternion)) > EPS) {
+
+				scope.dispatchEvent(changeEvent);
+
+				lastPosition.copy(scope.object.position);
+				lastQuaternion.copy(scope.object.quaternion);
+				zoomChanged = false;
+
+				return true;
+			}
+
+			return false;
+		};
+	}();
+
+	this.dispose = function () {
+
+		scope.domElement.removeEventListener('contextmenu', onContextMenu, false);
+		scope.domElement.removeEventListener('mousedown', onMouseDown, false);
+		scope.domElement.removeEventListener('wheel', onMouseWheel, false);
+
+		scope.domElement.removeEventListener('touchstart', onTouchStart, false);
+		scope.domElement.removeEventListener('touchend', onTouchEnd, false);
+		scope.domElement.removeEventListener('touchmove', onTouchMove, false);
+
+		document.removeEventListener('mousemove', onMouseMove, false);
+		document.removeEventListener('mouseup', onMouseUp, false);
+
+		window.removeEventListener('keydown', onKeyDown, false);
+
+		//scope.dispatchEvent( { type: 'dispose' } ); // should this be added here?
+	};
+
+	//
+	// internals
+	//
+
+	var scope = this;
+
+	var changeEvent = { type: 'change' };
+	var startEvent = { type: 'start' };
+	var endEvent = { type: 'end' };
+
+	var STATE = { NONE: -1, ROTATE: 0, DOLLY: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_DOLLY: 4, TOUCH_PAN: 5 };
+
+	var state = STATE.NONE;
+
+	var EPS = 0.000001;
+
+	// current position in spherical coordinates
+	var spherical = new Spherical();
+	var sphericalDelta = new Spherical();
+
+	var scale = 1;
+	var panOffset = new Vector3();
+	var zoomChanged = false;
+
+	var rotateStart = new Vector2();
+	var rotateEnd = new Vector2();
+	var rotateDelta = new Vector2();
+
+	var panStart = new Vector2();
+	var panEnd = new Vector2();
+	var panDelta = new Vector2();
+
+	var dollyStart = new Vector2();
+	var dollyEnd = new Vector2();
+	var dollyDelta = new Vector2();
+
+	function getAutoRotationAngle() {
+
+		return 2 * Math.PI / 60 / 60 * scope.autoRotateSpeed;
+	}
+
+	function getZoomScale() {
+
+		return Math.pow(0.95, scope.zoomSpeed);
+	}
+
+	function rotateLeft(angle) {
+
+		sphericalDelta.theta -= angle;
+	}
+
+	function rotateUp(angle) {
+
+		sphericalDelta.phi -= angle;
+	}
+
+	var panLeft = function () {
+
+		var v = new Vector3();
+
+		return function panLeft(distance, objectMatrix) {
+
+			v.setFromMatrixColumn(objectMatrix, 0); // get X column of objectMatrix
+			v.multiplyScalar(-distance);
+
+			panOffset.add(v);
+		};
+	}();
+
+	var panUp = function () {
+
+		var v = new Vector3();
+
+		return function panUp(distance, objectMatrix) {
+
+			v.setFromMatrixColumn(objectMatrix, 1); // get Y column of objectMatrix
+			v.multiplyScalar(distance);
+
+			panOffset.add(v);
+		};
+	}();
+
+	// deltaX and deltaY are in pixels; right and down are positive
+	var pan = function () {
+
+		var offset = new Vector3();
+
+		return function pan(deltaX, deltaY) {
+
+			var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
+
+			if (scope.object instanceof PerspectiveCamera) {
+
+				// perspective
+				var position = scope.object.position;
+				offset.copy(position).sub(scope.target);
+				var targetDistance = offset.length();
+
+				// half of the fov is center to top of screen
+				targetDistance *= Math.tan(scope.object.fov / 2 * Math.PI / 180.0);
+
+				// we actually don't use screenWidth, since perspective camera is fixed to screen height
+				panLeft(2 * deltaX * targetDistance / element.clientHeight, scope.object.matrix);
+				panUp(2 * deltaY * targetDistance / element.clientHeight, scope.object.matrix);
+			} else if (scope.object instanceof OrthographicCamera) {
+
+				// orthographic
+				panLeft(deltaX * (scope.object.right - scope.object.left) / scope.object.zoom / element.clientWidth, scope.object.matrix);
+				panUp(deltaY * (scope.object.top - scope.object.bottom) / scope.object.zoom / element.clientHeight, scope.object.matrix);
+			} else {
+
+				// camera neither orthographic nor perspective
+				console.warn('WARNING: OrbitControls.js encountered an unknown camera type - pan disabled.');
+				scope.enablePan = false;
+			}
+		};
+	}();
+
+	function dollyIn(dollyScale) {
+
+		if (scope.object instanceof PerspectiveCamera) {
+
+			scale /= dollyScale;
+		} else if (scope.object instanceof OrthographicCamera) {
+
+			scope.object.zoom = Math.max(scope.minZoom, Math.min(scope.maxZoom, scope.object.zoom * dollyScale));
+			scope.object.updateProjectionMatrix();
+			zoomChanged = true;
+		} else {
+
+			console.warn('WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.');
+			scope.enableZoom = false;
+		}
+	}
+
+	function dollyOut(dollyScale) {
+
+		if (scope.object instanceof PerspectiveCamera) {
+
+			scale *= dollyScale;
+		} else if (scope.object instanceof OrthographicCamera) {
+
+			scope.object.zoom = Math.max(scope.minZoom, Math.min(scope.maxZoom, scope.object.zoom / dollyScale));
+			scope.object.updateProjectionMatrix();
+			zoomChanged = true;
+		} else {
+
+			console.warn('WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.');
+			scope.enableZoom = false;
+		}
+	}
+
+	//
+	// event callbacks - update the object state
+	//
+
+	function handleMouseDownRotate(event) {
+
+		//console.log( 'handleMouseDownRotate' );
+
+		rotateStart.set(event.clientX, event.clientY);
+	}
+
+	function handleMouseDownDolly(event) {
+
+		//console.log( 'handleMouseDownDolly' );
+
+		dollyStart.set(event.clientX, event.clientY);
+	}
+
+	function handleMouseDownPan(event) {
+
+		//console.log( 'handleMouseDownPan' );
+
+		panStart.set(event.clientX, event.clientY);
+	}
+
+	function handleMouseMoveRotate(event) {
+
+		//console.log( 'handleMouseMoveRotate' );
+
+		rotateEnd.set(event.clientX, event.clientY);
+		rotateDelta.subVectors(rotateEnd, rotateStart);
+
+		var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
+
+		// rotating across whole screen goes 360 degrees around
+		rotateLeft(2 * Math.PI * rotateDelta.x / element.clientWidth * scope.rotateSpeed);
+
+		// rotating up and down along whole screen attempts to go 360, but limited to 180
+		rotateUp(2 * Math.PI * rotateDelta.y / element.clientHeight * scope.rotateSpeed);
+
+		rotateStart.copy(rotateEnd);
+
+		scope.update();
+	}
+
+	function handleMouseMoveDolly(event) {
+
+		//console.log( 'handleMouseMoveDolly' );
+
+		dollyEnd.set(event.clientX, event.clientY);
+
+		dollyDelta.subVectors(dollyEnd, dollyStart);
+
+		if (dollyDelta.y > 0) {
+
+			dollyIn(getZoomScale());
+		} else if (dollyDelta.y < 0) {
+
+			dollyOut(getZoomScale());
+		}
+
+		dollyStart.copy(dollyEnd);
+
+		scope.update();
+	}
+
+	function handleMouseMovePan(event) {
+
+		//console.log( 'handleMouseMovePan' );
+
+		panEnd.set(event.clientX, event.clientY);
+
+		panDelta.subVectors(panEnd, panStart);
+
+		pan(panDelta.x, panDelta.y);
+
+		panStart.copy(panEnd);
+
+		scope.update();
+	}
+
+	function handleMouseUp(event) {
+
+		// console.log( 'handleMouseUp' );
+
+	}
+
+	function handleMouseWheel(event) {
+
+		// console.log( 'handleMouseWheel' );
+
+		if (event.deltaY < 0) {
+
+			dollyOut(getZoomScale());
+		} else if (event.deltaY > 0) {
+
+			dollyIn(getZoomScale());
+		}
+
+		scope.update();
+	}
+
+	function handleKeyDown(event) {
+
+		//console.log( 'handleKeyDown' );
+
+		switch (event.keyCode) {
+
+			case scope.keys.UP:
+				pan(0, scope.keyPanSpeed);
+				scope.update();
+				break;
+
+			case scope.keys.BOTTOM:
+				pan(0, -scope.keyPanSpeed);
+				scope.update();
+				break;
+
+			case scope.keys.LEFT:
+				pan(scope.keyPanSpeed, 0);
+				scope.update();
+				break;
+
+			case scope.keys.RIGHT:
+				pan(-scope.keyPanSpeed, 0);
+				scope.update();
+				break;
+
+		}
+	}
+
+	function handleTouchStartRotate(event) {
+
+		//console.log( 'handleTouchStartRotate' );
+
+		rotateStart.set(event.touches[0].pageX, event.touches[0].pageY);
+	}
+
+	function handleTouchStartDolly(event) {
+
+		//console.log( 'handleTouchStartDolly' );
+
+		var dx = event.touches[0].pageX - event.touches[1].pageX;
+		var dy = event.touches[0].pageY - event.touches[1].pageY;
+
+		var distance = Math.sqrt(dx * dx + dy * dy);
+
+		dollyStart.set(0, distance);
+	}
+
+	function handleTouchStartPan(event) {
+
+		//console.log( 'handleTouchStartPan' );
+
+		panStart.set(event.touches[0].pageX, event.touches[0].pageY);
+	}
+
+	function handleTouchMoveRotate(event) {
+
+		//console.log( 'handleTouchMoveRotate' );
+
+		rotateEnd.set(event.touches[0].pageX, event.touches[0].pageY);
+		rotateDelta.subVectors(rotateEnd, rotateStart);
+
+		var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
+
+		// rotating across whole screen goes 360 degrees around
+		rotateLeft(2 * Math.PI * rotateDelta.x / element.clientWidth * scope.rotateSpeed);
+
+		// rotating up and down along whole screen attempts to go 360, but limited to 180
+		rotateUp(2 * Math.PI * rotateDelta.y / element.clientHeight * scope.rotateSpeed);
+
+		rotateStart.copy(rotateEnd);
+
+		scope.update();
+	}
+
+	function handleTouchMoveDolly(event) {
+
+		//console.log( 'handleTouchMoveDolly' );
+
+		var dx = event.touches[0].pageX - event.touches[1].pageX;
+		var dy = event.touches[0].pageY - event.touches[1].pageY;
+
+		var distance = Math.sqrt(dx * dx + dy * dy);
+
+		dollyEnd.set(0, distance);
+
+		dollyDelta.subVectors(dollyEnd, dollyStart);
+
+		if (dollyDelta.y > 0) {
+
+			dollyOut(getZoomScale());
+		} else if (dollyDelta.y < 0) {
+
+			dollyIn(getZoomScale());
+		}
+
+		dollyStart.copy(dollyEnd);
+
+		scope.update();
+	}
+
+	function handleTouchMovePan(event) {
+
+		//console.log( 'handleTouchMovePan' );
+
+		panEnd.set(event.touches[0].pageX, event.touches[0].pageY);
+
+		panDelta.subVectors(panEnd, panStart);
+
+		pan(panDelta.x, panDelta.y);
+
+		panStart.copy(panEnd);
+
+		scope.update();
+	}
+
+	function handleTouchEnd(event) {}
+
+	//console.log( 'handleTouchEnd' );
+
+	//
+	// event handlers - FSM: listen for events and reset state
+	//
+
+	function onMouseDown(event) {
+
+		if (scope.enabled === false) return;
+
+		event.preventDefault();
+
+		switch (event.button) {
+
+			case scope.mouseButtons.ORBIT:
+
+				if (scope.enableRotate === false) return;
+
+				handleMouseDownRotate(event);
+
+				state = STATE.ROTATE;
+
+				break;
+
+			case scope.mouseButtons.ZOOM:
+
+				if (scope.enableZoom === false) return;
+
+				handleMouseDownDolly(event);
+
+				state = STATE.DOLLY;
+
+				break;
+
+			case scope.mouseButtons.PAN:
+
+				if (scope.enablePan === false) return;
+
+				handleMouseDownPan(event);
+
+				state = STATE.PAN;
+
+				break;
+
+		}
+
+		if (state !== STATE.NONE) {
+
+			document.addEventListener('mousemove', onMouseMove, false);
+			document.addEventListener('mouseup', onMouseUp, false);
+
+			scope.dispatchEvent(startEvent);
+		}
+	}
+
+	function onMouseMove(event) {
+
+		if (scope.enabled === false) return;
+
+		event.preventDefault();
+
+		switch (state) {
+
+			case STATE.ROTATE:
+
+				if (scope.enableRotate === false) return;
+
+				handleMouseMoveRotate(event);
+
+				break;
+
+			case STATE.DOLLY:
+
+				if (scope.enableZoom === false) return;
+
+				handleMouseMoveDolly(event);
+
+				break;
+
+			case STATE.PAN:
+
+				if (scope.enablePan === false) return;
+
+				handleMouseMovePan(event);
+
+				break;
+
+		}
+	}
+
+	function onMouseUp(event) {
+
+		if (scope.enabled === false) return;
+
+		handleMouseUp(event);
+
+		document.removeEventListener('mousemove', onMouseMove, false);
+		document.removeEventListener('mouseup', onMouseUp, false);
+
+		scope.dispatchEvent(endEvent);
+
+		state = STATE.NONE;
+	}
+
+	function onMouseWheel(event) {
+
+		if (scope.enabled === false || scope.enableZoom === false || state !== STATE.NONE && state !== STATE.ROTATE) return;
+
+		event.preventDefault();
+		event.stopPropagation();
+
+		handleMouseWheel(event);
+
+		scope.dispatchEvent(startEvent); // not sure why these are here...
+		scope.dispatchEvent(endEvent);
+	}
+
+	function onKeyDown(event) {
+
+		if (scope.enabled === false || scope.enableKeys === false || scope.enablePan === false) return;
+
+		handleKeyDown(event);
+	}
+
+	function onTouchStart(event) {
+
+		if (scope.enabled === false) return;
+
+		switch (event.touches.length) {
+
+			case 1:
+				// one-fingered touch: rotate
+
+				if (scope.enableRotate === false) return;
+
+				handleTouchStartRotate(event);
+
+				state = STATE.TOUCH_ROTATE;
+
+				break;
+
+			case 2:
+				// two-fingered touch: dolly
+
+				if (scope.enableZoom === false) return;
+
+				handleTouchStartDolly(event);
+
+				state = STATE.TOUCH_DOLLY;
+
+				break;
+
+			case 3:
+				// three-fingered touch: pan
+
+				if (scope.enablePan === false) return;
+
+				handleTouchStartPan(event);
+
+				state = STATE.TOUCH_PAN;
+
+				break;
+
+			default:
+
+				state = STATE.NONE;
+
+		}
+
+		if (state !== STATE.NONE) {
+
+			scope.dispatchEvent(startEvent);
+		}
+	}
+
+	function onTouchMove(event) {
+
+		if (scope.enabled === false) return;
+
+		event.preventDefault();
+		event.stopPropagation();
+
+		switch (event.touches.length) {
+
+			case 1:
+				// one-fingered touch: rotate
+
+				if (scope.enableRotate === false) return;
+				if (state !== STATE.TOUCH_ROTATE) return; // is this needed?...
+
+				handleTouchMoveRotate(event);
+
+				break;
+
+			case 2:
+				// two-fingered touch: dolly
+
+				if (scope.enableZoom === false) return;
+				if (state !== STATE.TOUCH_DOLLY) return; // is this needed?...
+
+				handleTouchMoveDolly(event);
+
+				break;
+
+			case 3:
+				// three-fingered touch: pan
+
+				if (scope.enablePan === false) return;
+				if (state !== STATE.TOUCH_PAN) return; // is this needed?...
+
+				handleTouchMovePan(event);
+
+				break;
+
+			default:
+
+				state = STATE.NONE;
+
+		}
+	}
+
+	function onTouchEnd(event) {
+
+		if (scope.enabled === false) return;
+
+		handleTouchEnd(event);
+
+		scope.dispatchEvent(endEvent);
+
+		state = STATE.NONE;
+	}
+
+	function onContextMenu(event) {
+
+		event.preventDefault();
+	}
+
+	//
+
+	scope.domElement.addEventListener('contextmenu', onContextMenu, false);
+
+	scope.domElement.addEventListener('mousedown', onMouseDown, false);
+	scope.domElement.addEventListener('wheel', onMouseWheel, false);
+
+	scope.domElement.addEventListener('touchstart', onTouchStart, false);
+	scope.domElement.addEventListener('touchend', onTouchEnd, false);
+	scope.domElement.addEventListener('touchmove', onTouchMove, false);
+
+	window.addEventListener('keydown', onKeyDown, false);
+
+	// force an update at start
+
+	this.update();
+};
+
+OrbitControls.prototype = Object.create(EventDispatcher.prototype);
+OrbitControls.prototype.constructor = OrbitControls;
+
+Object.defineProperties(OrbitControls.prototype, {
+
+	center: {
+
+		get: function get() {
+
+			console.warn('OrbitControls: .center has been renamed to .target');
+			return this.target;
+		}
+
+	},
+
+	// backward compatibility
+
+	noZoom: {
+
+		get: function get() {
+
+			console.warn('OrbitControls: .noZoom has been deprecated. Use .enableZoom instead.');
+			return !this.enableZoom;
+		},
+
+		set: function set(value) {
+
+			console.warn('OrbitControls: .noZoom has been deprecated. Use .enableZoom instead.');
+			this.enableZoom = !value;
+		}
+
+	},
+
+	noRotate: {
+
+		get: function get() {
+
+			console.warn('OrbitControls: .noRotate has been deprecated. Use .enableRotate instead.');
+			return !this.enableRotate;
+		},
+
+		set: function set(value) {
+
+			console.warn('OrbitControls: .noRotate has been deprecated. Use .enableRotate instead.');
+			this.enableRotate = !value;
+		}
+
+	},
+
+	noPan: {
+
+		get: function get() {
+
+			console.warn('OrbitControls: .noPan has been deprecated. Use .enablePan instead.');
+			return !this.enablePan;
+		},
+
+		set: function set(value) {
+
+			console.warn('OrbitControls: .noPan has been deprecated. Use .enablePan instead.');
+			this.enablePan = !value;
+		}
+
+	},
+
+	noKeys: {
+
+		get: function get() {
+
+			console.warn('OrbitControls: .noKeys has been deprecated. Use .enableKeys instead.');
+			return !this.enableKeys;
+		},
+
+		set: function set(value) {
+
+			console.warn('OrbitControls: .noKeys has been deprecated. Use .enableKeys instead.');
+			this.enableKeys = !value;
+		}
+
+	},
+
+	staticMoving: {
+
+		get: function get() {
+
+			console.warn('OrbitControls: .staticMoving has been deprecated. Use .enableDamping instead.');
+			return !this.enableDamping;
+		},
+
+		set: function set(value) {
+
+			console.warn('OrbitControls: .staticMoving has been deprecated. Use .enableDamping instead.');
+			this.enableDamping = !value;
+		}
+
+	},
+
+	dynamicDampingFactor: {
+
+		get: function get() {
+
+			console.warn('OrbitControls: .dynamicDampingFactor has been renamed. Use .dampingFactor instead.');
+			return this.dampingFactor;
+		},
+
+		set: function set(value) {
+
+			console.warn('OrbitControls: .dynamicDampingFactor has been renamed. Use .dampingFactor instead.');
+			this.dampingFactor = value;
+		}
+
+	}
+
+});
+
+/**
+ * @author dmarcos / https://github.com/dmarcos
+ * @author mrdoob / http://mrdoob.com
+ *
+ * WebVR Spec: http://mozvr.github.io/webvr-spec/webvr.html
+ *
+ * Firefox: http://mozvr.com/downloads/
+ * Chromium: https://drive.google.com/folderview?id=0BzudLt22BqGRbW9WTHMtOWMzNjQ&usp=sharing#list
+ *
+ */
+
+var VREffect = function VREffect(renderer, onError) {
+
+			var vrHMD;
+			var isDeprecatedAPI = false;
+			var eyeTranslationL = new Vector3();
+			var eyeTranslationR = new Vector3();
+			var renderRectL, renderRectR;
+			var eyeFOVL, eyeFOVR;
+
+			function gotVRDevices(devices) {
+
+						for (var i = 0; i < devices.length; i++) {
+
+									if ('VRDisplay' in window && devices[i] instanceof VRDisplay) {
+
+												vrHMD = devices[i];
+												isDeprecatedAPI = false;
+												break; // We keep the first we encounter
+									} else if ('HMDVRDevice' in window && devices[i] instanceof HMDVRDevice) {
+
+												vrHMD = devices[i];
+												isDeprecatedAPI = true;
+												break; // We keep the first we encounter
+									}
+						}
+
+						if (vrHMD === undefined) {
+
+									if (onError) onError('HMD not available');
+						}
+			}
+
+			if (navigator.getVRDisplays) {
+
+						navigator.getVRDisplays().then(gotVRDevices);
+			} else if (navigator.getVRDevices) {
+
+						// Deprecated API.
+						navigator.getVRDevices().then(gotVRDevices);
+			}
+
+			//
+
+			this.scale = 1;
+
+			var isPresenting = false;
+
+			var rendererSize = renderer.getSize();
+			var rendererPixelRatio = renderer.getPixelRatio();
+
+			this.setSize = function (width, height) {
+
+						rendererSize = { width: width, height: height };
+
+						if (isPresenting) {
+
+									var eyeParamsL = vrHMD.getEyeParameters('left');
+									renderer.setPixelRatio(1);
+
+									if (isDeprecatedAPI) {
+
+												renderer.setSize(eyeParamsL.renderRect.width * 2, eyeParamsL.renderRect.height, false);
+									} else {
+
+												renderer.setSize(eyeParamsL.renderWidth * 2, eyeParamsL.renderHeight, false);
+									}
+						} else {
+
+									renderer.setPixelRatio(rendererPixelRatio);
+									renderer.setSize(width, height);
+						}
+			};
+
+			// fullscreen
+
+			var canvas = renderer.domElement;
+			var requestFullscreen;
+			var exitFullscreen;
+			var fullscreenElement;
+
+			function onFullscreenChange() {
+
+						var wasPresenting = isPresenting;
+						isPresenting = vrHMD !== undefined && (vrHMD.isPresenting || isDeprecatedAPI && document[fullscreenElement] instanceof window.HTMLElement);
+
+						if (wasPresenting === isPresenting) {
+
+									return;
+						}
+
+						if (isPresenting) {
+
+									rendererPixelRatio = renderer.getPixelRatio();
+									rendererSize = renderer.getSize();
+
+									var eyeParamsL = vrHMD.getEyeParameters('left');
+									var eyeWidth, eyeHeight;
+
+									if (isDeprecatedAPI) {
+
+												eyeWidth = eyeParamsL.renderRect.width;
+												eyeHeight = eyeParamsL.renderRect.height;
+									} else {
+
+												eyeWidth = eyeParamsL.renderWidth;
+												eyeHeight = eyeParamsL.renderHeight;
+									}
+
+									renderer.setPixelRatio(1);
+									renderer.setSize(eyeWidth * 2, eyeHeight, false);
+						} else {
+
+									renderer.setPixelRatio(rendererPixelRatio);
+									renderer.setSize(rendererSize.width, rendererSize.height);
+						}
+			}
+
+			if (canvas.requestFullscreen) {
+
+						requestFullscreen = 'requestFullscreen';
+						fullscreenElement = 'fullscreenElement';
+						exitFullscreen = 'exitFullscreen';
+						document.addEventListener('fullscreenchange', onFullscreenChange, false);
+			} else if (canvas.mozRequestFullScreen) {
+
+						requestFullscreen = 'mozRequestFullScreen';
+						fullscreenElement = 'mozFullScreenElement';
+						exitFullscreen = 'mozCancelFullScreen';
+						document.addEventListener('mozfullscreenchange', onFullscreenChange, false);
+			} else {
+
+						requestFullscreen = 'webkitRequestFullscreen';
+						fullscreenElement = 'webkitFullscreenElement';
+						exitFullscreen = 'webkitExitFullscreen';
+						document.addEventListener('webkitfullscreenchange', onFullscreenChange, false);
+			}
+
+			window.addEventListener('vrdisplaypresentchange', onFullscreenChange, false);
+
+			this.setFullScreen = function (boolean) {
+
+						return new Promise(function (resolve, reject) {
+
+									if (vrHMD === undefined) {
+
+												reject(new Error('No VR hardware found.'));
+												return;
+									}
+									if (isPresenting === boolean) {
+
+												resolve();
+												return;
+									}
+
+									if (!isDeprecatedAPI) {
+
+												if (boolean) {
+
+															resolve(vrHMD.requestPresent([{ source: canvas }]));
+												} else {
+
+															resolve(vrHMD.exitPresent());
+												}
+									} else {
+
+												if (canvas[requestFullscreen]) {
+
+															canvas[boolean ? requestFullscreen : exitFullscreen]({ vrDisplay: vrHMD });
+															resolve();
+												} else {
+
+															console.error('No compatible requestFullscreen method found.');
+															reject(new Error('No compatible requestFullscreen method found.'));
+												}
+									}
+						});
+			};
+
+			this.requestPresent = function () {
+
+						return this.setFullScreen(true);
+			};
+
+			this.exitPresent = function () {
+
+						return this.setFullScreen(false);
+			};
+
+			// render
+
+			var cameraL = new PerspectiveCamera();
+			cameraL.layers.enable(1);
+
+			var cameraR = new PerspectiveCamera();
+			cameraR.layers.enable(2);
+
+			this.render = function (scene, camera) {
+
+						if (vrHMD && isPresenting) {
+
+									var autoUpdate = scene.autoUpdate;
+
+									if (autoUpdate) {
+
+												scene.updateMatrixWorld();
+												scene.autoUpdate = false;
+									}
+
+									var eyeParamsL = vrHMD.getEyeParameters('left');
+									var eyeParamsR = vrHMD.getEyeParameters('right');
+
+									if (!isDeprecatedAPI) {
+
+												eyeTranslationL.fromArray(eyeParamsL.offset);
+												eyeTranslationR.fromArray(eyeParamsR.offset);
+												eyeFOVL = eyeParamsL.fieldOfView;
+												eyeFOVR = eyeParamsR.fieldOfView;
+									} else {
+
+												eyeTranslationL.copy(eyeParamsL.eyeTranslation);
+												eyeTranslationR.copy(eyeParamsR.eyeTranslation);
+												eyeFOVL = eyeParamsL.recommendedFieldOfView;
+												eyeFOVR = eyeParamsR.recommendedFieldOfView;
+									}
+
+									if (Array.isArray(scene)) {
+
+												console.warn('THREE.VREffect.render() no longer supports arrays. Use object.layers instead.');
+												scene = scene[0];
+									}
+
+									// When rendering we don't care what the recommended size is, only what the actual size
+									// of the backbuffer is.
+									var size = renderer.getSize();
+									renderRectL = { x: 0, y: 0, width: size.width / 2, height: size.height };
+									renderRectR = { x: size.width / 2, y: 0, width: size.width / 2, height: size.height };
+
+									renderer.setScissorTest(true);
+									renderer.clear();
+
+									if (camera.parent === null) camera.updateMatrixWorld();
+
+									cameraL.projectionMatrix = fovToProjection(eyeFOVL, true, camera.near, camera.far);
+									cameraR.projectionMatrix = fovToProjection(eyeFOVR, true, camera.near, camera.far);
+
+									camera.matrixWorld.decompose(cameraL.position, cameraL.quaternion, cameraL.scale);
+									camera.matrixWorld.decompose(cameraR.position, cameraR.quaternion, cameraR.scale);
+
+									var scale = this.scale;
+									cameraL.translateOnAxis(eyeTranslationL, scale);
+									cameraR.translateOnAxis(eyeTranslationR, scale);
+
+									// render left eye
+									renderer.setViewport(renderRectL.x, renderRectL.y, renderRectL.width, renderRectL.height);
+									renderer.setScissor(renderRectL.x, renderRectL.y, renderRectL.width, renderRectL.height);
+									renderer.render(scene, cameraL);
+
+									// render right eye
+									renderer.setViewport(renderRectR.x, renderRectR.y, renderRectR.width, renderRectR.height);
+									renderer.setScissor(renderRectR.x, renderRectR.y, renderRectR.width, renderRectR.height);
+									renderer.render(scene, cameraR);
+
+									renderer.setScissorTest(false);
+
+									if (autoUpdate) {
+
+												scene.autoUpdate = true;
+									}
+
+									if (!isDeprecatedAPI) {
+
+												vrHMD.submitFrame();
+									}
+
+									return;
+						}
+
+						// Regular render mode if not HMD
+
+						renderer.render(scene, camera);
+			};
+
+			//
+
+			function fovToNDCScaleOffset(fov) {
+
+						var pxscale = 2.0 / (fov.leftTan + fov.rightTan);
+						var pxoffset = (fov.leftTan - fov.rightTan) * pxscale * 0.5;
+						var pyscale = 2.0 / (fov.upTan + fov.downTan);
+						var pyoffset = (fov.upTan - fov.downTan) * pyscale * 0.5;
+						return { scale: [pxscale, pyscale], offset: [pxoffset, pyoffset] };
+			}
+
+			function fovPortToProjection(fov, rightHanded, zNear, zFar) {
+
+						rightHanded = rightHanded === undefined ? true : rightHanded;
+						zNear = zNear === undefined ? 0.01 : zNear;
+						zFar = zFar === undefined ? 10000.0 : zFar;
+
+						var handednessScale = rightHanded ? -1.0 : 1.0;
+
+						// start with an identity matrix
+						var mobj = new Matrix4();
+						var m = mobj.elements;
+
+						// and with scale/offset info for normalized device coords
+						var scaleAndOffset = fovToNDCScaleOffset(fov);
+
+						// X result, map clip edges to [-w,+w]
+						m[0 * 4 + 0] = scaleAndOffset.scale[0];
+						m[0 * 4 + 1] = 0.0;
+						m[0 * 4 + 2] = scaleAndOffset.offset[0] * handednessScale;
+						m[0 * 4 + 3] = 0.0;
+
+						// Y result, map clip edges to [-w,+w]
+						// Y offset is negated because this proj matrix transforms from world coords with Y=up,
+						// but the NDC scaling has Y=down (thanks D3D?)
+						m[1 * 4 + 0] = 0.0;
+						m[1 * 4 + 1] = scaleAndOffset.scale[1];
+						m[1 * 4 + 2] = -scaleAndOffset.offset[1] * handednessScale;
+						m[1 * 4 + 3] = 0.0;
+
+						// Z result (up to the app)
+						m[2 * 4 + 0] = 0.0;
+						m[2 * 4 + 1] = 0.0;
+						m[2 * 4 + 2] = zFar / (zNear - zFar) * -handednessScale;
+						m[2 * 4 + 3] = zFar * zNear / (zNear - zFar);
+
+						// W result (= Z in)
+						m[3 * 4 + 0] = 0.0;
+						m[3 * 4 + 1] = 0.0;
+						m[3 * 4 + 2] = handednessScale;
+						m[3 * 4 + 3] = 0.0;
+
+						mobj.transpose();
+
+						return mobj;
+			}
+
+			function fovToProjection(fov, rightHanded, zNear, zFar) {
+
+						var DEG2RAD = Math.PI / 180.0;
+
+						var fovPort = {
+									upTan: Math.tan(fov.upDegrees * DEG2RAD),
+									downTan: Math.tan(fov.downDegrees * DEG2RAD),
+									leftTan: Math.tan(fov.leftDegrees * DEG2RAD),
+									rightTan: Math.tan(fov.rightDegrees * DEG2RAD)
+						};
+
+						return fovPortToProjection(fovPort, rightHanded, zNear, zFar);
+			}
+};
+
 
 
 var lib = Object.freeze({
 	ammo: ammo,
 	grahamScan: graham_scan_min,
 	three: three_module,
+	VRControls: VRControls,
+	OrbitControls: OrbitControls,
+	VREffect: VREffect,
 	$: jquery2_1_4_min
 });
 
+/* global window */
 var Camera$1 = function () {
     function Camera() {
         var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -45119,13 +46600,15 @@ var Camera$1 = function () {
 
             var target = opts.target === undefined ? [0, 0, 0] : opts.target;
             this.target = target;
+
+            this.initControls();
         }
     }, {
         key: 'setPerspective',
         value: function setPerspective(opts) {
             this._type = 'perspective';
 
-            this.threeCamera = new PerspectiveCamera(opts.fov === undefined ? 45 : opts.fov, opts.aspect === undefined ? 1 : opts.aspect, opts.near === undefined ? 1 : opts.near, opts.far === undefined ? 2000 : opts.far);
+            this.threeCamera = new PerspectiveCamera(opts.fov === undefined ? 75 : opts.fov, opts.aspect === undefined ? window.innerWidth / window.innerHeight : opts.aspect, opts.near === undefined ? 0.1 : opts.near, opts.far === undefined ? 10000 : opts.far);
 
             return this.threeCamera;
         }
@@ -45137,6 +46620,16 @@ var Camera$1 = function () {
             this.threeCamera = new OrthographicCamera(opts.left === undefined ? -2 : opts.left, opts.right === undefined ? 2 : opts.right, opts.top === undefined ? 2 : opts.top, opts.bottom === undefined ? -2 : opts.bottom, opts.near === undefined ? 1 : opts.near, opts.far === undefined ? 2000 : opts.far);
 
             return this.threeCamera;
+        }
+    }, {
+        key: 'initControls',
+        value: function initControls() {
+            var controls = new OrbitControls(this.threeCamera, jquery2_1_4_min('body')[0]);
+
+            controls.rotateSpeed = 5.0;
+            controls.zoomSpeed = 1.2;
+
+            this.controls = controls;
         }
     }, {
         key: 'aspectRatio',
@@ -45156,6 +46649,21 @@ var Camera$1 = function () {
             this.threeCamera.position.x = pos[0];
             this.threeCamera.position.y = pos[1];
             this.threeCamera.position.z = pos[2];
+        }
+    }, {
+        key: 'positionX',
+        set: function set$$1(x) {
+            this.threeCamera.position.x = x;
+        }
+    }, {
+        key: 'positionY',
+        set: function set$$1(y) {
+            this.threeCamera.position.y = y;
+        }
+    }, {
+        key: 'positionZ',
+        set: function set$$1(z) {
+            this.threeCamera.position.z = z;
         }
     }, {
         key: 'target',
@@ -45181,7 +46689,33 @@ var Camera$1 = function () {
     return Camera;
 }();
 
-/* global document */
+var VRCamera = function (_Camera) {
+    inherits(VRCamera, _Camera);
+
+    function VRCamera() {
+        var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+        classCallCheck(this, VRCamera);
+
+        var _this = possibleConstructorReturn(this, (VRCamera.__proto__ || Object.getPrototypeOf(VRCamera)).call(this, opts));
+
+        _this.vrControls = new VRControls(_this.threeCamera);
+        _this.vrControls.standing = true;
+        _this.positionY = _this.vrControls.userHeight;
+        return _this;
+    }
+
+    createClass(VRCamera, [{
+        key: 'initialize',
+        value: function initialize() {
+            var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+            get(VRCamera.prototype.__proto__ || Object.getPrototypeOf(VRCamera.prototype), 'initialize', this).call(this, opts);
+        }
+    }]);
+    return VRCamera;
+}(Camera$1);
+
+/* global document, window */
 var Renderer = function () {
     function Renderer() {
         var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -45189,6 +46723,8 @@ var Renderer = function () {
         classCallCheck(this, Renderer);
 
         this.cameraOptions = opts.cameraOptions;
+        this.vrEnabled = opts.VR === undefined ? false : opts.VR;
+        this.lightStyle = opts.lightStyle === undefined ? 'spotlight' : opts.lightStyle;
 
         this.initializeGL();
         this.initializeWorld();
@@ -45198,6 +46734,7 @@ var Renderer = function () {
         this.joints = {};
 
         this.callback = opts.callback;
+
         this.element = element === undefined ? 'body' : element;
     }
 
@@ -45205,18 +46742,26 @@ var Renderer = function () {
         key: 'initializeGL',
         value: function initializeGL() {
             this.renderer = new WebGLRenderer({
-                preserveDrawingBuffer: true,
                 antialias: true
             });
 
-            this.renderer.setClearColor(0xffffff, 1);
+            this.renderer.setPixelRatio(window.devicePixelRatio);
+            //        this.renderer.setClearColor(0xffffff, 1);
+
+            if (this.vrEnabled) {
+                this.enableVR();
+            }
         }
     }, {
         key: 'initializeWorld',
         value: function initializeWorld() {
             this.scene = new Scene();
 
-            this.camera = new Camera$1(this.cameraOptions);
+            if (this.vrEnabled) {
+                this.camera = new VRCamera(this.cameraOptions);
+            } else {
+                this.camera = new Camera$1(this.cameraOptions);
+            }
 
             this.scene.add(this.camera.threeCamera);
 
@@ -45230,44 +46775,34 @@ var Renderer = function () {
     }, {
         key: 'initializeDiv',
         value: function initializeDiv() {
-            var scope = this;
-
-            /*
-            this.panel = $('<div>')
-                .addClass('threeworld')
-                .attr({tabindex:0})
-                .css({
-                    position: 'absolute',
-                    width: 400,
-                    height: 400,
-                });
-            */
-            this.panel = jquery2_1_4_min('<div>').addClass('coach-context').attr({ tabindex: 0 });
-
-            this.renderer.setSize(400, 400);
-
-            this.canvas = jquery2_1_4_min(this.renderer.domElement).width(400).height(400).addClass('three-canvas');
-            jquery2_1_4_min(this.panel).append(this.canvas);
+            var _this = this;
 
             jquery2_1_4_min(document).ready(function () {
-                jquery2_1_4_min(scope.element).append(scope.panel);
-                scope.setSize();
+                document.body.appendChild(_this.renderer.domElement);
+                _this.setSize();
             });
+
+            //        window.addEventListener('resize', () => this.setSize(), true);
+        }
+    }, {
+        key: 'enableVR',
+        value: function enableVR() {
+            this.effect = new VREffect(this.renderer);
+            this.effect.setSize(window.innerWidth, window.innerHeight);
         }
     }, {
         key: 'setSize',
         value: function setSize() {
-            var w = jquery2_1_4_min(this.element).width();
-            var h = jquery2_1_4_min(this.element).height();
-
-            this.canvas.width(w);
-            this.canvas.height(h);
+            var w = window.innerWidth;
+            var h = window.innerHeight;
 
             this.renderer.setSize(w, h);
 
-            this.camera.aspectRatio = w / h;
+            if (this.vrEnabled && this.effect !== undefined) {
+                this.effect.setSize(w, h);
+            }
 
-            //    this.panel.css({width: w, height: h});
+            this.camera.aspectRatio = w / h;
         }
     }, {
         key: 'setCallback',
@@ -45278,10 +46813,18 @@ var Renderer = function () {
         key: 'render',
         value: function render(time) {
             this.updateEntities();
+            if (this.lightStyle === 'spotlight') {
+                var pos = this.camera.position;
+                this.light.position.set(pos[0], pos[1], pos[2]);
+            }
             if (this.callback !== undefined) {
                 this.callback(this.camera, time);
             }
-            this.renderer.render(this.scene, this.camera.threeCamera);
+            if (this.vrEnabled) {
+                this.effect.render(this.scene, this.camera.threeCamera);
+            } else {
+                this.renderer.render(this.scene, this.camera.threeCamera);
+            }
         }
     }, {
         key: 'updateEntities',
@@ -45744,6 +47287,11 @@ var Simulator = function () {
             var pos = e.position;
             startTransform.setOrigin(new ammo.btVector3(pos[0], pos[1], pos[2]));
 
+            //        const ori = e.orientation;
+            //        if (ori) {
+            //            startTransform.setRotation(new Ammo.btQuaternion(ori[1], ori[2], ori[3], ori[0]));
+            //        }
+
             var myMotionState = new ammo.btDefaultMotionState(startTransform);
             var rbInfo = new ammo.btRigidBodyConstructionInfo(mass, myMotionState, shape, localInertia);
             var body = new ammo.btRigidBody(rbInfo);
@@ -45913,9 +47461,11 @@ var Simulator = function () {
 
 /* eslint-enable */
 
-/* global requestAnimationFrame */
+/* global requestAnimationFrame, navigator, performance */
 var World = function () {
     function World() {
+        var _this = this;
+
         var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
         var element = arguments[1];
         classCallCheck(this, World);
@@ -45924,7 +47474,30 @@ var World = function () {
         this.dt = opts.dt === undefined ? 0.0001 : opts.dt;
         this.is2D = opts['2D'] === undefined ? false : opts['2D'];
 
-        this.renderer = new Renderer({ cameraOptions: opts.cameraOptions }, element);
+        this.vrEnabled = opts.VR === undefined ? false : opts.VR;
+
+        if (this.vrEnabled) {
+            this.vrReady = false;
+            // eslint-disable-next-line no-param-reassign
+            navigator.getVRDisplays().then(function (displays) {
+                if (displays.length > 0) {
+                    _this.vrDisplay = displays[0];
+                    if (_this.vrDisplay.stageParameters) {
+                        //                        this.setupVR(this.vrDisplay.stageParameters);
+                        _this.vrReady = true;
+                    }
+                    if (opts.vrReadyCallback) {
+                        opts.vrReadyCallback(_this.vrDisplay);
+                    }
+                }
+            });
+        }
+
+        this.renderer = new Renderer({
+            cameraOptions: opts.cameraOptions,
+            VR: this.vrEnabled
+        }, element);
+
         this.simulator = new Simulator(this.dt, { '2D': this.is2D });
 
         this.entities = {};
@@ -46048,31 +47621,52 @@ var World = function () {
             var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
             var scope = this;
-            var ready = true;
-            var framerate = 1.0 / this.FPS;
-            var framerateMS = framerate * 1000;
 
             this.simulator.setCallback(opts.simulationCallback);
             this.renderer.setCallback(opts.renderCallback);
 
-            function animate() {
-                requestAnimationFrame(animate);
+            var elapsed = 0;
 
-                var now = Date.now();
-                if (ready) {
-                    ready = false;
-                    var time = 0;
-                    while (Date.now() - now < framerateMS) {
-                        if (time < framerate) {
-                            scope.step();
-                            time += scope.dt;
-                        }
-                    }
+            var last = void 0;
 
-                    scope.render(time);
-                    ready = true;
+            var dtMS = scope.dt * 1000;
+
+            // maximum time to simulate per frame. This limits elapsed time.
+            // requestAnimationFrame will pause if the page is not shown (switched tabs etc),
+            // so when we resume, elapsed time will be a massive number.
+            // The choice of 16.66 corresponds to 60fps
+            var MAX_SIMULATION_TIME_PER_FRAME = 16.66;
+
+            var renderTime = 8;
+
+            function animate(now) {
+                elapsed = now - last;
+                elapsed = Math.min(MAX_SIMULATION_TIME_PER_FRAME, elapsed);
+                var simulationTime = 0;
+                var realTime = performance.now() - now;
+                while (simulationTime < elapsed && realTime < elapsed - 2 * renderTime) {
+                    scope.step();
+                    simulationTime += dtMS;
+                    realTime = performance.now() - now;
+                }
+
+                if (scope.vrEnabled) {
+                    scope.renderer.camera.vrControls.update();
+                }
+
+                var renderStart = performance.now();
+                scope.render(simulationTime / elapsed);
+                renderTime = performance.now() - renderStart;
+
+                last = now;
+
+                if (scope.vrEnabled && scope.vrReady) {
+                    scope.vrDisplay.requestAnimationFrame(animate);
+                } else {
+                    requestAnimationFrame(animate);
                 }
             }
+            last = performance.now();
             requestAnimationFrame(animate);
         }
     }, {
