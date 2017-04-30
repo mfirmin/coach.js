@@ -1,5 +1,6 @@
 /* global window */
-import { three as THREE } from '../lib/index';
+import { three as THREE, OrbitControls } from '../lib/index';
+import $ from '../lib/jquery-2.1.4.min';
 
 class Camera {
     constructor(opts = {}) {
@@ -23,6 +24,8 @@ class Camera {
 
         const target = (opts.target === undefined) ? [0, 0, 0] : opts.target;
         this.target = target;
+
+        this.initControls();
     }
 
     setPerspective(opts) {
@@ -51,6 +54,15 @@ class Camera {
         );
 
         return this.threeCamera;
+    }
+
+    initControls() {
+        const controls = new OrbitControls(this.threeCamera, $('body')[0]);
+
+        controls.rotateSpeed = 5.0;
+        controls.zoomSpeed = 1.2;
+
+        this.controls = controls;
     }
 
     set aspectRatio(aspect) {

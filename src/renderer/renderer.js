@@ -11,6 +11,7 @@ class Renderer {
     constructor(opts = {}, element) {
         this.cameraOptions = opts.cameraOptions;
         this.vrEnabled = (opts.VR === undefined) ? false : opts.VR;
+        this.lightStyle = (opts.lightStyle === undefined) ? 'spotlight' : opts.lightStyle;
 
         this.initializeGL();
         this.initializeWorld();
@@ -57,23 +58,6 @@ class Renderer {
     }
 
     initializeDiv() {
-        /*
-        this.panel = $('<div>')
-            .addClass('threeworld')
-            .attr({tabindex:0})
-            .css({
-                position: 'absolute',
-                width: 400,
-                height: 400,
-            });
-        */
-//        this.panel = $('<div>')
-//            .addClass('coach-context')
-//            .attr({ tabindex: 0 });
-
-//        this.canvas = $(this.renderer.domElement).width(400).height(400).addClass('three-canvas');
-//        $(this.panel).append(this.canvas);
-
         $(document).ready(() => {
             document.body.appendChild(this.renderer.domElement);
             this.setSize();
@@ -106,6 +90,10 @@ class Renderer {
 
     render(time) {
         this.updateEntities();
+        if (this.lightStyle === 'spotlight') {
+            const pos = this.camera.position;
+            this.light.position.set(pos[0], pos[1], pos[2]);
+        }
         if (this.callback !== undefined) {
             this.callback(this.camera, time);
         }
