@@ -96,11 +96,11 @@ class World {
         }
     }
 
-    go(opts = {}) {
+    go({ autoSimulate = true, simulationCallback, renderCallback }) {
         const scope = this;
 
-        this.simulator.setCallback(opts.simulationCallback);
-        this.renderer.setCallback(opts.renderCallback);
+        this.simulator.setCallback(simulationCallback);
+        this.renderer.setCallback(renderCallback);
 
         let elapsed = 0;
 
@@ -120,11 +120,13 @@ class World {
             elapsed = now - last;
             elapsed = Math.min(MAX_SIMULATION_TIME_PER_FRAME, elapsed);
             let simulationTime = 0;
-            let realTime = performance.now() - now;
-            while (simulationTime < elapsed && realTime < elapsed - (2 * renderTime)) {
-                scope.step();
-                simulationTime += dtMS;
-                realTime = performance.now() - now;
+            if (autoSimulate) {
+                let realTime = performance.now() - now;
+                while (simulationTime < elapsed && realTime < elapsed - (2 * renderTime)) {
+                    scope.step();
+                    simulationTime += dtMS;
+                    realTime = performance.now() - now;
+                }
             }
 
             if (scope.vrEnabled) {
