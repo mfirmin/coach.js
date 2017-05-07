@@ -79,6 +79,9 @@ class Simulator {
 
             jointPosInA = jointPosInA.rotate(qA.getAxis().normalized(), -qA.getAngle());
 
+            // Note: the vector.rotate function (and other functions labelled [Value] in the idl)
+            // returns a singleton Vector3 instance. Therefore we need to clone it, otherwise
+            // jointPosInB will refer to the same (singleton) instance as jointPosInA
             jointPosInA = new Ammo.btVector3(jointPosInA.x(), jointPosInA.y(), jointPosInA.z());
 
             const posB = this.entities[j.child.name].entity.position;

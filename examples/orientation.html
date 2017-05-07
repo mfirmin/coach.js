@@ -29,22 +29,31 @@ title: Coach.js Pendulum example
                 },
             }, '#pendulum');
             var ground = new coach.entities.Box('ground', [5,1,5], {mass: 0, color: [100,100,100]});
-            var pivot  = new coach.entities.Sphere('pivot', 0.05, {mass: 0, color: [255,0,0]});
-            var link1  = new coach.entities.Cylinder('link1', 0.05, 0.5, {mass: 1, color: [0,255,0]});
+            var pivot  = new coach.entities.Sphere('pivot', 0.04, {mass: 0, color: [55,189,230]});
+            var link1  = new coach.entities.Cylinder('link1', 0.04, 0.5, {mass: 1, color: [0,255,130]});
+            var link2  = new coach.entities.Cylinder('link2', 0.04, 0.5, {mass: 1, color: [187,155,30]});
             ground.position = [0.,-0.5,0];
             pivot.position = [0,2,0];
             link1.position = [0.25,2,0];
             link1.orientation = [0.707, 0.0, 0.0, 0.707];
 
+            link2.position = [0.5,1.75,0];
+
             world.addEntity(ground);
             world.addEntity(pivot);
             world.addEntity(link1);
+            world.addEntity(link2);
 
             var j0 = new coach.joints.Ball('joint0', pivot, link1, [0,2,0], {
                 "torqueScale": [0.1,1,1.0],
             });
 
+            var j1 = new coach.joints.Ball('joint1', link1, link2, [0.5, 2, 0], {
+                "torqueScale": [0.1,1,1.0],
+            });
+
             world.addJoint(j0);
+            world.addJoint(j1);
 
             var renderCallback = function(camera, rate) {
                 coach.lib.$('#simRate').text((rate).toFixed(1));
