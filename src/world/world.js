@@ -42,9 +42,9 @@ class World {
     addJoint(j, opts = {}) {
         const render = (opts.render === undefined) ? false : opts.render;
 
-        const name = j.name;
-        if (name in this.entities) {
-            throw new Error(`Cannot add entity. Entity with name ${name} already exists.`);
+        const id = j.id;
+        if (id in this.joints) {
+            throw new Error(`Cannot add joint. Joint with id ${id} already exists.`);
         }
 
         if (render) {
@@ -53,7 +53,7 @@ class World {
 
         this.simulator.addJoint(j);
 
-        this.joints[name] = j;
+        this.joints[id] = j;
     }
 
     addEntity(e, opts = {}) {
@@ -61,9 +61,9 @@ class World {
 
         const simulate = (opts.simulate === undefined) ? true : opts.simulate;
 
-        const name = e.name;
-        if (name in this.entities) {
-            throw new Error(`Cannot add entity. Entity with name ${name}already exists.`);
+        const id = e.id;
+        if (id in this.entities) {
+            throw new Error(`Cannot add entity. Entity with id ${id} already exists.`);
         }
 
         if (render) {
@@ -74,7 +74,7 @@ class World {
             this.simulator.addEntity(e);
         }
 
-        this.entities[name] = e;
+        this.entities[id] = e;
     }
 
     addCharacter(character, opts = {}) {

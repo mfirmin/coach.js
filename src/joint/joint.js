@@ -1,9 +1,9 @@
 class Joint {
-    constructor(name, parent, child, opts = {}) {
+    constructor(parent, child, opts = {}) {
+        this.id = (opts.id) === undefined ? Joint.newID() : opts.id;
+
         this._parent = parent;
         this._child = child;
-
-        this.name = name;
 
         this.initialize();
     }
@@ -26,6 +26,12 @@ class Joint {
 
     // eslint-disable-next-line class-methods-use-this
     initialize() { }
+
+    static newID() {
+        return Joint._idCount++;
+    }
 }
+
+Joint._idCount = 0;
 
 export default Joint;

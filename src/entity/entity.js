@@ -1,10 +1,10 @@
 class Entity {
-    constructor(name, opts = {}) {
-        this.name = name;
+    constructor(opts = {}) {
+        this.id = (opts.id) === undefined ? Entity.newID() : opts.id;
 
         this._position = (opts.position === undefined) ?
             [0, 0, 0] : opts.position;
-        this._orientation = (opts.position === undefined) ?
+        this._orientation = (opts.orientation === undefined) ?
             [1, 0, 0, 0] : opts.orientation; // q.w, q.v
         this._angularVelocity = (opts.angularVelocity === undefined) ?
             [0, 0, 0] : opts.angularVelocity;
@@ -70,6 +70,11 @@ class Entity {
         this._color[2] = c[2];
     }
 
+    static newID() {
+        return Entity._idCount++;
+    }
 }
+
+Entity._idCount = 0;
 
 export default Entity;

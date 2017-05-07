@@ -66,8 +66,8 @@ class Simulator {
         if (type === 'BALL') {
             const pos = j.position;
 
-            const posA = this.entities[j.parent.name].entity.position;
-            const oriA = this.entities[j.parent.name].entity.orientation;
+            const posA = this.entities[j.parent.id].entity.position;
+            const oriA = this.entities[j.parent.id].entity.orientation;
 
             const qA = new Ammo.btQuaternion(oriA[1], oriA[2], oriA[3], oriA[0]);
 
@@ -84,8 +84,8 @@ class Simulator {
             // jointPosInB will refer to the same (singleton) instance as jointPosInA
             jointPosInA = new Ammo.btVector3(jointPosInA.x(), jointPosInA.y(), jointPosInA.z());
 
-            const posB = this.entities[j.child.name].entity.position;
-            const oriB = this.entities[j.child.name].entity.orientation;
+            const posB = this.entities[j.child.id].entity.position;
+            const oriB = this.entities[j.child.id].entity.orientation;
 
             const qB = new Ammo.btQuaternion(oriB[1], oriB[2], oriB[3], oriB[0]);
 
@@ -100,8 +100,8 @@ class Simulator {
             jointPosInB = new Ammo.btVector3(jointPosInB.x(), jointPosInB.y(), jointPosInB.z());
 
             joint = new Ammo.btPoint2PointConstraint(
-                this.entities[j.parent.name].body,
-                this.entities[j.child.name].body,
+                this.entities[j.parent.id].body,
+                this.entities[j.child.id].body,
                 jointPosInA,
                 jointPosInB,
             );
@@ -128,15 +128,15 @@ class Simulator {
         } else if (type === 'HINGE') {
             // const axis = j.axis;
             const pos = j.position;
-            const posA = this.entities[j.parent.name].entity.position;
+            const posA = this.entities[j.parent.id].entity.position;
             const jointPosInA = [pos[0] - posA[0], pos[1] - posA[1], pos[2] - posA[2]];
 
             if (j.child !== undefined) {
-                const posB = this.entities[j.child.name].entity.position;
+                const posB = this.entities[j.child.id].entity.position;
                 const jointPosInB = [pos[0] - posB[0], pos[1] - posB[1], pos[2] - posB[2]];
                 joint = new Ammo.btHingeConstraint(
-                    this.entities[j.parent.name].body,
-                    this.entities[j.child.name].body,
+                    this.entities[j.parent.id].body,
+                    this.entities[j.child.id].body,
                     new Ammo.btVector3(jointPosInA[0], jointPosInA[1], jointPosInA[2]),
                     new Ammo.btVector3(jointPosInB[0], jointPosInB[1], jointPosInB[2]),
                     new Ammo.btVector3(j.axis[0], j.axis[1], j.axis[2]),
@@ -148,7 +148,7 @@ class Simulator {
                 // THIS DOESNT WORK
 
                 joint = new Ammo.btHingeConstraint(
-                    this.entities[j.parent.name].body,
+                    this.entities[j.parent.id].body,
                     new Ammo.btVector3(jointPosInA[0], jointPosInA[1], jointPosInA[2]),
                     new Ammo.btVector3(j.axis[0], j.axis[1], j.axis[2]),
                     false,
@@ -163,7 +163,7 @@ class Simulator {
 
         this.dynamicsWorld.addConstraint(joint);
 
-        this.joints[j.name] = { joint: j, jointBullet: joint };
+        this.joints[j.id] = { joint: j, jointBullet: joint };
     }
 
     addEntity(e) {
@@ -230,20 +230,20 @@ class Simulator {
         const nothing = 0;
         const human = 1 << 0;
         const ground = 1 << 1;
-        if (e.name === 'ground') {
+        if (e.id === 'ground') {
             this.dynamicsWorld.addRigidBody(body, ground, human);
         } else {
             this.dynamicsWorld.addRigidBody(body, human, ground);
         }
 
-        this.entities[e.name] = { entity: e, body };
+        this.entities[e.id] = { entity: e, body };
     }
 
     step(callback) {
-        for (const name of Object.keys(this.joints)) {
-            const j = this.joints[name].joint;
-            const A = this.entities[j.parent.name].body;
-            const B = this.entities[j.child.name].body;
+        for (const id of Object.keys(this.joints)) {
+            const j = this.joints[id].joint;
+            const A = this.entities[j.parent.id].body;
+            const B = this.entities[j.child.id].body;
 
             if (A.isActive() === 0) {
                 A.setActivationState(1);
@@ -267,8 +267,8 @@ class Simulator {
 
         this.dynamicsWorld.stepSimulation(this.dt, 1, this.dt);
 
-        for (const name of Object.keys(this.entities)) {
-            const e = this.entities[name];
+        for (const id of Object.keys(this.entities)) {
+            const e = this.entities[id];
             const body = e.body;
             body.activate();
             const entity = e.entity;
@@ -285,8 +285,8 @@ class Simulator {
             }
         }
 
-        for (const name of Object.keys(this.joints)) {
-            const j = this.joints[name];
+        for (const id of Object.keys(this.joints)) {
+            const j = this.joints[id];
             const jointEntity = j.joint;
             const jointBullet = j.jointBullet;
             if (jointEntity.type === 'HINGE') {

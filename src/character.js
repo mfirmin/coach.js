@@ -6,19 +6,20 @@ import Ball     from './joint/ball';
 
 class Character {
 
-    constructor(name, opts = {}) {
-        this.name = name;
+    constructor(opts = {}) {
+        this.id = (opts.id) === undefined ? Character.newID() : opts.id;
+
         this.initialize();
         this.entities = {};
         this.joints = {};
     }
 
     addEntity(e) {
-        this.entities[e.name] = e;
+        this.entities[e.id] = e;
     }
 
     addJoint(j) {
-        this.joints[j.name] = j;
+        this.joints[j.id] = j;
     }
 
     setFromJSON(data, overlayMesh) {
@@ -26,24 +27,21 @@ class Character {
             this._overlayMesh = overlayMesh;
         }
 
-        for (const [e, eInfo] of Object.entries(data.parts)) {
-            const name = `${this.name}.${e}`;
-
+        for (const eInfo of Object.values(data.parts)) {
             let entity;
             switch (eInfo.type) {
                 case 'SPHERE':
-                    entity = new Sphere(name, eInfo.radius, { mass: eInfo.mass });
+                    entity = new Sphere(eInfo.radius, { mass: eInfo.mass });
                     break;
                 case 'CAPSULE':
                     entity = new Capsule(
-                        name,
                         (eInfo.radiusTop + eInfo.radiusBottom) / 2.0,
                         eInfo.height,
                         { mass: eInfo.mass },
                     );
                     break;
                 case 'BOX':
-                    entity = new Box(name, eInfo.sides, { mass: eInfo.mass });
+                    entity = new Box(eInfo.sides, { mass: eInfo.mass });
                     break;
                 default:
                     throw new Error(`Unknown Entity type: ${eInfo.type}`);
@@ -51,30 +49,28 @@ class Character {
             entity.setPosition(eInfo.position);
             this.addEntity(entity);
         }
-        for (const [j, jInfo] of Object.entries(data.joints)) {
-            const name = `${this.name}.${j}`;
-
+        for (const jInfo of Object.values(data.joints)) {
             let joint;
             switch (jInfo.type) {
                 case 'HINGE':
-                    joint = new Hinge(name,
-                                      this.entities[`${this.name}.${jInfo.A}`],
-                                      this.entities[`${this.name}.${jInfo.B}`],
-                                      jInfo.position,
-                                      jInfo.axis,
+                    joint = new Hinge(
+                        this.entities[`${this.id}.${jInfo.A}`],
+                        this.entities[`${this.id}.${jInfo.B}`],
+                        jInfo.position,
+                        jInfo.axis,
                         {
                             limits: {
                                 lo: jInfo.min[2],
                                 hi: jInfo.max[2],
                             },
-                        });
-
+                        },
+                    );
                     break;
                 case 'BALL':
-                    joint = new Ball(name,
-                                     this.entities[`${this.name}.${jInfo.A}`],
-                                     this.entities[`${this.name}.${jInfo.B}`],
-                                     jInfo.position,
+                    joint = new Ball(
+                        this.entities[`${this.id}.${jInfo.A}`],
+                        this.entities[`${this.id}.${jInfo.B}`],
+                        jInfo.position,
                         {
                             limits: {
                                 X: [jInfo.min[0], jInfo.max[0]],
@@ -86,7 +82,8 @@ class Character {
                                 jInfo.torqueScale[1],
                                 jInfo.torqueScale[2],
                             ],
-                        });
+                        },
+                    );
                     break;
                 default:
                     throw new Error(`Unknown Joint type: ${jInfo.type}`);
@@ -94,6 +91,12 @@ class Character {
             this.addJoint(joint);
         }
     }
+
+    static newID() {
+        return Character._idCount++;
+    }
 }
+
+Character._idCount = 0;
 
 export default Character;
