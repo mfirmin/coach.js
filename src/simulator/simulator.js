@@ -65,19 +65,42 @@ class Simulator {
         const type = j.type;
         if (type === 'BALL') {
             const pos = j.position;
+
             const posA = this.entities[j.parent.name].entity.position;
-            const jointPosInA = [pos[0] - posA[0], pos[1] - posA[1], pos[2] - posA[2]];
-            const pivotInA = new Ammo.btVector3(jointPosInA[0], jointPosInA[1], jointPosInA[2]);
+            const oriA = this.entities[j.parent.name].entity.orientation;
+
+            const qA = new Ammo.btQuaternion(oriA[1], oriA[2], oriA[3], oriA[0]);
+
+            let jointPosInA = new Ammo.btVector3(
+                pos[0] - posA[0],
+                pos[1] - posA[1],
+                pos[2] - posA[2],
+            );
+
+            jointPosInA = jointPosInA.rotate(qA.getAxis().normalized(), -qA.getAngle());
+
+            jointPosInA = new Ammo.btVector3(jointPosInA.x(), jointPosInA.y(), jointPosInA.z());
 
             const posB = this.entities[j.child.name].entity.position;
-            const jointPosInB = [pos[0] - posB[0], pos[1] - posB[1], pos[2] - posB[2]];
-            const pivotInB = new Ammo.btVector3(jointPosInB[0], jointPosInB[1], jointPosInB[2]);
+            const oriB = this.entities[j.child.name].entity.orientation;
+
+            const qB = new Ammo.btQuaternion(oriB[1], oriB[2], oriB[3], oriB[0]);
+
+            let jointPosInB = new Ammo.btVector3(
+                pos[0] - posB[0],
+                pos[1] - posB[1],
+                pos[2] - posB[2],
+            );
+
+            jointPosInB = jointPosInB.rotate(qB.getAxis().normalized(), -qB.getAngle());
+
+            jointPosInB = new Ammo.btVector3(jointPosInB.x(), jointPosInB.y(), jointPosInB.z());
 
             joint = new Ammo.btPoint2PointConstraint(
                 this.entities[j.parent.name].body,
                 this.entities[j.child.name].body,
-                pivotInA,
-                pivotInB,
+                jointPosInA,
+                jointPosInB,
             );
 
             /*
@@ -179,10 +202,10 @@ class Simulator {
         const pos = e.position;
         startTransform.setOrigin(new Ammo.btVector3(pos[0], pos[1], pos[2]));
 
-//        const ori = e.orientation;
-//        if (ori) {
-//            startTransform.setRotation(new Ammo.btQuaternion(ori[1], ori[2], ori[3], ori[0]));
-//        }
+        const ori = e.orientation;
+        if (ori) {
+            startTransform.setRotation(new Ammo.btQuaternion(ori[1], ori[2], ori[3], ori[0]));
+        }
 
         const myMotionState = new Ammo.btDefaultMotionState(startTransform);
         const rbInfo = new Ammo.btRigidBodyConstructionInfo(
