@@ -5,7 +5,7 @@ class Entity {
         this._position = (opts.position === undefined) ?
             [0, 0, 0] : opts.position;
         this._orientation = (opts.position === undefined) ?
-            [0, 0, 0, 1] : opts.orientation; // q.w, q.v
+            [1, 0, 0, 0] : opts.orientation; // q.w, q.v
         this._angularVelocity = (opts.angularVelocity === undefined) ?
             [0, 0, 0] : opts.angularVelocity;
 
