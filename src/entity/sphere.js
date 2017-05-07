@@ -1,8 +1,8 @@
 import Entity from './entity';
 
 class Sphere extends Entity {
-    constructor(name, radius, opts) {
-        super(name, opts);
+    constructor(radius, opts) {
+        super(opts);
 
         this._radius = radius;
         this._type = 'SPHERE';

@@ -139,13 +139,13 @@ class Renderer {
         const obj = this.constructor.addSphere(entity);
 
         this.scene.add(obj);
-        this.joints[j.name] = { object: obj, joint: j };
+        this.joints[j.id] = { object: obj, joint: j };
     }
 
     addEntity(e, options) {
-        const name = e.name;
-        if (name in this.entities) {
-            throw new Error(`Cannot add entity. Entity with name ${name} already exists.`);
+        const id = e.id;
+        if (id in this.entities) {
+            throw new Error(`Cannot add entity. Entity with id ${id} already exists.`);
         }
 
         let obj;
@@ -169,7 +169,7 @@ class Renderer {
 
         this.scene.add(obj);
 
-        this.entities[e.name] = { entity: e, object: obj };
+        this.entities[e.id] = { entity: e, object: obj };
     }
 
     static createMeshAndOutline(options) {
