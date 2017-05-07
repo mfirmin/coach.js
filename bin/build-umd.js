@@ -23,6 +23,7 @@ rollup.rollup({
         builtins(),
         commonjs({
             include: [
+                '../node_modules/**',
                 '../src/lib/ammo.js',
 //                '../src/lib/three.min.js',
                 '../src/lib/graham_scan.min.js',
