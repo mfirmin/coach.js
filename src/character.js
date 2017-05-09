@@ -9,7 +9,12 @@ class Character {
     constructor(opts = {}) {
         this.id = (opts.id) === undefined ? Character.newID() : opts.id;
 
-        this.initialize();
+        if (Character._cGroupCount > 15) {
+            throw new Error('Reached maximum number of Characters: 16');
+        }
+        this._collisionGroup = 1 << Character._cGroupCount;
+        Character._cGroupCount++;
+
         this.entities = {};
         this.joints = {};
     }
@@ -92,11 +97,16 @@ class Character {
         }
     }
 
+    get collisionGroup() {
+        return this._collisionGroup;
+    }
+
     static newID() {
         return Character._idCount++;
     }
 }
 
+Character._cGroupCount = 0;
 Character._idCount = 0;
 
 export default Character;

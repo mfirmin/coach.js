@@ -226,14 +226,11 @@ class Simulator {
         }
     //    body.setAngularFactor(new Ammo.btVector3(1, 0, 1));
 
-        // eslint-disable-next-line no-unused-vars
-        const nothing = 0;
-        const human = 1 << 0;
-        const ground = 1 << 1;
-        if (e.id === 'ground') {
-            this.dynamicsWorld.addRigidBody(body, ground, human);
-        } else {
-            this.dynamicsWorld.addRigidBody(body, human, ground);
+        this.dynamicsWorld.addRigidBody(body);
+        if (e.character !== null) {
+            const thisGroup = e.character.collisionGroup;
+            const thisMask  = thisGroup ^ 65535; // collide with everything but itself
+            this.dynamicsWorld.addRigidBody(body, thisGroup, thisMask);
         }
 
         this.entities[e.id] = { entity: e, body };

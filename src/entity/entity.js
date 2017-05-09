@@ -12,6 +12,9 @@ class Entity {
         this._mass = (opts.mass === undefined) ? 0 : opts.mass;
         this._color = (opts.color === undefined) ? [130, 130, 130] : opts.color;
 
+        // Reference to the character this entity belongs to.
+        this._character = (opts.character === undefined) ? null : opts.character;
+
         this.initialize();
     }
 
@@ -68,6 +71,14 @@ class Entity {
         this._color[0] = c[0];
         this._color[1] = c[1];
         this._color[2] = c[2];
+    }
+
+    get character() {
+        return this._character;
+    }
+
+    set character(c) {
+        this._character = c;
     }
 
     static newID() {
