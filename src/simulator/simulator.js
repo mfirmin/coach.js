@@ -226,14 +226,33 @@ class Simulator {
         }
     //    body.setAngularFactor(new Ammo.btVector3(1, 0, 1));
 
-        this.dynamicsWorld.addRigidBody(body);
         if (e.character !== null) {
             const thisGroup = e.character.collisionGroup;
             const thisMask  = thisGroup ^ 65535; // collide with everything but itself
             this.dynamicsWorld.addRigidBody(body, thisGroup, thisMask);
+        } else {
+            this.dynamicsWorld.addRigidBody(body);
         }
 
         this.entities[e.id] = { entity: e, body };
+    }
+
+    updateEntity(id) {
+        if (this.entities[id] === undefined) {
+            throw new Error(`Unknown Entity with id ${id}`);
+        }
+        const e    = this.entities[id];
+        const body = e.body;
+
+        const proxy = body.getBroadphaseProxy();
+        let thisGroup = 0;
+        let thisMask = 0;
+        if (e.character !== null) {
+            thisGroup = e.character.collisionGroup;
+            thisMask  = thisGroup ^ 65535; // collide with everything but itself
+        }
+        proxy.set_m_collisionFilterGroup(thisGroup);
+        proxy.set_m_collisionFilterMask(thisMask);
     }
 
     step(callback) {

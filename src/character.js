@@ -20,10 +20,12 @@ class Character {
     }
 
     addEntity(e) {
+        // TODO: Add entity to world if character is already in world
         this.entities[e.id] = e;
     }
 
     addJoint(j) {
+        // TODO: Add joint to world if character is already in world
         this.joints[j.id] = j;
     }
 

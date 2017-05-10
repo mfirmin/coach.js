@@ -15,6 +15,8 @@ class Entity {
         // Reference to the character this entity belongs to.
         this._character = (opts.character === undefined) ? null : opts.character;
 
+        this._world = null;
+
         this.initialize();
     }
 
@@ -79,6 +81,17 @@ class Entity {
 
     set character(c) {
         this._character = c;
+        if (this._world !== null) {
+            this._world.updateEntity(this.id);
+        }
+    }
+
+    get world() {
+        return this._world;
+    }
+
+    set world(w) {
+        this._world = w;
     }
 
     static newID() {

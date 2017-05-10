@@ -75,6 +75,8 @@ class World {
         }
 
         this.entities[id] = e;
+
+        e.world = this;
     }
 
     addCharacter(character, opts = {}) {
@@ -89,11 +91,20 @@ class World {
                 };
                 eOpts.mesh = mesh;
             }
-            this.addEntity(entity, eOpts);
+            if (!(entity.id in this.entities)) {
+                this.addEntity(entity, eOpts);
+            }
         }
         for (const joint of Object.values(character.joints)) {
             this.addJoint(joint);
         }
+
+        // eslint-disable-next-line no-param-reassign
+        character.world = this;
+    }
+
+    updateEntity(id) {
+        this.simulator.updateEntity(id);
     }
 
     go({ autoSimulate = true, simulationCallback, renderCallback }) {
