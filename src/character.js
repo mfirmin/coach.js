@@ -17,16 +17,22 @@ class Character {
 
         this.entities = {};
         this.joints = {};
+
+        this._world = null;
     }
 
     addEntity(e) {
-        // TODO: Add entity to world if character is already in world
         this.entities[e.id] = e;
+        if (this.world && !this.world.hasEntity(e)) {
+            this.world.addEntity(e);
+        }
     }
 
     addJoint(j) {
-        // TODO: Add joint to world if character is already in world
         this.joints[j.id] = j;
+        if (this.world && !this.world.hasJoint(j)) {
+            this.world.addJoint(j);
+        }
     }
 
     setFromJSON(data, overlayMesh) {
@@ -105,6 +111,14 @@ class Character {
 
     static newID() {
         return Character._idCount++;
+    }
+
+    get world() {
+        return this._world;
+    }
+
+    set world(w) {
+        this._world = w;
     }
 }
 

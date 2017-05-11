@@ -1706,6 +1706,8 @@ var Entity = function () {
         // Reference to the character this entity belongs to.
         this._character = opts.character === undefined ? null : opts.character;
 
+        this._world = null;
+
         this.initialize();
     }
 
@@ -1776,6 +1778,17 @@ var Entity = function () {
         },
         set: function set(c) {
             this._character = c;
+            if (this._world !== null) {
+                this._world.updateEntity(this.id);
+            }
+        }
+    }, {
+        key: "world",
+        get: function get() {
+            return this._world;
+        },
+        set: function set(w) {
+            this._world = w;
         }
     }], [{
         key: "newID",
@@ -1917,6 +1930,8 @@ var Joint = function () {
         this._parent = parent;
         this._child = child;
 
+        this._world = null;
+
         this.initialize();
     }
 
@@ -1941,6 +1956,14 @@ var Joint = function () {
         },
         set: function set(p) {
             this._child = p;
+        }
+    }, {
+        key: "world",
+        get: function get() {
+            return this._world;
+        },
+        set: function set(w) {
+            this._world = w;
         }
     }], [{
         key: "newID",
@@ -2275,17 +2298,25 @@ var Character = function () {
 
         this.entities = {};
         this.joints = {};
+
+        this._world = null;
     }
 
     _createClass(Character, [{
         key: 'addEntity',
         value: function addEntity(e) {
             this.entities[e.id] = e;
+            if (this.world && !this.world.hasEntity(e)) {
+                this.world.addEntity(e);
+            }
         }
     }, {
         key: 'addJoint',
         value: function addJoint(j) {
             this.joints[j.id] = j;
+            if (this.world && !this.world.hasJoint(j)) {
+                this.world.addJoint(j);
+            }
         }
     }, {
         key: 'setFromJSON',
@@ -2386,6 +2417,14 @@ var Character = function () {
         key: 'collisionGroup',
         get: function get() {
             return this._collisionGroup;
+        }
+    }, {
+        key: 'world',
+        get: function get() {
+            return this._world;
+        },
+        set: function set(w) {
+            this._world = w;
         }
     }], [{
         key: 'newID',
@@ -49122,14 +49161,34 @@ var Simulator = function () {
             }
             //    body.setAngularFactor(new Ammo.btVector3(1, 0, 1));
 
-            this.dynamicsWorld.addRigidBody(body);
             if (e.character !== null) {
                 var thisGroup = e.character.collisionGroup;
                 var thisMask = thisGroup ^ 65535; // collide with everything but itself
                 this.dynamicsWorld.addRigidBody(body, thisGroup, thisMask);
+            } else {
+                this.dynamicsWorld.addRigidBody(body);
             }
 
             this.entities[e.id] = { entity: e, body: body };
+        }
+    }, {
+        key: 'updateEntity',
+        value: function updateEntity(id) {
+            if (this.entities[id] === undefined) {
+                throw new Error('Unknown Entity with id ' + id);
+            }
+            var e = this.entities[id];
+            var body = e.body;
+
+            var proxy = body.getBroadphaseProxy();
+            var thisGroup = 0;
+            var thisMask = 0;
+            if (e.character !== null) {
+                thisGroup = e.character.collisionGroup;
+                thisMask = thisGroup ^ 65535; // collide with everything but itself
+            }
+            proxy.set_m_collisionFilterGroup(thisGroup);
+            proxy.set_m_collisionFilterMask(thisMask);
         }
     }, {
         key: 'step',
@@ -49376,7 +49435,6 @@ var World = function () {
 
         _classCallCheck(this, World);
 
-        this.FPS = opts.FPS === undefined ? 30.0 : opts.FPS;
         this.dt = opts.dt === undefined ? 0.0001 : opts.dt;
         this.is2D = opts['2D'] === undefined ? false : opts['2D'];
 
@@ -49454,6 +49512,18 @@ var World = function () {
             }
 
             this.entities[id] = e;
+
+            e.world = this;
+        }
+    }, {
+        key: 'hasEntity',
+        value: function hasEntity(e) {
+            return e.id in this.entities && this.entities[e.id] === e;
+        }
+    }, {
+        key: 'hasJoint',
+        value: function hasJoint(j) {
+            return j.id in this.joints && this.joints[j.id] === j;
         }
     }, {
         key: 'addCharacter',
@@ -49479,7 +49549,9 @@ var World = function () {
                         };
                         eOpts.mesh = mesh;
                     }
-                    this.addEntity(entity, eOpts);
+                    if (!this.hasEntity(entity)) {
+                        this.addEntity(entity, eOpts);
+                    }
                 }
             } catch (err) {
                 _didIteratorError = true;
@@ -49504,8 +49576,12 @@ var World = function () {
                 for (var _iterator2 = _getIterator(_Object$values(character.joints)), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
                     var joint = _step2.value;
 
-                    this.addJoint(joint);
+                    if (!this.hasJoint(joint)) {
+                        this.addJoint(joint);
+                    }
                 }
+
+                // eslint-disable-next-line no-param-reassign
             } catch (err) {
                 _didIteratorError2 = true;
                 _iteratorError2 = err;
@@ -49520,6 +49596,13 @@ var World = function () {
                     }
                 }
             }
+
+            character.world = this;
+        }
+    }, {
+        key: 'updateEntity',
+        value: function updateEntity(id) {
+            this.simulator.updateEntity(id);
         }
     }, {
         key: 'go',

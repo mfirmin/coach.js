@@ -4,7 +4,6 @@ import Simulator from '../simulator/simulator';
 
 class World {
     constructor(opts = {}, element) {
-        this.FPS = (opts.FPS === undefined) ? 30.0 : opts.FPS;
         this.dt  = (opts.dt === undefined) ? 0.0001 : opts.dt;
         this.is2D = (opts['2D'] === undefined) ? false : opts['2D'];
 
@@ -79,6 +78,14 @@ class World {
         e.world = this;
     }
 
+    hasEntity(e) {
+        return (e.id in this.entities && this.entities[e.id] === e);
+    }
+
+    hasJoint(j) {
+        return (j.id in this.joints && this.joints[j.id] === j);
+    }
+
     addCharacter(character, opts = {}) {
         for (const [fullname, entity] of Object.entries(character.entities)) {
             const name = fullname.slice(fullname.indexOf('.') + 1);
@@ -91,12 +98,14 @@ class World {
                 };
                 eOpts.mesh = mesh;
             }
-            if (!(entity.id in this.entities)) {
+            if (!this.hasEntity(entity)) {
                 this.addEntity(entity, eOpts);
             }
         }
         for (const joint of Object.values(character.joints)) {
-            this.addJoint(joint);
+            if (!this.hasJoint(joint)) {
+                this.addJoint(joint);
+            }
         }
 
         // eslint-disable-next-line no-param-reassign
