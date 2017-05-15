@@ -241,18 +241,23 @@ class Simulator {
         if (this.entities[id] === undefined) {
             throw new Error(`Unknown Entity with id ${id}`);
         }
-        const e    = this.entities[id];
-        const body = e.body;
+        const e      = this.entities[id];
+        const entity = e.entity;
+        const body   = e.body;
 
-        const proxy = body.getBroadphaseProxy();
+        // NOTE: Directly setting the collision filter group/mask doesn't seem to
+        // work if a constraint between masked entities is "active".
+        // Instead, just remove and re-add the rigid body
+        this.dynamicsWorld.removeRigidBody(body);
         let thisGroup = 0;
         let thisMask = 0;
-        if (e.character !== null) {
-            thisGroup = e.character.collisionGroup;
+        if (entity.character !== null) {
+            thisGroup = entity.character.collisionGroup;
             thisMask  = thisGroup ^ 65535; // collide with everything but itself
+            this.dynamicsWorld.addRigidBody(body, thisGroup, thisMask);
+        } else {
+            this.dynamicsWorld.addRigidBody(body);
         }
-        proxy.set_m_collisionFilterGroup(thisGroup);
-        proxy.set_m_collisionFilterMask(thisMask);
     }
 
     step(callback) {
