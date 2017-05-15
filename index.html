@@ -29,6 +29,9 @@ title: Coach.js Pendulum example
                     "target": [0,1,0],
                 },
             });
+
+            var pendulum = new coach.Character();
+
             var ground = new coach.entities.Box([5,1,5], { mass: 0, color: [100,100,100], id: 'ground' });
             var pivot  = new coach.entities.Box([0.1,0.1,0.1], {mass: 0, color: [255,0,0]});
             var link1  = new coach.entities.Box([0.5, 0.1, 0.1], {mass: 1, color: [0,255,0]});
@@ -40,10 +43,16 @@ title: Coach.js Pendulum example
             link2.position = [0.75,2,0];
             link3.position = [1.25,2,0];
             world.addEntity(ground);
-            world.addEntity(pivot);
-            world.addEntity(link1);
+
+            // Example of adding something to the world, then later
+            // adding it to a character
             world.addEntity(link2);
             world.addEntity(link3);
+
+            pendulum.addEntity(pivot);
+            pendulum.addEntity(link1);
+            pendulum.addEntity(link2);
+            pendulum.addEntity(link3);
 
             var j0 = new coach.joints.Ball(pivot, link1, [0,2,0], {
                 "torqueScale": [0.1,1,1.0],
@@ -54,9 +63,12 @@ title: Coach.js Pendulum example
             var j2 = new coach.joints.Ball(link2, link3, [1,2,0], {
                 "torqueScale": [0.1,1,1.0],
             });
-            world.addJoint(j0);
-            world.addJoint(j1);
-            world.addJoint(j2);
+
+            pendulum.addJoint(j0);
+            pendulum.addJoint(j1);
+            pendulum.addJoint(j2);
+
+            world.addCharacter(pendulum);
 
             var pdc = new coach.controllers.PDController3D(j1, {"X": 0, "Y": 0, "Z": 1.57}, {
                 "kp": 200,

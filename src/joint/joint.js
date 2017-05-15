@@ -5,6 +5,8 @@ class Joint {
         this._parent = parent;
         this._child = child;
 
+        this._world = null;
+
         this.initialize();
     }
 
@@ -26,6 +28,22 @@ class Joint {
 
     // eslint-disable-next-line class-methods-use-this
     initialize() { }
+
+    get world() {
+        return this._world;
+    }
+
+    set world(w) {
+        this._world = w;
+    }
+
+    get character() {
+        return this._character;
+    }
+
+    set character(c) {
+        this._character = c;
+    }
 
     static newID() {
         return Joint._idCount++;

@@ -20,6 +20,7 @@ title: Coach.js Pendulum example
         <script>
             var FPS = 30;
             var dt = 0.00025;
+
             var world = new coach.World({
                 "FPS": FPS,
                 "dt": dt,
@@ -30,6 +31,9 @@ title: Coach.js Pendulum example
                     "target": [0,1,0],
                 },
             }, '#pendulum');
+
+            var pendulum = new coach.Character();
+
             var ground = new coach.entities.Box([5,1,5], {mass: 0, color: [100,100,100], id: 'ground' });
             var pivot  = new coach.entities.Box([0.1,0.1,0.1], {mass: 0, color: [255,0,0]});
             var link1  = new coach.entities.Box([0.5, 0.1, 0.1], {mass: 1, color: [0,255,0]});
@@ -41,17 +45,19 @@ title: Coach.js Pendulum example
             link2.position = [0.75,2,0]
             link3.position = [1.25,2,0]
             world.addEntity(ground);
-            world.addEntity(pivot);
-            world.addEntity(link1);
-            world.addEntity(link2);
-            world.addEntity(link3);
+            pendulum.addEntity(pivot);
+            pendulum.addEntity(link1);
+            pendulum.addEntity(link2);
+            pendulum.addEntity(link3);
 
             var j0 = new coach.joints.Hinge(pivot, link1, [0,2,0],   [0,0,1]);
             var j1 = new coach.joints.Hinge(link1, link2, [0.5,2,0], [0,0,1]);
             var j2 = new coach.joints.Hinge(link2, link3, [1,2,0],   [0,0,1]);
-            world.addJoint(j0);
-            world.addJoint(j1);
-            world.addJoint(j2);
+            pendulum.addJoint(j0);
+            pendulum.addJoint(j1);
+            pendulum.addJoint(j2);
+
+            world.addCharacter(pendulum);
 
             var renderCallback = function(camera, time) {
                 coach.lib.$('#simRate').text((time*30.).toFixed(1));

@@ -226,17 +226,38 @@ class Simulator {
         }
     //    body.setAngularFactor(new Ammo.btVector3(1, 0, 1));
 
-        // eslint-disable-next-line no-unused-vars
-        const nothing = 0;
-        const human = 1 << 0;
-        const ground = 1 << 1;
-        if (e.id === 'ground') {
-            this.dynamicsWorld.addRigidBody(body, ground, human);
+        if (e.character !== null) {
+            const thisGroup = e.character.collisionGroup;
+            const thisMask  = thisGroup ^ 65535; // collide with everything but itself
+            this.dynamicsWorld.addRigidBody(body, thisGroup, thisMask);
         } else {
-            this.dynamicsWorld.addRigidBody(body, human, ground);
+            this.dynamicsWorld.addRigidBody(body);
         }
 
         this.entities[e.id] = { entity: e, body };
+    }
+
+    updateEntity(id) {
+        if (this.entities[id] === undefined) {
+            throw new Error(`Unknown Entity with id ${id}`);
+        }
+        const e      = this.entities[id];
+        const entity = e.entity;
+        const body   = e.body;
+
+        // NOTE: Directly setting the collision filter group/mask doesn't seem to
+        // work if a constraint between masked entities is "active".
+        // Instead, just remove and re-add the rigid body
+        this.dynamicsWorld.removeRigidBody(body);
+        let thisGroup = 0;
+        let thisMask = 0;
+        if (entity.character !== null) {
+            thisGroup = entity.character.collisionGroup;
+            thisMask  = thisGroup ^ 65535; // collide with everything but itself
+            this.dynamicsWorld.addRigidBody(body, thisGroup, thisMask);
+        } else {
+            this.dynamicsWorld.addRigidBody(body);
+        }
     }
 
     step(callback) {
