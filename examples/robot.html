@@ -29,6 +29,9 @@ title: Robotic Arm
                         "target": [0,1,0],
                     },
                 }, '#robot');
+
+                var pendulum = new coach.Character();
+
                 var ground = new coach.entities.Box([50,1,50], {mass: 0, color: [100,100,100], id: 'ground' });
                 var pivot  = new coach.entities.Sphere(0.1, {mass: 0, color: [255,0,0]});
                 var link1  = new coach.entities.Box([0.1, 0.5, 0.1], {mass: 1, color: [0,255,0]});
@@ -41,11 +44,12 @@ title: Robotic Arm
                 link2.position = [0.,1.75,0]
                 link3.position = [0.,2.25,0]
                 world.addEntity(ground,{shader: {fragmentShader: 'ground_fragShader', vertexShader: 'ground_vertShader'}} );
-                world.addEntity(pivot);
-                world.addEntity(link1);
 
-                world.addEntity(link2);
-                world.addEntity(link3);
+                pendulum.addEntity(pivot);
+                pendulum.addEntity(link1);
+
+                pendulum.addEntity(link2);
+                pendulum.addEntity(link3);
 
                 var j0 = new coach.joints.Ball(pivot, link1, [0,1,0], {
                     "torqueScale": [1,.1,1],
@@ -57,9 +61,9 @@ title: Robotic Arm
                     "torqueScale": [1,0.1,1],
                 });
 
-                world.addJoint(j0);
-                world.addJoint(j1);
-                world.addJoint(j2);
+                pendulum.addJoint(j0);
+                pendulum.addJoint(j1);
+                pendulum.addJoint(j2);
 
                 var renderCallback = function(camera, time) {
                     coach.lib.$('#simRate').text((time*30.).toFixed(1));
@@ -88,6 +92,8 @@ title: Robotic Arm
                     var t3 = pdc2.evaluate(dt);
                     j2.addTorque(t3);
                 };
+
+                world.addCharacter(pendulum);
 
                 world.go({renderCallback: renderCallback, simulationCallback: controller})
 

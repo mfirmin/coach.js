@@ -50,6 +50,8 @@ title: coach.js Pendulum example
                 },
             });
 
+            var pendulum = new coach.Character();
+
             var ground = new coach.entities.Box([10, 1, 10], {mass: 0, color: [100,100,100], id: 'ground' });
             var pivot  = new coach.entities.Sphere(0.1, {mass: 0, color: [255,0,0]});
             var link1  = new coach.entities.Cylinder(0.05, 0.7, {mass: 1, color: [0,255,0]});
@@ -58,18 +60,20 @@ title: coach.js Pendulum example
             link1.position = [0.35,1.6,0];
             link1.orientation = [0, 0, 1, 1];
             world.addEntity(ground);
-            world.addEntity(pivot);
-            world.addEntity(link1);
+            pendulum.addEntity(pivot);
+            pendulum.addEntity(link1);
 
             var j0 = new coach.joints.Ball(pivot, link1, [0.0,1.6,0], {
                 "torqueScale": [0.1,1,1.0],
             });
-            world.addJoint(j0);
+            pendulum.addJoint(j0);
 
 //            var pdc = new coach.controllers.PDController3D(j0, {"X": 0, "Y": 0, "Z": 1.57}, {
 //                "kp": 200,
 //                "kd": 20
 //            });
+
+            world.addCharacter(pendulum);
 
             world.go()
 

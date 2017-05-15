@@ -1965,6 +1965,14 @@ var Joint = function () {
         set: function set(w) {
             this._world = w;
         }
+    }, {
+        key: "character",
+        get: function get() {
+            return this._character;
+        },
+        set: function set(c) {
+            this._character = c;
+        }
     }], [{
         key: "newID",
         value: function newID() {
@@ -2306,6 +2314,7 @@ var Character = function () {
         key: 'addEntity',
         value: function addEntity(e) {
             this.entities[e.id] = e;
+            e.character = this;
             if (this.world && !this.world.hasEntity(e)) {
                 this.world.addEntity(e);
             }
@@ -2314,6 +2323,7 @@ var Character = function () {
         key: 'addJoint',
         value: function addJoint(j) {
             this.joints[j.id] = j;
+            j.character = this; // eslint-disable-line no-param-reassign
             if (this.world && !this.world.hasJoint(j)) {
                 this.world.addJoint(j);
             }
@@ -49178,17 +49188,22 @@ var Simulator = function () {
                 throw new Error('Unknown Entity with id ' + id);
             }
             var e = this.entities[id];
+            var entity = e.entity;
             var body = e.body;
 
-            var proxy = body.getBroadphaseProxy();
+            // NOTE: Directly setting the collision filter group/mask doesn't seem to
+            // work if a constraint between masked entities is "active".
+            // Instead, just remove and re-add the rigid body
+            this.dynamicsWorld.removeRigidBody(body);
             var thisGroup = 0;
             var thisMask = 0;
-            if (e.character !== null) {
-                thisGroup = e.character.collisionGroup;
+            if (entity.character !== null) {
+                thisGroup = entity.character.collisionGroup;
                 thisMask = thisGroup ^ 65535; // collide with everything but itself
+                this.dynamicsWorld.addRigidBody(body, thisGroup, thisMask);
+            } else {
+                this.dynamicsWorld.addRigidBody(body);
             }
-            proxy.set_m_collisionFilterGroup(thisGroup);
-            proxy.set_m_collisionFilterMask(thisMask);
         }
     }, {
         key: 'step',
