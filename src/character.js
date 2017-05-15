@@ -23,6 +23,7 @@ class Character {
 
     addEntity(e) {
         this.entities[e.id] = e;
+        e.character = this;
         if (this.world && !this.world.hasEntity(e)) {
             this.world.addEntity(e);
         }
@@ -30,6 +31,7 @@ class Character {
 
     addJoint(j) {
         this.joints[j.id] = j;
+        j.character = this; // eslint-disable-line no-param-reassign
         if (this.world && !this.world.hasJoint(j)) {
             this.world.addJoint(j);
         }

@@ -37,6 +37,14 @@ class Joint {
         this._world = w;
     }
 
+    get character() {
+        return this._character;
+    }
+
+    set character(c) {
+        this._character = c;
+    }
+
     static newID() {
         return Joint._idCount++;
     }
