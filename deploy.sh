@@ -5,7 +5,11 @@ SOURCE_BRANCH="master"
 TARGET_BRANCH="gh-pages"
 
 function doCompile {
-    cp -r _site out
+    cp -r static out
+    cp -r Gemfile out
+    cp -r Gemfile.lock out
+    cp -r index.html out
+    cp -r examples out
 }
 
 # Pull requests and commits to other branches shouldn't try to deploy, just build to verify
