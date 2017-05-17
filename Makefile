@@ -22,3 +22,6 @@ watch: build
 
 run:
 	bundle exec jekyll serve 
+
+docs:
+	echo "Implement me!"
