@@ -3,6 +3,7 @@ import Character   from './character';
 import entities    from './entity/index';
 import joints      from './joint/index';
 import Renderer    from './renderer/renderer';
+import Intersector from './renderer/intersector';
 import Simulator   from './simulator/simulator';
 import World       from './world/world';
 import utils       from './utils/utils';
@@ -19,6 +20,7 @@ const Coach = {
 
     Character,
     Renderer,
+    Intersector,
     Simulator,
     World,
 

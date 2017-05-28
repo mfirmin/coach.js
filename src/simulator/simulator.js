@@ -23,6 +23,8 @@ class Simulator {
         this.entities = {};
         this.joints = {};
 
+        this._kinematicEntities = new Set();
+
         this.initialize();
     }
 
@@ -234,7 +236,13 @@ class Simulator {
             this.dynamicsWorld.addRigidBody(body);
         }
 
-        this.entities[e.id] = { entity: e, body };
+        this.entities[e.id] = {
+            entity: e,
+
+            body,
+            // store in case we toggle between kinematic and dynamic later
+            initialInertia: [localInertia.x(), localInertia.y(), localInertia.z()],
+        };
     }
 
     updateEntity(id) {
@@ -257,6 +265,56 @@ class Simulator {
             this.dynamicsWorld.addRigidBody(body, thisGroup, thisMask);
         } else {
             this.dynamicsWorld.addRigidBody(body);
+        }
+    }
+
+    toggleDynamic(id) {
+        if (this.entities[id] === undefined) {
+            throw new Error(`Unknown Entity with id ${id}`);
+        }
+        const e      = this.entities[id];
+        const entity = e.entity;
+        const body   = e.body;
+
+        let mass = 0;
+        let inertia;
+        if (entity.dynamic) {
+            mass = entity.mass;
+            inertia = new Ammo.btVector3(
+                e.initialInertia[0],
+                e.initialInertia[1],
+                e.initialInertia[2],
+            );
+            this._kinematicEntities.delete(id);
+
+            // ensure we update the body's position too when toggling dynamic
+            const pos = entity.position;
+            const wt = new Ammo.btTransform();
+            body.getMotionState().getWorldTransform(wt);
+            const newPos = new Ammo.btVector3(pos[0], pos[1], pos[2]);
+            wt.setOrigin(newPos);
+            body.setWorldTransform(wt);
+        } else {
+            inertia = new Ammo.btVector3(0, 0, 0);
+            this._kinematicEntities.add(id);
+        }
+
+        body.setMassProps(mass, inertia);
+    }
+
+    updateKinematicEntities() {
+        for (const id of this._kinematicEntities) {
+            const e      = this.entities[id];
+            const body   = e.body;
+            const entity = e.entity;
+
+            const pos = entity.position;
+            const wt = new Ammo.btTransform();
+            body.getMotionState().getWorldTransform(wt);
+            const newPos = new Ammo.btVector3(pos[0], pos[1], pos[2]);
+            wt.setOrigin(newPos);
+            body.getMotionState().setWorldTransform(wt);
+            body.setWorldTransform(wt);
         }
     }
 
@@ -285,6 +343,8 @@ class Simulator {
 
             j.resetTorque();
         }
+
+        this.updateKinematicEntities();
 
         this.dynamicsWorld.stepSimulation(this.dt, 1, this.dt);
 

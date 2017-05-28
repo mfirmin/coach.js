@@ -8,7 +8,7 @@ import VRCamera from './vrCamera';
 import $ from '../lib/jquery-2.1.4.min';
 
 class Renderer {
-    constructor(opts = {}, element) {
+    constructor(opts = {}) {
         this.cameraOptions = opts.cameraOptions;
         this.vrEnabled = (opts.VR === undefined) ? false : opts.VR;
         this.lightStyle = (opts.lightStyle === undefined) ? 'spotlight' : opts.lightStyle;
@@ -22,7 +22,7 @@ class Renderer {
 
         this.callback = opts.callback;
 
-        this.element = (element === undefined) ? 'body' : element;
+//        this.element = (element === undefined) ? 'body' : element;
     }
 
     initializeGL() {
@@ -122,6 +122,17 @@ class Renderer {
                     entity.orientation[0],
                 ),
             );
+
+            if (entity.highlighted) {
+                obj.children[0].material.color.r = 0;
+                obj.children[0].material.color.g = 1;
+                obj.children[0].material.color.b = 1;
+            } else {
+                const color = entity.color.map(c => c / 255.0);
+                obj.children[0].material.color.r = color[0];
+                obj.children[0].material.color.g = color[1];
+                obj.children[0].material.color.b = color[2];
+            }
         }
 
         for (const j of Object.values(this.joints)) {
@@ -170,6 +181,22 @@ class Renderer {
         this.scene.add(obj);
 
         this.entities[e.id] = { entity: e, object: obj };
+    }
+
+    getObjectForEntity(e) {
+        let id;
+        if (typeof e === 'string' || typeof e === 'number') {
+            id = e;
+        } else if (e.id !== undefined) {
+            id = e.id;
+        } else {
+            throw new Error(`Expected entity or id, got: ${e}`);
+        }
+        return this.entities[id].object;
+    }
+
+    get element() {
+        return this.renderer.domElement;
     }
 
     static createMeshAndOutline(options) {

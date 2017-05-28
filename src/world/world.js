@@ -76,6 +76,10 @@ class World {
         this.entities[id] = e;
 
         e.world = this;
+
+        if (e.dynamic) {
+            this.toggleDynamic(e.id);
+        }
     }
 
     hasEntity(e) {
@@ -114,6 +118,10 @@ class World {
 
     updateEntity(id) {
         this.simulator.updateEntity(id);
+    }
+
+    toggleDynamic(id) {
+        this.simulator.toggleDynamic(id);
     }
 
     go({ autoSimulate = true, simulationCallback, renderCallback }) {

@@ -17,17 +17,19 @@ title: Coach.js Pendulum example
             }
         </style>
     </head>
-    <body>
+    <body style="margin: 0;">
         <div id='simTime'>Simulation Time (% real time): <div id='simRate' style="display: inline-block">0</div></div>
         <script>
             var world = new coach.World({
-                "dt": 0.001,
-                "cameraOptions": {
-                    "type": "perspective",
-                    "position": [4, 4, 4],
-                    "target": [0,1,0],
+                dt: 0.001,
+                cameraOptions: {
+                    type:     'perspective',
+                    position: [4, 4, 4],
+                    target:   [0, 1, 0],
                 },
-            }, '#pendulum');
+            });
+
+            var intersector = new coach.Intersector(world);
 
             var ground = new coach.entities.Box([10,1,10], {
                 mass:     0,
@@ -42,10 +44,17 @@ title: Coach.js Pendulum example
                 position: [1, 2, 1],
             });
 
-
+            var b2 = new coach.entities.Box([0.1, 0.1, 0.1], {
+                mass:     10000,
+                color:    [20, 137, 0],
+                position: [1, 30, 1],
+            });
 
             world.addEntity(ground);
             world.addEntity(b1);
+            world.addEntity(b2);
+
+            intersector.addEntity(b1);
 
             var renderCallback = function(camera, rate) {
                 coach.lib.$('#simRate').text((rate).toFixed(1));
@@ -54,13 +63,6 @@ title: Coach.js Pendulum example
             world.go({renderCallback: renderCallback, autoSimulate: true })
 
             setTimeout(() => {
-//                var a = world.simulator.entities[0].body.getBroadphaseProxy();
-//                a.set_m_collisionFilterGroup(1 << 1);
-//                a.set_m_collisionFilterMask(1 << 1);
-
-//                var b = world.simulator.entities['ground'].body.getBroadphaseProxy();
-//                b.set_m_collisionFilterGroup(1 << 2);
-//                b.set_m_collisionFilterMask(1 << 2);
             }, 100);
 
         </script>

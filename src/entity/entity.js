@@ -12,10 +12,14 @@ class Entity {
         this._mass = (opts.mass === undefined) ? 0 : opts.mass;
         this._color = (opts.color === undefined) ? [130, 130, 130] : opts.color;
 
+        this._highlighted = false;
+
         // Reference to the character this entity belongs to.
         this._character = (opts.character === undefined) ? null : opts.character;
 
         this._world = null;
+
+        this._dynamic = (opts.dynamic === undefined) ? true : opts.dynamic;
 
         this.initialize();
     }
@@ -75,6 +79,14 @@ class Entity {
         this._color[2] = c[2];
     }
 
+    set highlighted(h) {
+        this._highlighted = h;
+    }
+
+    get highlighted() {
+        return this._highlighted;
+    }
+
     get character() {
         return this._character;
     }
@@ -84,6 +96,18 @@ class Entity {
         if (this._world !== null) {
             this._world.updateEntity(this.id);
         }
+    }
+
+    get dynamic() {
+        return this._dynamic;
+    }
+
+    set dynamic(d) {
+        if (this._dynamic === d) {
+            return;
+        }
+        this._dynamic = d;
+        this._world.toggleDynamic(this.id);
     }
 
     get world() {
