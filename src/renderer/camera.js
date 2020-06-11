@@ -111,6 +111,11 @@ class Camera {
         this.threeCamera.lookAt(new THREE.Vector3(target[0], target[1], target[2]));
     }
 
+    get viewVector() {
+        const pos = this.position;
+        return [this._target[0] - pos[0], this._target[1] - pos[1], this._target[2] - pos[2]];
+    }
+
     get type() {
         return this._type;
     }

@@ -2,6 +2,8 @@ class Entity {
     constructor(opts = {}) {
         this.id = (opts.id) === undefined ? Entity.newID() : opts.id;
 
+        this._previousPosition = [0, 0, 0];
+
         this._position = (opts.position === undefined) ?
             [0, 0, 0] : opts.position;
         this._orientation = (opts.orientation === undefined) ?
@@ -28,6 +30,12 @@ class Entity {
     initialize() { }
 
     set position(xyz) {
+        if (!this._dynamic) {
+            this._previousPosition[0] = this._position[0];
+            this._previousPosition[1] = this._position[1];
+            this._previousPosition[2] = this._position[2];
+        }
+
         this._position[0] = xyz[0];
         this._position[1] = xyz[1];
         this._position[2] = xyz[2];
@@ -52,6 +60,10 @@ class Entity {
         //     this.angularVelocity,
         //     utils.RFromQuaternion(this.orientation),
         // );
+    }
+
+    get previousPosition() {
+        return this._previousPosition;
     }
 
     get position() {

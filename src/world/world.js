@@ -33,6 +33,8 @@ class World {
 
         this.simulator = new Simulator(this.dt, { '2D': this.is2D });
 
+        this.intersector = null;
+
         this.entities = {};
         this.joints   = {};
         this.characters = {};
@@ -131,6 +133,7 @@ class World {
         this.renderer.setCallback(renderCallback);
 
         let elapsed = 0;
+        let elapsedInv = 0;
 
         let last;
 
@@ -147,11 +150,17 @@ class World {
         function animate(now) {
             elapsed = now - last;
             elapsed = Math.min(MAX_SIMULATION_TIME_PER_FRAME, elapsed);
+            elapsedInv = 1 / elapsed;
+
+            if (scope.intersector) {
+                scope.intersector.handleEvents();
+            }
+
             let simulationTime = 0;
             if (autoSimulate) {
                 let realTime = performance.now() - now;
                 while (simulationTime < elapsed && realTime < elapsed - (2 * renderTime)) {
-                    scope.step();
+                    scope.step(simulationTime * elapsedInv);
                     simulationTime += dtMS;
                     realTime = performance.now() - now;
                 }
@@ -181,8 +190,8 @@ class World {
         this.renderer.render(time);
     }
 
-    step() {
-        this.simulator.step();
+    step(p) {
+        this.simulator.step(p);
     }
 }
 

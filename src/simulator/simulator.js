@@ -22,6 +22,8 @@ class Simulator {
 
         this.entities = {};
         this.joints = {};
+        this.picks = {};
+        this.pickCount = -1;
 
         this._kinematicEntities = new Set();
 
@@ -295,30 +297,93 @@ class Simulator {
             wt.setOrigin(newPos);
             body.setWorldTransform(wt);
         } else {
-            inertia = new Ammo.btVector3(0, 0, 0);
+            // inertia = new Ammo.btVector3(0, 0, 0);
+            inertia = new Ammo.btVector3(
+                e.initialInertia[0],
+                e.initialInertia[1],
+                e.initialInertia[2],
+            );
             this._kinematicEntities.add(id);
         }
 
         body.setMassProps(mass, inertia);
     }
 
-    updateKinematicEntities() {
+    /**
+     * @method beginPick
+     * @memberOf Simulator
+     * @param { String } e - Uid of picked entity
+     * @param { Array[3] } pt - Point at which e was picked
+     * @returns { String } - pick id
+     * @description
+     * Begins a pick, creating a temporary body which represents the pick
+     * And attaches it to the picked entity through a point2point constraint
+     **/
+    beginPick(e, pt) {
+        this.pickCount++;
+        this.picks[this.pickCount] = { entity: e, point: pt };
+        return this.pickCount;
+    }
+
+    /**
+     * @method updatePick
+     * @memberOf Simulator
+     * @param { String } pid - Id of pick to update
+     * @param { Array[3] } pt - Point to move pick to
+     * @description
+     * Updates pick pid, moving the pivot of the p2p constraint
+     **/
+    updatePick(pid, pt) {
+        if (this.picks[pid]) {
+        } else {
+            throw new Error(`No such pick: ${pid}`);
+        }
+    }
+
+    /**
+     * @method finishPick
+     * @memberOf Simulator
+     * @param { String } pid - Id of pick to finish
+     * @description
+     * Finishes pick pid, removing the constraint
+     **/
+    finishPick(pid) {
+        if (this.picks[pid]) {
+            delete this.picks[pid];
+        } else {
+            throw new Error(`No such pick: ${pid}`);
+        }
+    }
+
+    updateKinematicEntities(p) {
         for (const id of this._kinematicEntities) {
             const e      = this.entities[id];
             const body   = e.body;
             const entity = e.entity;
 
+            const prev = entity.previousPosition;
             const pos = entity.position;
+
+            const interpolatedPosition = [
+                ((1 - p) * prev[0]) + (pos[0] * p),
+                ((1 - p) * prev[1]) + (pos[1] * p),
+                ((1 - p) * prev[2]) + (pos[2] * p),
+            ];
+
             const wt = new Ammo.btTransform();
             body.getMotionState().getWorldTransform(wt);
-            const newPos = new Ammo.btVector3(pos[0], pos[1], pos[2]);
+            const newPos = new Ammo.btVector3(
+                interpolatedPosition[0],
+                interpolatedPosition[1],
+                interpolatedPosition[2],
+            );
             wt.setOrigin(newPos);
             body.getMotionState().setWorldTransform(wt);
             body.setWorldTransform(wt);
         }
     }
 
-    step(callback) {
+    step(p, callback) {
         for (const id of Object.keys(this.joints)) {
             const j = this.joints[id].joint;
             const A = this.entities[j.parent.id].body;
@@ -344,7 +409,7 @@ class Simulator {
             j.resetTorque();
         }
 
-        this.updateKinematicEntities();
+        this.updateKinematicEntities(p);
 
         this.dynamicsWorld.stepSimulation(this.dt, 1, this.dt);
 
@@ -354,12 +419,20 @@ class Simulator {
             body.activate();
             const entity = e.entity;
             if (body.getMotionState()) {
-                body.getMotionState().getWorldTransform(trans);
-                const pos = [trans.getOrigin().x(), trans.getOrigin().y(), trans.getOrigin().z()];
+                // only set position and rotation for dynamic entities
+                // kinematic entities calculated externally
+                if (entity.dynamic) {
+                    body.getMotionState().getWorldTransform(trans);
+                    const pos = [
+                        trans.getOrigin().x(),
+                        trans.getOrigin().y(),
+                        trans.getOrigin().z(),
+                    ];
 
-                const rot = trans.getRotation().normalized();
-                entity.position = pos;
-                entity.orientation = [rot.w(), rot.x(), rot.y(), rot.z()];
+                    const rot = trans.getRotation().normalized();
+                    entity.position = pos;
+                    entity.orientation = [rot.w(), rot.x(), rot.y(), rot.z()];
+                }
 
                 const angVel = body.getAngularVelocity();
                 entity.angularVelocity = [angVel.x(), angVel.y(), angVel.z()];
